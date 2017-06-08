@@ -17,7 +17,7 @@ class ForgotService
         $this->mailer = $mailer;
     }
 
-    public function sendResetPasswordEmail(Form $form)
+    public function sendResetPasswordEmail(Form $form): bool
     {
         $email = $form->get('email')->getData();
         $em = $this->registry->getEntityManager();
@@ -29,6 +29,15 @@ class ForgotService
 
         if (is_null($user)) {
             return false;
+        }
+
+        $userReset = $em->getRepository('AppBundle:ForgotPassword')
+            ->findOneBy(array(
+                'email' => $email,
+            ));
+        if (!is_null($userReset)) {
+            $em->remove($userReset);
+            $em->flush();
         }
 
         $hash = md5(uniqid(null, true));
@@ -55,6 +64,7 @@ class ForgotService
         $forgotPassword = new ForgotPassword();
         $forgotPassword->setEmail($email);
         $forgotPassword->setHashCode($hash);
+        $forgotPassword->setCreateDate(new \DateTime());
 
         $em = $this->registry->getEntityManager();
         $em->persist($forgotPassword);

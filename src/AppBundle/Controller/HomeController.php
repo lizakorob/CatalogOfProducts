@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\RegisterType;
+use Symfony\Component\Validator\Constraints\Date;
 
 class HomeController extends Controller
 {

@@ -40,6 +40,13 @@ services:
         public: true
         arguments:
             - '@doctrine'
+            - '@mailer'
+
+    reset_password:
+        class: AppBundle\Service\ResetService
+        public: true
+        arguments:
+            - '@doctrine'
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:

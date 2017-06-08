@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * ForgotPassword
@@ -34,6 +35,13 @@ class ForgotPassword
      * @ORM\Column(name="hashCode", type="string", length=255)
      */
     private $hashCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="create_date", type="date")
+     */
+    private $createDate;
 
 
     /**
@@ -92,6 +100,28 @@ class ForgotPassword
     public function getHashCode()
     {
         return $this->hashCode;
+    }
+
+    /**
+     * Set createDate
+     *
+     * @param Date createDate
+     *
+     * @return ForgotPassword
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Get createDate
+     */
+    public function getCreateDate()
+    {
+        return $this->createDate;
     }
 }
 
