@@ -1,0 +1,115 @@
+body {
+    font-family: 'Roboto, sans-serif', sans-serif;
+    margin: 0;
+}
+
+.header {
+    background: #F7F7F7;
+    border: none;
+}
+
+.navbar {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    background:  #e6ccff;
+    border: none;
+}
+.openLoginForm {
+    float: right;
+}
+
+.social-icon {
+    margin-right: 1%;
+}
+
+.modal-content {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+.btn.btn-default {
+    border-radius: 0;
+    color: white;
+    background-color: #ce99ff;
+    height: 35px;
+    border: none;
+    text-shadow: none;
+}
+
+.form-control {
+    border-radius: 0;
+    /*height: 30px;*/
+    font-size: 14px;
+}
+
+.modal-header {
+    /*color: white;*/
+    text-align: center;
+    background-color: #dab3ff;
+}
+
+label {
+    font-size: 14px;
+    /*font-family: "MuseoSansRounded",Helvetica,sans-serif;*/
+}
+
+#login_logup {
+    margin-top: 8px;
+}
+
+.icon-bar {
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.icon-bar a {
+    /*float: left;*/
+    /*display: inline;*/
+    margin-top: 8px;
+    width: 20%;
+    height: 30%;
+    text-align: center;
+    padding: 12px 0;
+    transition: all 0.3s ease;
+    font-size: 20px;
+    background-color: #777777;
+}
+
+.icon-bar a:hover {
+    background-color: #bcb8ff;
+}
+
+.active {
+    background-color: #9ea1ff !important;
+}
+
+.login{
+    height: 190px;
+}
+
+.register {
+    height: 360px;
+}
+
+#addRegisterBtn {
+    background-color: #d7d7d7;
+}
+
+.login div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 10px;
+    height: auto;
+
+}
+
+.register div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+
+

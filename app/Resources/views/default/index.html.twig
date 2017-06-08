@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid ">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header col-xs-4 col-md-2 col-lg-3">
+                <a class="navbar-brand" href="#">Brand</a>
+            </div>
+            <div class="icon-bar hidden-sm hidden-md hidden-lg">
+                <a class="active" href="#">
+                    <i class="glyphicon glyphicon-search col-xs-3"></i>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#loginModal">
+                    <i class="glyphicon glyphicon-log-in col-xs-3"></i>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#registrationModal">
+                    <i class="glyphicon glyphicon-pencil col-xs-3"></i>
+                </a>
+                {#<a href="#"><i class="glyphicon glyphicon-search col-xs-3"></i></a>#}
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class='hidden-xs'>
+                <form class="navbar-form navbar-left hidden-xs col-lg-8 col-md-8" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" >
+                    </div>
+                    <button type="submit" class="btn btn-default">Найти</button>
+                </form>
+                <div class="nav navbar-nav navbar-right col-md-3" id="login_logup">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#loginModal">Вход</button>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#registrationModal">Регистрация</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Вход</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(loginForm, { 'attr': {'class': 'login'} }) }}
+                     <div class="col-sm-offset-2 col-sm-8 ">
+                         {{ form_widget(loginForm) }}
+                         <div style="display: inline">
+                             <input type="submit" value="Войти" class="btn btn-default col-xs-12 col-sm-6"
+                                 style="margin-right: 16px;"/>
+                             <a href="#" data-toggle="modal" data-target="#registrationModal" style="padding-top: 7px;"
+                                data-dismiss="modal" aria-hidden="true" class="col-xs-12 col-sm-4">
+                                 Зарегистрироваться
+                             </a>
+                             {#<input type="button" value="Зарегистрироваться" id="addRegisterBtn"#}
+                             {#data-toggle="modal" data-target="#registrationModal"#}
+                             {#class="btn btn-default col-xs-12 col-sm-6" data-dismiss="modal" aria-hidden="true"/>#}
+                         </div>
+                     </div>
+                    {{ form_end(loginForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="registrationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(registerForm, { 'attr': {'class': 'register' } }) }}
+                        <div class="col-sm-offset-2 col-sm-8">
+                            {{ form_widget(registerForm) }}
+                            <input type="submit" value="Зарегистрироваться" class="btn btn-default" />
+                        </div>
+                    {{ form_end(registerForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
