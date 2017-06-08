@@ -24,19 +24,33 @@ class HomeController extends Controller
      */
     public function registerAction(Request $request)
     {
+        $authenticationUtils = $this->get('security.authorization_checker');
+        if ($authenticationUtils->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $user = new User();
+        $error = null;
         $form = $this->createForm(RegisterType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('register_service')->register($form);
-            /*var_dump($request->request);
-            var_dump($form->getData()); die();*/
+            $error = $this->get('register_service')->register($form, $request);
+
+            if ($error != null) {
+                return $this->render('home/register.html.twig', array(
+                    'form' => $form->createView(),
+                    'error' => $error,
+                ));
+            }
+
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('home/register.html.twig', array(
             'form' => $form->createView(),
+            'error' => $error,
         ));
     }
 }

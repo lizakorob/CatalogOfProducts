@@ -14,6 +14,11 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request, AuthenticationUtils $authUtils)
     {
+        $authenticationUtils = $this->get('security.authorization_checker');
+        if ($authenticationUtils->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $error = $authUtils->getLastAuthenticationError();
 
         $lastUsername = $authUtils->getLastUsername();
