@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\RegisterType;
-use Symfony\Component\Validator\Constraints\Date;
 
 class HomeController extends Controller
 {
@@ -21,6 +20,8 @@ class HomeController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return Response
      * @Route("/register", name="register")
      */
     public function registerAction(Request $request)
