@@ -4,7 +4,7 @@ body {
 }
 
 .header {
-    background: #F7F7F7;
+    /*background: #F7F7F7;*/
     border: none;
 }
 
@@ -12,6 +12,7 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     background:  #e6ccff;
     border: none;
+    /*border-color: inherit;*/
 }
 .openLoginForm {
     float: right;
@@ -38,8 +39,15 @@ body {
 
 .form-control {
     border-radius: 0;
-    /*height: 30px;*/
     font-size: 14px;
+}
+
+form {
+    border: none;
+}
+
+form input {
+    height: 30px;
 }
 
 .modal-header {
@@ -87,15 +95,11 @@ label {
 }
 
 .register {
-    height: 420px;
+    height: 440px;
 }
 
 .forgotPassword {
     height: 100px;
-}
-
-#addRegisterBtn {
-    background-color: #d7d7d7;
 }
 
 .login div {
@@ -126,4 +130,13 @@ label {
 
 #searchField {
     width: 300px;
+}
+
+.error {
+    color: #d94cff;
+    font-size: 14px;
+}
+
+.navbar-form {
+    border:none;
 }

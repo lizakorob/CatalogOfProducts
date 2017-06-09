@@ -1,14 +1,108 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let openSearch = false;
+
+        function loginValidate() {
+            let emailItem = document.getElementById('user_login_email').value;
+            let passwordItem = document.getElementById('user_login_password').value;
+            if (!emailValidate(emailItem)) {
+                showMessage('loginError', 'Поле E-mail заполнено некорректно');
+                //document.getElementById('user_login_email').classList.add("has-error");
+                return false;
+            }
+            else if (!passwordValidate(passwordItem)) {
+                showMessage('loginError', 'Пароль должен быть длиной от 8 до 64 символов');
+                return false;
+            }
+        }
+
+        function registrationValidate() {
+            let nameItem = document.getElementById('user_registration_firstName').value;
+            let surnameItem = document.getElementById('user_registration_surname').value;
+            let usernameItem = document.getElementById('user_registration_username').value;
+            let emailItem = document.getElementById('user_registration_email').value;
+            let passwordItem = document.getElementById('user_registration_password_first').value;
+            let confirmPasswordItem = document.getElementById('user_registration_password_second').value;
+
+            if (!nameValidate(nameItem)) {
+                showMessage('registrationError', 'Имя должно быть длиной от 1 до 15 символов');
+                return false;
+            }
+            else if (!surnameValidate(surnameItem)) {
+                showMessage('registrationError', 'Фамилия должна быть длиной от 1 до 20 символов');
+                return false;
+            }
+            else if (!usernameValidate(usernameItem)) {
+                showMessage('registrationError', 'Логин должен быть длиной от 3 до 16 символов');
+                return false;
+            }
+            else if(!emailValidate(emailItem)) {
+                showMessage('registrationError', 'Поле E-mail заполнено некорректно');
+                return false;
+            }
+            else if (!passwordValidate(passwordItem)) {
+                showMessage('registrationError', 'Пароль должен быть длиной от 8 до 64 символов');
+                return false;
+            }
+            else if (!checkConfirmPassword(passwordItem, confirmPasswordItem)) {
+                showMessage('registrationError', 'Введенные пароли не совпадают');
+                return false;
+            }
+        }
+
+        function emailValidate(emailItem) {
+            const emailPattern = /^[a-z0-9_-]+@[a-z0-9-]+\.([a-z]{1,6}\.)?[a-z]{2,6}$/i;
+            return emailItem.match(emailPattern);
+        }
+
+        function passwordValidate(passwordItem) {
+            return !(passwordItem.length <= 8 || passwordItem.length >= 64);
+        }
+
+        function nameValidate(nameItem) {
+            return !(nameItem.length <= 1 || nameItem.length >= 15);
+        }
+
+        function surnameValidate(surnameItem) {
+            return !(surnameItem.length <= 1 || surnameItem.length >= 20);
+        }
+
+        function usernameValidate(usernameItem) {
+            return !(usernameItem.length <= 3 || usernameItem.length >= 16);
+        }
+
+        function checkConfirmPassword(passwordItem, confirmPasswordItem) {
+            return passwordItem === confirmPasswordItem;
+        }
+
+        function showMessage(idFormError, message) {
+            document.getElementById(idFormError).innerHTML = message;
+        }
+
+        function openSearchForm() {
+            if (!openSearch) {
+                document.getElementById('searchForm').classList.remove("hidden-xs");
+                document.getElementById('searchForm').classList.remove("hidden-sm");
+                openSearch = true;
+            } else {
+                document.getElementById('searchForm').classList.add("hidden-xs");
+                document.getElementById('searchForm').classList.add("hidden-sm");
+                openSearch = false;
+            }
+        }
+    </script>
+{% endblock %}
 {% block header %}
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid ">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header col-xs-4 col-sm-2">
                 <a class="navbar-brand" href="#">Brand</a>
             </div>
             <div class="icon-bar hidden-sm hidden-md hidden-lg">
-                <a class="active" href="#">
+                <a class="active" href="#" onclick="openSearchForm()">
                     <i class="glyphicon glyphicon-search col-xs-4"></i>
                 </a>
                 <a href="#" data-toggle="modal" data-target="#loginModal">
@@ -17,25 +111,26 @@
                 <a href="#" data-toggle="modal" data-target="#registrationModal">
                     <i class="glyphicon glyphicon-pencil col-xs-4"></i>
                 </a>
-                {#<a href="#"><i class="glyphicon glyphicon-search col-xs-3"></i></a>#}
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class='hidden-xs'>
-                <form class="navbar-form navbar-left hidden-xs col-sm-12" role="search"
-                    onsumbit="alert('submit!');return false;">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="searchField" placeholder="Search" >
+                <form class="navbar-form navbar-left col-sm-12 hidden-xs" id="searchForm" role="search"
+                    onsubmit="alert('submit!');return false;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Ищу...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-default">Найти</button>
                 </form>
-                <div class="nav navbar-nav navbar-right col-sm-3" id="login_logup">
-                    <button class="btn btn-default" data-toggle="modal" data-target="#loginModal">Вход</button>
-                    <button class="btn btn-default" data-toggle="modal" data-target="#registrationModal">Регистрация</button>
+                <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
+                    {% if is_granted("USER") %}
+                        Hi {{ app.user.username }}
+                    {% else %}
+                        <button class="btn btn-default" data-toggle="modal" data-target="#loginModal">Вход</button>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#registrationModal">Регистрация</button>
+                    {% endif %}
                 </div>
             </div>
-        </div>
     </nav>
-
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -44,9 +139,13 @@
                     <h4 class="modal-title" id="myModalLabel">Вход</h4>
                 </div>
                 <div class="modal-body">
-                    {{ form_start(loginForm, { 'attr': {'class': 'login', 'onsumbit': "alert('submit!');return false;"},
+                    <div class="col-sm-offset-2 col-sm-8 error">
+                        <span id="loginError"></span>
+                    </div>
+                    {{ form_start(loginForm, { 'attr': {'class': 'login',
+                        'onsubmit': "return loginValidate()"},
                         'action': path('login'), 'method': 'POST'} ) }}
-                    <div class="col-sm-offset-2 col-sm-8 ">
+                    <div class="col-sm-offset-2 col-sm-8">
                          {{ form_widget(loginForm) }}
                          <div style="display: inline">
                              <input type="submit" value="Войти" class="btn btn-default col-xs-12 col-sm-6"
@@ -70,7 +169,11 @@
                     <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
                 </div>
                 <div class="modal-body">
-                    {{ form_start(registerForm, { 'attr': {'class': 'register' } }) }}
+                    <div class="error">
+                        <span id="registrationError">tr</span>
+                    </div>
+                    {{ form_start(registerForm, { 'attr': {'class': 'register',
+                        'onsubmit': "return registrationValidate()"} }) }}
                         <div class="col-sm-offset-2 col-sm-8">
                             {{ form_widget(registerForm) }}
                             <input type="submit" value="Зарегистрироваться" class="btn btn-default" />
@@ -88,6 +191,9 @@
                     <h4 class="modal-title" id="myModalLabel">Восстановление пароля</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="error">
+                        <span>tr</span>
+                    </div>
                     {{ form_start(forgotPasswordForm, { 'attr': {'class': 'forgotPassword' } }) }}
                     <div class="col-sm-offset-2 col-sm-8">
                         {{ form_widget(forgotPasswordForm) }}
@@ -98,10 +204,6 @@
         </div>
     </div>
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-    </script>
-{% endblock %}
+
 
 
