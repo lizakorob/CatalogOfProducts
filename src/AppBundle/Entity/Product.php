@@ -87,6 +87,12 @@ class Product
      */
     private $image;
 
+    public function __construct()
+    {
+        $this->createDate = new \DateTime();
+        $this->updateDate = new \DateTime();
+    }
+
     /**
      * Get id
      *
