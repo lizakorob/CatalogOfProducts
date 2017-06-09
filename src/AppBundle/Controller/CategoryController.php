@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Category;
 use AppBundle\Form\EditCategoryType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,17 +15,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class CategoryController
  * @package AppBundle\Controller
- *
+ * @Route("/categories")
  * @Security("has_role('ROLE_MODERATOR')")
  */
 class CategoryController extends Controller
 {
     /**
-     * @param Request $request
-     * @Route("/categories", name="categories")
+     * @Route("/", name="categories")
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $categories = $em->getRepository('AppBundle:Category')->findAll();
@@ -34,9 +35,38 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     * @Route("/create", name="create_category")
+     */
+    public function createAction(Request $request)
+    {
+        $category = new Category();
+        $form = $this->createForm(EditCategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result = $this->get('category')->addCategory($form);
+
+            if (!$result) {
+                $this->addFlash('message', 'Category is already created');
+                return $this->redirectToRoute('create_category');
+            }
+
+            $this->addFlash('message', 'Category was created');
+            return $this->redirectToRoute('categories');
+        }
+
+        return $this->render('category/create.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * @param $id
-     * @Route("/categories/details/{id}",
-     *     requirements={"id" = "/d+"},
+     * @Route("/details/{id}",
+     *     requirements={"id" = "\d+"},
+     *     defaults={"id" = 1},
      *     name="category_by_id")
      * @return Response
      */
@@ -59,8 +89,9 @@ class CategoryController extends Controller
      * @param $id
      * @return Response
      *
-     * @Route("/categories/edit/{id}",
-     *     requirements={"id" = "/d+"},
+     * @Route("/edit/{id}",
+     *     requirements={"id" = "\d+"},
+     *     defaults={"id" = 1},
      *     name="category_edit_id")
      */
     public function editAction(Request $request, $id)
@@ -85,7 +116,7 @@ class CategoryController extends Controller
                 ));
             }
 
-            $this->addFlash('message', 'Category has been changed');
+            $this->addFlash('message', 'Category was changed');
             return $this->redirectToRoute('categories');
         }
 
@@ -94,8 +125,46 @@ class CategoryController extends Controller
         ));
     }
 
-    public function deleteAction()
+    /**
+     * @param $id
+     * @return Response
+     * @Route("/delete/{id}",
+     *     requirements={"id" = "\d+"},
+     *     defaults={"id" = 1},
+     *     name="categories_delete_id")
+     * @Method("GET")
+     */
+    public function deleteAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $category = $em->getRepository('AppBundle:Category')->find($id);
 
+        if (is_null($category)) {
+            throw new NotFoundHttpException('Category is not found');
+        }
+
+        return $this->render('category/delete.html.twig', array(
+            'category' => $category,
+        ));
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("/delete/{id}",
+     *     requirements={"id" = "\d+"},
+     *     defaults={"id" = 1})
+     * @Method("POST")
+     */
+    public function deleteConfirmAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $category = $em->getRepository('AppBundle:Category')->find($id);
+
+        $em->remove($category);
+        $em->flush();
+
+        $this->addFlash('message', 'Category was deleted');
+        return $this->redirectToRoute('categories');
     }
 }
