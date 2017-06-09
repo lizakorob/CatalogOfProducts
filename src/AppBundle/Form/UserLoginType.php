@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class UserLoginType extends AbstractType
 {
@@ -15,7 +16,9 @@ class UserLoginType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, array(
-                'label' => 'E-mail или логин'))
+                'label' => 'E-mail или логин',
+                'required' => true,
+                'constraints' => array(new Length(array('min' => 8)))))
             ->add('password', PasswordType::class, array(
                 'label' => 'Пароль'))
         ;

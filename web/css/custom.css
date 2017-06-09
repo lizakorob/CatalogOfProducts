@@ -44,6 +44,7 @@ body {
 
 .modal-header {
     /*color: white;*/
+    height: 45px;
     text-align: center;
     background-color: #dab3ff;
 }
@@ -63,8 +64,6 @@ label {
 }
 
 .icon-bar a {
-    /*float: left;*/
-    /*display: inline;*/
     margin-top: 8px;
     width: 20%;
     height: 30%;
@@ -88,7 +87,11 @@ label {
 }
 
 .register {
-    height: 360px;
+    height: 420px;
+}
+
+.forgotPassword {
+    height: 100px;
 }
 
 #addRegisterBtn {
@@ -101,7 +104,6 @@ label {
     flex-direction: column;
     margin-bottom: 10px;
     height: auto;
-
 }
 
 .register div {
@@ -111,5 +113,17 @@ label {
     margin-bottom: 10px;
 }
 
+.forgotPassword div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
 
+#user_registration_firstName #user_registration_surname {
+    display: inline;
+}
 
+#searchField {
+    width: 300px;
+}
