@@ -43,6 +43,11 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
+     * @ORM\Column(name="salt", type="string", length=150)
+     */
+    private $salt;
+
+    /**
      * @Assert\NotBlank()
      * @Assert\Email(
      *     message="The email '{{ value }}' is not a valid email."
@@ -89,15 +94,9 @@ class User implements UserInterface, \Serializable
 
     public function __construct()
     {
-        /*$this->firstName = $firstName;
-        $this->surname = $surname;
-        $this->username = $username;
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
-        $this->email = $email;*/
         $this->role = 'ROLE_USER';
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid(null, true));
+        $this->salt = md5(uniqid(null, true));
     }
 
     public function getUsername()
@@ -107,9 +106,7 @@ class User implements UserInterface, \Serializable
 
     public function getSalt()
     {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
+        return $this->salt;
     }
 
     public function getPassword()
