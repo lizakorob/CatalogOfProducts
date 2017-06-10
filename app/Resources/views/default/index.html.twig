@@ -2,84 +2,21 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ 'js/validation.js' }}"></script>
+    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>#}
     <script>
         let openSearch = false;
 
-        function loginValidate() {
-            let emailItem = document.getElementById('user_login_email').value;
-            let passwordItem = document.getElementById('user_login_password').value;
-            if (!emailValidate(emailItem)) {
-                showMessage('loginError', 'Поле E-mail заполнено некорректно');
-                //document.getElementById('user_login_email').classList.add("has-error");
-                return false;
+        $(document).ready(function(){
+            getCategories();
+        });
+
+        class Category {
+            constructor(id, name, parentId) {
+                this.id = id;
+                this.name = name;
+                this.parentId = parentId;
             }
-            else if (!passwordValidate(passwordItem)) {
-                showMessage('loginError', 'Пароль должен быть длиной от 8 до 64 символов');
-                return false;
-            }
-        }
-
-        function registrationValidate() {
-            let nameItem = document.getElementById('user_registration_firstName').value;
-            let surnameItem = document.getElementById('user_registration_surname').value;
-            let usernameItem = document.getElementById('user_registration_username').value;
-            let emailItem = document.getElementById('user_registration_email').value;
-            let passwordItem = document.getElementById('user_registration_password_first').value;
-            let confirmPasswordItem = document.getElementById('user_registration_password_second').value;
-
-            if (!nameValidate(nameItem)) {
-                showMessage('registrationError', 'Имя должно быть длиной от 1 до 15 символов');
-                return false;
-            }
-            else if (!surnameValidate(surnameItem)) {
-                showMessage('registrationError', 'Фамилия должна быть длиной от 1 до 20 символов');
-                return false;
-            }
-            else if (!usernameValidate(usernameItem)) {
-                showMessage('registrationError', 'Логин должен быть длиной от 3 до 16 символов');
-                return false;
-            }
-            else if(!emailValidate(emailItem)) {
-                showMessage('registrationError', 'Поле E-mail заполнено некорректно');
-                return false;
-            }
-            else if (!passwordValidate(passwordItem)) {
-                showMessage('registrationError', 'Пароль должен быть длиной от 8 до 64 символов');
-                return false;
-            }
-            else if (!checkConfirmPassword(passwordItem, confirmPasswordItem)) {
-                showMessage('registrationError', 'Введенные пароли не совпадают');
-                return false;
-            }
-        }
-
-        function emailValidate(emailItem) {
-            const emailPattern = /^[a-z0-9_-]+@[a-z0-9-]+\.([a-z]{1,6}\.)?[a-z]{2,6}$/i;
-            return emailItem.match(emailPattern);
-        }
-
-        function passwordValidate(passwordItem) {
-            return !(passwordItem.length <= 8 || passwordItem.length >= 64);
-        }
-
-        function nameValidate(nameItem) {
-            return !(nameItem.length <= 1 || nameItem.length >= 15);
-        }
-
-        function surnameValidate(surnameItem) {
-            return !(surnameItem.length <= 1 || surnameItem.length >= 20);
-        }
-
-        function usernameValidate(usernameItem) {
-            return !(usernameItem.length <= 3 || usernameItem.length >= 16);
-        }
-
-        function checkConfirmPassword(passwordItem, confirmPasswordItem) {
-            return passwordItem === confirmPasswordItem;
-        }
-
-        function showMessage(idFormError, message) {
-            document.getElementById(idFormError).innerHTML = message;
         }
 
         function openSearchForm() {
@@ -93,9 +30,41 @@
                 openSearch = false;
             }
         }
+
+        let categories = [new Category(1, 'Конфеты', null) , new Category(2, 'Печенье', null),
+            new Category(3, 'Подарки', null), new Category(4, 'Шоколадные', 1)];
+        function getCategories() {
+            $.ajax({
+                type: "GET",
+//                url: "getCategories",
+                dataType: 'json',
+                success: function(msg) {
+                    msg.forEach(function(item) {
+//                        let note = new Note(item.idDiv, item.text, item.width, item.height, item.x, item.y, item.color);
+//                        userNotes.push(note);
+
+                    });
+                }
+            });
+        }
+
+        $('ul.nav li.dropdown').hover(function() {
+            console.log("dd");
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function() {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+
     </script>
 {% endblock %}
 {% block header %}
+    {% for flash_message in app.session.flashbag.get('message') %}
+        {{ flash_message }}
+    {% endfor %}
+
+    {#{% if error %}#}
+        {#<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+    {#{% endif %}#}
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid ">
             <div class="navbar-header col-xs-4 col-sm-2">
@@ -139,13 +108,14 @@
                     <h4 class="modal-title" id="myModalLabel">Вход</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col-sm-offset-2 col-sm-8 error">
-                        <span id="loginError"></span>
-                    </div>
+
                     {{ form_start(loginForm, { 'attr': {'class': 'login',
                         'onsubmit': "return loginValidate()"},
                         'action': path('login'), 'method': 'POST'} ) }}
                     <div class="col-sm-offset-2 col-sm-8">
+                        <div class="error">
+                            <span id="loginError"></span>
+                        </div>
                          {{ form_widget(loginForm) }}
                          <div style="display: inline">
                              <input type="submit" value="Войти" class="btn btn-default col-xs-12 col-sm-6"
@@ -169,12 +139,12 @@
                     <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="error">
-                        <span id="registrationError">tr</span>
-                    </div>
                     {{ form_start(registerForm, { 'attr': {'class': 'register',
                         'onsubmit': "return registrationValidate()"} }) }}
                         <div class="col-sm-offset-2 col-sm-8">
+                            <div class="error">
+                                <span id="registrationError"></span>
+                            </div>
                             {{ form_widget(registerForm) }}
                             <input type="submit" value="Зарегистрироваться" class="btn btn-default" />
                         </div>
@@ -191,17 +161,22 @@
                     <h4 class="modal-title" id="myModalLabel">Восстановление пароля</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="error">
-                        <span>tr</span>
-                    </div>
                     {{ form_start(forgotPasswordForm, { 'attr': {'class': 'forgotPassword' } }) }}
                     <div class="col-sm-offset-2 col-sm-8">
+                        <div class="error">
+                            <span id="emailForgotError"></span>
+                        </div>
                         {{ form_widget(forgotPasswordForm) }}
                     </div>
                     {{ form_end(forgotPasswordForm) }}
                 </div>
             </div>
         </div>
+    </div>
+{% endblock %}
+{% block nav %}
+    <div class="mainMenu">
+        {{ knp_menu_render('main') }}
     </div>
 {% endblock %}
 

@@ -34,3 +34,11 @@ services:
         public: true
         arguments:
             - '@doctrine'
+
+    app.menu_builder:
+        class: AppBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+        public: true
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }

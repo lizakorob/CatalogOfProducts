@@ -10,7 +10,7 @@ body {
 
 .navbar {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    background:  #e6ccff;
+    background:  #f59ca0;
     border: none;
     /*border-color: inherit;*/
 }
@@ -26,12 +26,13 @@ body {
     -webkit-border-radius: 0px !important;
     -moz-border-radius: 0px !important;
     border-radius: 0px !important;
+    background-color: #fffff5;
 }
 
 .btn.btn-default {
     border-radius: 0;
-    color: white;
-    background-color: #ce99ff;
+    color: #fff2d8;
+    background-color: #f3848d;
     height: 35px;
     border: none;
     text-shadow: none;
@@ -54,7 +55,7 @@ form input {
     /*color: white;*/
     height: 45px;
     text-align: center;
-    background-color: #dab3ff;
+    background-color: #f3848d;
 }
 
 label {
@@ -80,26 +81,30 @@ label {
     transition: all 0.3s ease;
     font-size: 20px;
     background-color: #777777;
+    color: #f3848d;
 }
 
 .icon-bar a:hover {
     background-color: #bcb8ff;
 }
 
-.active {
-    background-color: #9ea1ff !important;
-}
+/*.active {*/
+    /*background-color: #9ea1ff !important;*/
+/*}*/
 
 .login{
-    height: 190px;
+    /*height: 190px;*/
+    overflow: hidden;
 }
 
 .register {
-    height: 440px;
+    /*height: 440px;*/
+    overflow: hidden;
 }
 
 .forgotPassword {
-    height: 100px;
+    /*height: 100px;*/
+    overflow: hidden;
 }
 
 .login div {
@@ -124,19 +129,56 @@ label {
     margin-bottom: 10px;
 }
 
-#user_registration_firstName #user_registration_surname {
-    display: inline;
-}
-
-#searchField {
-    width: 300px;
-}
 
 .error {
-    color: #d94cff;
+    color: #f3848d;
     font-size: 14px;
 }
 
 .navbar-form {
     border:none;
 }
+
+.mainMenu {
+    padding-top: 15px;
+    margin-top:  -20px;
+    padding-bottom: 15px;
+    width: auto;
+    height: auto;
+    background-color: #ffecde;
+    /*overflow: hidden;*/
+    /*height: 100px;*/
+}
+
+.mainMenu li {
+    display: inline-block;
+    float: left;
+    padding-left: 5%;
+    font-size: 14px;
+    font-family: tahoma,arial,sans-serif;
+}
+
+li a {
+    color: #bb646d;
+}
+
+a:hover {
+    color: #f59ca0;
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    border-radius: 0;
+    /*color: #bb646d;*/
+    background-color: #ffecde;
+    border: none;
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: inherit;
+    background-image: none;
+    text-decoration: underline;
+}
+
+
+
