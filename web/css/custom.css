@@ -1,6 +1,7 @@
 body {
     font-family: 'Roboto, sans-serif', sans-serif;
     margin: 0;
+    height: 100%;
 }
 
 .header {
@@ -31,7 +32,7 @@ body {
 
 .btn.btn-default {
     border-radius: 0;
-    color: #fff2d8;
+    color: #f6fff4;
     background-color: #f3848d;
     height: 35px;
     border: none;
@@ -129,7 +130,6 @@ label {
     margin-bottom: 10px;
 }
 
-
 .error {
     color: #f3848d;
     font-size: 14px;
@@ -142,10 +142,10 @@ label {
 .mainMenu {
     padding-top: 15px;
     margin-top:  -20px;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
     width: auto;
     height: auto;
-    background-color: #ffecde;
+    background-color: #fff4e6;
     /*overflow: hidden;*/
     /*height: 100px;*/
 }
@@ -177,7 +177,36 @@ a:hover {
 .dropdown-menu > li > a:hover {
     background-color: inherit;
     background-image: none;
+    color: #bb646d;
     text-decoration: underline;
+}
+
+.needLogin {
+    /*display: inline;*/
+    min-width: 100%;
+    min-height: 100%;
+    position: relative;
+    font-size: 60px;
+    color: #bb646d;
+    /*text-align: center;*/
+    /*background-color: #fffdf5;*/
+    font-family: tahoma,arial,sans-serif;
+    /*overflow: auto;*/
+}
+
+.needLogin img {
+    position: absolute;
+    float:right;
+    top: 20px;
+    /*left: 0;*/
+}
+
+li {
+    list-style-type: none;
+}
+
+li.first.last ul {
+    margin-left: -20px;
 }
 
 

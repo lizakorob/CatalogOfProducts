@@ -24,7 +24,7 @@ class HomeController extends Controller
         $loginForm = $this->createForm(UserLoginType::class, $user);
         $registerForm = $this->createForm(UserRegistrationType::class, $user);
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
-        return $this->render('default/index.html.twig', array(
+        return $this->render('security/index.html.twig', array(
 //            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'loginForm' => $loginForm->createView(), 'registerForm' => $registerForm->createView(),
             'forgotPasswordForm' => $forgotPasswordForm->createView(),

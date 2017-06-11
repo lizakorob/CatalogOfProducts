@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\ForgotPasswordType;
 use AppBundle\Form\ResetType;
+use AppBundle\Form\UserLoginType;
+use AppBundle\Form\UserRegistrationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

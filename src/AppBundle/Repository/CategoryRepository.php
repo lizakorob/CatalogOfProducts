@@ -10,4 +10,13 @@ namespace AppBundle\Repository;
  */
 class CategoryRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function isExist(array $options, $id): bool
+    {
+        $em = $this->getEntityManager();
+        $categoryByName = $em->getRepository('AppBundle:Category')->findOneBy($options);
+        if ($categoryByName->getId() != $id) {
+            return false;
+        }
+        return true;
+    }
 }
