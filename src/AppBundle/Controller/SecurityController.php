@@ -24,10 +24,16 @@ class SecurityController extends Controller
         }
         $error = $authUtils->getLastAuthenticationError();
         $lastUsername = $authUtils->getLastUsername();
+//        $loginForm = $this->createForm(UserLoginType::class);
+//        $registerForm = $this->createForm(UserRegistrationType::class);
+//        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
         return $this->render('security/login.html.twig', array(
             'last_username' => $lastUsername,
             'error'         => $error,
-        ));
+//            'loginForm' => $loginForm->createView(),
+//            'registerForm' => $registerForm->createView(),
+//            'forgotPasswordForm' => $forgotPasswordForm->createView(),
+    ));
     }
     /**
      * @Route("/forgot_password", name="forgot_password")
@@ -70,6 +76,7 @@ class SecurityController extends Controller
         }
         $form = $this->createForm(ResetType::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted()) {
             $result = $this->get('reset_password')->resetPassword($form, $hash);
             if (!$result) {
