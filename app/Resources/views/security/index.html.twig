@@ -19,7 +19,9 @@
         }
 
         $(document).ready(function() {
-            $('li.dropdown').hover(function () {
+            $('li.dropdown').hover(function (e) {
+//                e.stopPropagation();
+                //e.preventDefault();
                 $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(200);
             }, function () {
                 $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
@@ -45,7 +47,6 @@
                 })
             });
         });
-
     </script>
 {% endblock %}
 {% block header %}
@@ -95,7 +96,90 @@
 {% endblock %}
 
 {% block body %}
-    {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
+
+    {#<div class="col-md-1 hidden-xs hidden-sm">#}
+        {#{{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}#}
+    {#</div>#}
+    {#{{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}#}
+
+    {#<div class="col-md-offset-1 col-md-9">#}
+        {#<ol class="breadcrumb">#}
+            {#<li><a href="#">Home</a></li>#}
+            {#<li><a href="#">Library</a></li>#}
+            {#<li class="active">Data</li>#}
+        {#</ol>#}
+
+        {#<h3 style="margin-top: 0"> Категория </h3>#}
+        {#<div id="catalog_sorter" class="sort" data-current="popular">#}
+            {#<span>Сортировать по:</span>#}
+            {#</a> |#}
+            {#<a id="price" data-value="price" href="#">#}
+                {#<span>цене</span>#}
+            {#</a> |#}
+            {#<a id="sale" data-value="sale" href="#">#}
+                {#<span>названию</span>#}
+            {#</a>#}
+        {#</div>#}
+        {#<div class="pager">#}
+            {#<div class="pageToInsert" data-current="1" data-show-prefix="True">#}
+            {#<span class="total many">#}
+                {#Товаров:#}
+                    {#<span>767</span>#}
+            {#</span>#}
+                {#<span class="active">1</span>#}
+                {#<a href="#">2</a>#}
+                {#<span>...</span>#}
+                {#<a href="#">755</a>#}
+                {#<a class="next" href="#">→</a>#}
+            {#</div>#}
+            {#<div class="count">#}
+                {#<!--noindex-->#}
+                {#<div class="pageSizer">#}
+                    {#<span>Показывать по:</span>#}
+                    {#<a class="pagesize_10" href="#">10</a>#}
+                    {#<a class="active pagesize_20" href="#">20</a>#}
+                    {#<a class="pagesize_30" href="#">30</a>#}
+                {#</div>#}
+                {#<!--/noindex-->#}
+            {#</div>#}
+        {#</div>#}
+        {#<div class="product col-xs-12 col-md-3">#}
+            {#<div>#}
+                {#<img src="{{ asset('https://vk.com/images/gifts/256/312.jpg') }}" />#}
+            {#</div>#}
+            {#<strong>Конфета №123</strong><br>#}
+            {#<span>10 р.</span><br>#}
+        {#</div>#}
+        {#<div class="product col-xs-12 col-md-3">#}
+            {#<div>#}
+                {#<img src="{{ asset('https://vk.com/images/gift/-147/256.jpg') }}" />#}
+            {#</div>#}
+            {#<strong>Антон №Волк</strong><br>#}
+            {#<span>10 р.</span><br>#}
+        {#</div>#}
+        {#<div class="product col-xs-12 col-md-3">#}
+            {#<div>#}
+                {#<img src="{{ asset('https://vk.com/images/gift/-149/256.jpg') }}" />#}
+            {#</div>#}
+            {#<strong>Подарки №123</strong><br>#}
+            {#<span>10 р.</span><br>#}
+        {#</div>#}
+        {#<div class="product col-xs-12 col-md-3">#}
+            {#<div>#}
+                {#<img src="{{ asset('https://vk.com/images/gift/873/256.jpg') }}" />#}
+            {#</div>#}
+            {#<strong>Подарки №123</strong><br>#}
+            {#<span>10 р.</span>#}
+        {#</div>#}
+        {#<div class="product col-xs-12 col-md-3">#}
+            {#<div>#}
+                {#<img src="{{ asset('https://vk.com/images/gift/805/256.jpg') }}" />#}
+            {#</div>#}
+            {#<strong>Подарки №123</strong><br>#}
+            {#<span>10 р.</span>#}
+        {#</div>#}
+        {#<h1>{{ category.name }}</h1>#}
+    {#</div>#}
 {% endblock %}
 
 

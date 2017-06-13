@@ -233,5 +233,14 @@ li.first.last ul {
     /*margin-left: -20px;*/
 }
 
+ol.breadcrumb {
+    display: inline-block;
+    background: white;
+    padding: 0;
+}
 
+.product:hover {
+    z-index: 1;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
 
