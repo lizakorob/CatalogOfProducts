@@ -19,15 +19,17 @@
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('candy.ico') }}" />
     </head>
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    <nav>
-        {% block nav %}{% endblock %}
-    </nav>
     <body>
+        <header>
+            {% block header %}{% endblock %}
+            {#<nav>#}
+            {#{% block nav %}{% endblock %}#}
+            {#</nav>#}
+        </header>
         {% block sidebar %} {% endblock %}
-        {% block body %}  {% endblock %}
+        <content>
+            {% block body %}  {% endblock %}
+        </content>
     </body>
 
 </html>

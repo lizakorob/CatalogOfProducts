@@ -4,21 +4,6 @@
 {% block javascripts %}
     {#{{ parent() }}#}
     <script src="{{ 'js/validation.js' }}"></script>
-    <script>
-        let openSearch = false;
-        function openSearchForm() {
-            if (!openSearch) {
-                document.getElementById('searchForm').classList.remove("hidden-xs");
-                document.getElementById('searchForm').classList.remove("hidden-sm");
-                openSearch = true;
-            } else {
-                document.getElementById('searchForm').classList.add("hidden-xs");
-                document.getElementById('searchForm').classList.add("hidden-sm");
-                openSearch = false;
-            }
-        }
-
-    </script>
 {% endblock %}
 {% block header %}
     <nav class="navbar navbar-default" role="navigation">
@@ -42,8 +27,8 @@
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Ищу...">
                     <span class="input-group-btn">
-                                <button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
-                            </span>
+                        <button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+                    </span>
                 </div>
             </form>
             <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
