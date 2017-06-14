@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class RegisterService
@@ -16,23 +15,10 @@ class RegisterService
         $this->registry = $registry;
     }
 
-    public function register(Form $form, Request $request)
+    public function register(Form $form)
     {
         $user = $form->getData();
         $password = $user->getPassword();
-        $confirmPassword = $request->request->get('_confirmPassword');
-
-        if ($confirmPassword != $password) {
-            return 'Confirm password do not match.';
-        }
-
-        if ($this->IsRegisterEmail($user->getEmail())) {
-            return 'Email is already used.';
-        }
-
-        if ($this->IsRegisterLogin($user->getUsername())) {
-            return 'Username is already used.';
-        }
 
         $encoder = new BCryptPasswordEncoder(12);
         $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
@@ -40,11 +26,9 @@ class RegisterService
         $em = $this->registry->getEntityManager();
         $em->persist($user);
         $em->flush();
-
-        return null;
     }
 
-    private function IsRegisterLogin(string $username): bool
+    public function IsRegisterLogin(string $username): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(
@@ -58,7 +42,7 @@ class RegisterService
         return false;
     }
 
-    private function IsRegisterEmail(string $email): bool
+    public function IsRegisterEmail(string $email): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(

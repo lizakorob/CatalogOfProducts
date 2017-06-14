@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/validation.js') }}"></script>
+    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>#}
+    <script>
+        $(document).ready(function() {
+            $('li.dropdown').hover(function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(200);
+            }, function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block header %}
+    {% include ':menu:header.html.twig' %}
+{% endblock %}
+{% block nav %}
+    <div class="mainMenu">
+        {#{{ knp_menu_render('main', {'currentClass': 'active'}) }}#}
+    </div>
+{% endblock %}
+{% block body %}
+    {#{{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}#}
+{% endblock %}
+
+
+
+

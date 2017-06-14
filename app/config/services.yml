@@ -29,6 +29,12 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    login_service:
+        class: AppBundle\Service\LoginService
+        public: true
+        arguments:
+            - '@doctrine'
+
     register_service:
         class: AppBundle\Service\RegisterService
         public: true
