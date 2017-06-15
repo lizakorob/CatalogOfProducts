@@ -17,13 +17,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class CategoryController
  * @package AppBundle\Controller
  * @Route("/categories")
- * @Security("has_role('ROLE_MODERATOR')")
  */
 class CategoryController extends Controller
 {
     /**
      * @Route("/", name="categories")
      * @return Response
+     * @Security("has_role('ROLE_USER')")
      */
     public function indexAction()
     {
@@ -39,6 +39,7 @@ class CategoryController extends Controller
      * @param Request $request
      * @return RedirectResponse|Response
      * @Route("/create", name="create_category")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function createAction(Request $request)
     {
@@ -70,6 +71,7 @@ class CategoryController extends Controller
      *     defaults={"id" = 1},
      *     name="category_by_id")
      * @return Response
+     * @Security("has_role('ROLE_USER')")
      */
     public function infoAction($id)
     {
@@ -94,6 +96,7 @@ class CategoryController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1},
      *     name="category_edit_id")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function editAction(Request $request, $id)
     {
@@ -134,6 +137,7 @@ class CategoryController extends Controller
      *     defaults={"id" = 1},
      *     name="categories_delete_id")
      * @Method("GET")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function deleteAction($id)
     {
@@ -156,6 +160,7 @@ class CategoryController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1})
      * @Method("POST")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function deleteConfirmAction($id)
     {

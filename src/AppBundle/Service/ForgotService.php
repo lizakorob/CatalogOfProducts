@@ -17,19 +17,10 @@ class ForgotService
         $this->mailer = $mailer;
     }
 
-    public function sendResetPasswordEmail(Form $form): bool
+    public function sendResetPasswordEmail(Form $form)
     {
         $email = $form->get('email')->getData();
         $em = $this->registry->getEntityManager();
-
-        $user = $em->getRepository('AppBundle:User')
-            ->findOneBy(array(
-                'email' => $email,
-            ));
-
-        if (is_null($user)) {
-            return false;
-        }
 
         $userReset = $em->getRepository('AppBundle:ForgotPassword')
             ->findOneBy(array(
@@ -42,8 +33,6 @@ class ForgotService
 
         $hash = md5(uniqid(null, true));
         $this->sendMessage($email, $hash);
-
-        return true;
     }
 
     private function sendMessage(string $email, string $hash)
@@ -69,5 +58,21 @@ class ForgotService
         $em = $this->registry->getEntityManager();
         $em->persist($forgotPassword);
         $em->flush();
+    }
+
+    public function IsRegisterEmail(string $email): bool
+    {
+        $em = $this->registry->getEntityManager();
+
+        $user = $em->getRepository('AppBundle:User')
+            ->findOneBy(array(
+                'email' => $email,
+            ));
+
+        if (is_null($user)) {
+            return false;
+        }
+
+        return true;
     }
 }

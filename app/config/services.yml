@@ -66,6 +66,14 @@ services:
         arguments:
             - '@doctrine'
 
+    app.menu_builder:
+            class: AppBundle\Menu\MenuBuilder
+            arguments: ["@knp_menu.factory"]
+            public: true
+            tags:
+                - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+                - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
+
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

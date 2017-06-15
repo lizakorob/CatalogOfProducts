@@ -87,9 +87,7 @@ class MenuBuilder
             if ($category->getParent() == null) {
                 $item = $menu->addChild( $category->getName(), array('route' => 'login'))
 //                    ->setAttribute('class', 'dropdown');
-                    ->setLinkAttribute('data-toggle', 'collapse')
-                    ->setLinkAttribute('data-target', '.'.$category->getUrl())
-                    ->setChildrenAttribute('class', 'collapse '.$category->getUrl());
+                    ->setLinkAttribute('data-toggle', 'collapse');
                 $this->setChildrenItem($item, $array, $category);
             }
         }

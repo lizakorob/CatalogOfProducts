@@ -3,7 +3,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/validation.js') }}"></script>
-    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>#}
     <script>
         $(document).ready(function() {
             $('li.dropdown').hover(function () {
@@ -12,7 +11,6 @@
                 $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
             });
         });
-
     </script>
 {% endblock %}
 {% block header %}
@@ -20,11 +18,16 @@
 {% endblock %}
 {% block nav %}
     <div class="mainMenu">
-        {#{{ knp_menu_render('main', {'currentClass': 'active'}) }}#}
+        {{ knp_menu_render('main', {'currentClass': 'active'}) }}
     </div>
 {% endblock %}
 {% block body %}
-    {#{{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}#}
+    {% for flash_message in app.session.flashbag.get('message') %}
+        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
 {% endblock %}
 
 

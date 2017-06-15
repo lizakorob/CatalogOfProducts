@@ -59,16 +59,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $('#register_user').click(function () {
-            registrationValidate();
-        });
-        $('#login_user').click(function () {
-            loginValidate();
-        });
-    </script>
-
     <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -77,16 +67,33 @@
                     <h4 class="modal-title" id="myModalLabel">Восстановление пароля</h4>
                 </div>
                 <div class="modal-body">
-                    {{ form_start(forgotPasswordForm, { 'attr': {'class': 'forgotPassword' } }) }}
+                    {{ form_start(forgotPasswordForm, { 'attr': {
+                        'class': 'forgotPassword' },
+                        'action': path('forgot_password'),
+                        'method': 'POST'
+                    }) }}
                     <div class="col-sm-offset-2 col-sm-8">
                         <div class="error">
                             <span id="emailForgotError"></span>
                         </div>
                         {{ form_widget(forgotPasswordForm) }}
+                        <input type="button" id="send_email" value="Отправить" class="btn btn-default" />
                     </div>
                     {{ form_end(forgotPasswordForm) }}
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $('#register_user').click(function () {
+            registrationValidate();
+        });
+        $('#login_user').click(function () {
+            loginValidate();
+        });
+        $('#send_email').click(function () {
+            forgotValidate();
+        });
+    </script>
 {% endblock %}
