@@ -12,8 +12,8 @@ class ForgotType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class)
-            ->add('Send', SubmitType::class)
+            ->add('email', EmailType::class, array(
+                'label' => 'Электронная почта' ))
         ;
     }
 }

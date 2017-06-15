@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/validation.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('li.dropdown').hover(function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(200);
+            }, function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
+            });
+        });
+    </script>
+{% endblock %}
+{% block header %}
+    {% include ':menu:header.html.twig' %}
+{% endblock %}
+{% block nav %}
+    <div class="mainMenu">
+        {{ knp_menu_render('main', {'currentClass': 'active'}) }}
+    </div>
+{% endblock %}
+{% block body %}
+    {% for flash_message in app.session.flashbag.get('message') %}
+        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
+{% endblock %}
+
+
+
+

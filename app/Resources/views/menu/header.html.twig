@@ -1,0 +1,58 @@
+{#{% extends ':security:index.html.twig' %}#}
+{#{% extends ':security:unauthorized.html.twig' %}#}
+
+{% block javascripts %}
+    {#{{ parent() }}#}
+    <script src="{{ asset('bundles/app/js/validation.js') }}"></script>
+    <script>
+        var openSearch = false;
+        function openSearchForm() {
+            if (!openSearch) {
+                document.getElementById('searchForm').classList.remove("hidden-xs");
+                document.getElementById('searchForm').classList.remove("hidden-sm");
+                openSearch = true;
+            } else {
+                document.getElementById('searchForm').classList.add("hidden-xs");
+                document.getElementById('searchForm').classList.add("hidden-sm");
+                openSearch = false;
+            }
+        }
+
+    </script>
+{% endblock %}
+{% block header %}
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid ">
+            <div class="navbar-header col-xs-4 col-sm-2">
+                <a class="navbar-brand" href="/">Brand</a>
+            </div>
+            <div class="icon-bar hidden-sm hidden-md hidden-lg">
+                <a class="active" href="#" onclick="openSearchForm()">
+                    <i class="glyphicon glyphicon-search col-xs-4"></i>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#loginModal">
+                    <i class="glyphicon glyphicon-log-in col-xs-4"></i>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#registrationModal">
+                    <i class="glyphicon glyphicon-pencil col-xs-4"></i>
+                </a>
+            </div>
+            <form class="navbar-form navbar-left col-sm-12 hidden-xs" id="searchForm" role="search"
+                  onsubmit="alert('submit!');return false;">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Ищу...">
+                    <span class="input-group-btn">
+                                <button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+                            </span>
+                </div>
+            </form>
+            <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
+                {% if is_granted("ROLE_USER") %}
+                    Hi {{ app.user.username }}
+                {% else %}
+                    {% include ':security:unauthorized.html.twig' %}
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+{% endblock %}

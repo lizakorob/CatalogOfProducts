@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\ForgotType;
 use AppBundle\Form\ResetType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends Controller
@@ -16,24 +19,45 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request, AuthenticationUtils $authUtils)
     {
-        $authenticationUtils = $this->get('security.authorization_checker');
-        if ($authenticationUtils->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('homepage');
+        $authUtils->getLastAuthenticationError();
+
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/sign", name="sign")
+     * @Method({"POST"})
+     */
+    public function signAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $username = $request->request->get('username');
+            $password = $request->request->get('password');
+
+            $flag = $this->get('login_service')->IsUser($username, $password);
+
+            if (!$flag) {
+                return new JsonResponse(array(
+                    'status' => '400',
+                    'message' => 'Некорректный логин или пароль'
+                ));
+            }
+
+            return new JsonResponse(array(
+                'status' => '200',
+                'message' => ''
+            ));
         }
-
-        $error = $authUtils->getLastAuthenticationError();
-
-        $lastUsername = $authUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig', array(
-            'last_username' => $lastUsername,
-            'error'         => $error,
-        ));
     }
 
 
     /**
+     * @param Request $request
+     * @return JsonResponse | Response
      * @Route("/forgot_password", name="forgot_password")
+     * @Method({"POST"})
      */
     public function forgotPasswordAction(Request $request)
     {
@@ -42,24 +66,29 @@ class SecurityController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
+        if ($request->isXmlHttpRequest()) {
+            $email = $request->request->get('email');
+
+            if(!$this->get('forgot_password')->IsRegisterEmail($email)) {
+                return new JsonResponse(array(
+                    'status' => '400',
+                    'message' => 'Пользователь с таким e-mail не найден'
+                ));
+            }
+
+            return new JsonResponse(array(
+                'status' => '200',
+                'message' => ''
+            ));
+        }
+
         $form = $this->createForm(ForgotType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $result = $this->get('forgot_password')->sendResetPasswordEmail($form);
+        $this->get('forgot_password')->sendResetPasswordEmail($form);
 
-            if (!$result) {
-                $this->addFlash('message', 'User with this email not found!');
-                return $this->redirectToRoute('forgot_password');
-            }
-
-            $this->addFlash('message', 'Message with instructions was send to your email!');
-            return $this->redirectToRoute('login');
-        }
-
-        return $this->render('security/forgot_password.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        $this->addFlash('message', 'Письмо с инструкцией по восстановлению пароля отправлено на ваш e-mail');
+        return $this->redirectToRoute('homepage');
     }
 
     /**

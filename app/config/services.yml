@@ -29,6 +29,12 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    login_service:
+        class: AppBundle\Service\LoginService
+        public: true
+        arguments:
+            - '@doctrine'
+
     register_service:
         class: AppBundle\Service\RegisterService
         public: true
@@ -59,6 +65,14 @@ services:
         public: true
         arguments:
             - '@doctrine'
+
+    app.menu_builder:
+            class: AppBundle\Menu\MenuBuilder
+            arguments: ["@knp_menu.factory"]
+            public: true
+            tags:
+                - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+                - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:

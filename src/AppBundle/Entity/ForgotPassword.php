@@ -39,7 +39,7 @@ class ForgotPassword
     /**
      * @var string
      *
-     * @ORM\Column(name="create_date", type="date")
+     * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
 
