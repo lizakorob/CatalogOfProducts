@@ -1,16 +1,7 @@
 function loginValidate() {
-    let emailItem = document.getElementById('user_login_email').value;
-    let passwordItem = document.getElementById('user_login_password').value;
-    if (!emailValidate(emailItem)) {
-        showMessage('loginError', 'Поле E-mail заполнено некорректно');
-        setErrorState('user_login_email');
-        return false;
-    }
-    else if (!passwordValidate(passwordItem)) {
-        showMessage('loginError', 'Пароль должен быть длиной от 8 до 64 символов');
-        setErrorState('user_login_password');
-        return false;
-    }
+    var usernameItem = document.getElementById('username').value;
+    var passwordItem = document.getElementById('password').value;
+    isRegisterUser(usernameItem, passwordItem);
 }
 
 function registrationValidate() {
@@ -51,6 +42,7 @@ function registrationValidate() {
         setErrorState('user_registration_password_second');
         return false;
     }
+    isRegisterData(usernameItem, emailItem);
 }
 
 function emailValidate(emailItem) {
@@ -85,4 +77,45 @@ function showMessage(idFormError, message) {
 function setErrorState(idItem) {
     document.getElementById(idItem).classList.add("form-control");
     document.getElementById(idItem).parentNode.classList.add("has-error");
+}
+
+function isRegisterData($username, $email) {
+    $.ajax({
+        type: 'POST',
+        url: '/register',
+        data: {
+            'username': $username,
+            'email': $email
+        },
+        success: function (data) {
+            if(data['status'] === '200') {
+                var password = $('#register_password_first').val();
+                $("form[name='register']").submit();
+                $('#username').val($username);
+                $('#password').val(password);
+                $("form[name='login']").submit();
+            } else {
+                showMessage('registrationError', data['message']);
+            }
+        }
+    });
+}
+
+function isRegisterUser($username, $password) {
+    $.ajax({
+        type: 'POST',
+        url: '/sign',
+        data: {
+            'username': $username,
+            'password': $password
+        },
+        success: function (data) {
+            if (data['status'] === '200') {
+                $("form[name='login']").submit();
+            } else {
+                showMessage('loginError', data['message']);
+                $('#password').val('');
+            }
+        }
+    });
 }

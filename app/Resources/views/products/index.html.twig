@@ -4,8 +4,14 @@
     {{ parent() }}
 {% endblock %}
 {% block body %}
-    <div class="col-md-offset-2 col-md-8" style="margin-top: 3%">
-        <div class="col-md-4" style="background-color: #1ab7ea;">
+    <div class="return col-xs-12 col-md-2">
+        <a href="#">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            <span class="hidden-xs hidden-sm">Вернуться к каталогу</span>
+        </a>
+    </div>
+    <div class="col-md-8" style="margin-top: 3%">
+        <div class="col-md-4">
             <img src="{{ asset('https://vk.com/images/gifts/256/312.jpg') }}" />
         </div>
         <div class="col-md-offset-1 col-md-4">

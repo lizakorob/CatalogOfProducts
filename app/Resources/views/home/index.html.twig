@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ 'js/validation.js' }}"></script>
+    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>#}
+    <script>
+        let openSearch = false;
+        function openSearchForm() {
+            if (!openSearch) {
+                document.getElementById('searchForm').classList.remove("hidden-xs");
+                document.getElementById('searchForm').classList.remove("hidden-sm");
+                openSearch = true;
+            } else {
+                document.getElementById('searchForm').classList.add("hidden-xs");
+                document.getElementById('searchForm').classList.add("hidden-sm");
+                openSearch = false;
+            }
+        }
+        $(document).ready(function() {
+            $('li.dropdown').hover(function (e) {
+//                e.stopPropagation();
+                //e.preventDefault();
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(200);
+            }, function () {
+                $(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(200);
+            });
+        });
+    </script>
+{% endblock %}
+{% block header %}
+    {% include ':menu:header.html.twig' %}
+    {% if not is_granted("USER_ROLE") %}
+        {% include ':security:securityModals.html.twig' %}
+    {% endif %}
+    {% block nav %}
+        {{ knp_menu_render('main', {'currentClass': 'active'}) }}
+    {% endblock %}
+{% endblock %}
+{% block body %}
+{% endblock %}

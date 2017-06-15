@@ -6,8 +6,10 @@ use AppBundle\Form\ForgotPasswordType;
 use AppBundle\Form\ResetType;
 use AppBundle\Form\UserLoginType;
 use AppBundle\Form\UserRegistrationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -18,22 +20,36 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request, AuthenticationUtils $authUtils)
     {
-        $authenticationUtils = $this->get('security.authorization_checker');
-        if ($authenticationUtils->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('homepage');
+        $authUtils->getLastAuthenticationError();
+        return $this->redirectToRoute('homepage');
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/sign", name="sign")
+     * @Method({"POST"})
+     */
+    public function signAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $username = $request->request->get('username');
+            $password = $request->request->get('password');
+            $flag = $this->get('login_service')->IsUser($username, $password);
+            if (!$flag) {
+                return new JsonResponse(array(
+                    'status' => '400',
+                    'message' => 'Некорректный логин или пароль'
+                ));
+            }
+            return new JsonResponse(array(
+                'status' => '200',
+                'message' => ''
+            ));
         }
-        $error = $authUtils->getLastAuthenticationError();
-        $lastUsername = $authUtils->getLastUsername();
-//        $loginForm = $this->createForm(UserLoginType::class);
-//        $registerForm = $this->createForm(UserRegistrationType::class);
-//        $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
-        return $this->render('security/login.html.twig', array(
-            'last_username' => $lastUsername,
-            'error'         => $error,
-//            'loginForm' => $loginForm->createView(),
-//            'registerForm' => $registerForm->createView(),
-//            'forgotPasswordForm' => $forgotPasswordForm->createView(),
-    ));
+        return new JsonResponse(array(
+            'status' => '400',
+            'message' => 'error'
+        ));
     }
     /**
      * @Route("/forgot_password", name="forgot_password")
@@ -76,7 +92,6 @@ class SecurityController extends Controller
         }
         $form = $this->createForm(ResetType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted()) {
             $result = $this->get('reset_password')->resetPassword($form, $hash);
             if (!$result) {

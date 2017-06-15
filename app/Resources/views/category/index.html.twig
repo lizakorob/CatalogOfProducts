@@ -2,24 +2,32 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $(document).on('mouseenter', '.product', function () {console.log('open');
+                $(this).find(".admin").show();
+            }).on('mouseleave', '.product', function () {
+                $(this).find(".admin").hide();
+            });
+        });
+    </script>
 {% endblock %}
 {% block body %}
     <div class="col-md-1 hidden-xs hidden-sm">
         {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
     </div>
-    {{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}
-
-    <div class="col-md-offset-1 col-md-9">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
-
-        <h3 style="margin-top: 0"> Категория </h3>
+    <div class="col-xs-12 hidden-md hidden-lg">
+        {{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}
+    </div>
+    <div class="col-xs-12 col-md-offset-1 col-md-9">
+        {#<ol class="breadcrumb">#}
+            {#<li><a href="#">Home</a></li>#}
+            {#<li><a href="#">Library</a></li>#}
+            {#<li class="active">Data</li>#}
+        {#</ol>#}
+        <h1> Категория </h1>
         <div id="catalog_sorter" class="sort" data-current="popular">
-            <span>Сортировать по:</span>
-            </a> |
+            <span>Сортировать по:</span>|
             <a id="price" data-value="price" href="#">
                 <span>цене</span>
             </a> |
@@ -50,37 +58,55 @@
                 <!--/noindex-->
             </div>
         </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-                <img src="{{ asset('https://vk.com/images/gifts/256/312.jpg') }}" />
+        <div class="product col-xs-12 col-sm-6 col-md-3">
+            <div class="admin btn-group btn-group-sm" role="group" aria-label="..." style="display: none;">
+                <button type="button" class="btn btn-default " >
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default " >
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
             </div>
+            <img src="{{ asset('https://vk.com/images/gifts/256/312.jpg') }}" />
             <strong>Конфета №123</strong><br>
             <span>10 р.</span><br>
         </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-                <img src="{{ asset('https://vk.com/images/gift/-147/256.jpg') }}" />
+        <div class="product col-xs-12 col-sm-6 col-md-3">
+            <div class="admin btn-group btn-group-sm" role="group" aria-label="..." style="display: none;">
+                <button type="button" class="btn btn-default" onclick="login" >
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default " >
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
             </div>
+            <img src="{{ asset('https://vk.com/images/gift/-147/256.jpg') }}" />
             <strong>Антон №Волк</strong><br>
             <span>10 р.</span><br>
         </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-                <img src="{{ asset('https://vk.com/images/gift/-149/256.jpg') }}" />
+        <div class="product col-xs-12 col-sm-6 col-md-3">
+            <div class="admin btn-group btn-group-sm" role="group" aria-label="..." style="display: none;">
+                <button type="button" class="btn btn-default " >
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default " >
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
             </div>
+            <img src="{{ asset('https://vk.com/images/gift/-149/256.jpg') }}" />
             <strong>Подарки №123</strong><br>
             <span>10 р.</span><br>
         </div>
-        <div class="product col-xs-12 col-md-3">
+        <div class="product col-xs-12 col-sm-6 col-md-3">
             <div>
                 <img src="{{ asset('https://vk.com/images/gift/873/256.jpg') }}" />
             </div>
             <strong>Подарки №123</strong><br>
             <span>10 р.</span>
         </div>
-        <div class="product col-xs-12 col-md-3">
+        <div class="product col-xs-12 col-sm-6 col-md-3">
             <div>
-                <img src="{{ asset('https://vk.com/images/gift/805/256.jpg') }}" />
+                <img src="{{ asset('https://cs14029.userapi.com/c840130/v840130072/8d0a/SN3QMiAa6vs.jpg') }}" />
             </div>
             <strong>Подарки №123</strong><br>
             <span>10 р.</span>
