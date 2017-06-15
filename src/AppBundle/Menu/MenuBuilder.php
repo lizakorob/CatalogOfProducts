@@ -92,14 +92,10 @@ class MenuBuilder
         foreach ($array as $category) {
             if ($category->getParent() == null) {
                 $item = $menu->addChild( $category->getName(), array('route' => 'login'))
-//                    ->setAttribute('class', 'dropdown');
-//                    ->setAttribute('class', 'dropdown')
-//                    ->setLinkAttribute('class', 'dropdown-toggle')
-//                    ->setLinkAttribute('data-toggle', 'dropdown')
                     ->setLinkAttribute('data-toggle', 'collapse')
+                    ->setLinkAttribute('onclick', 'return false;')
                     ->setLinkAttribute('data-target', '.'.$category->getId())
                     ->setChildrenAttribute('class', 'collapse '.$category->getId());
-//                    ->setChildrenAttribute('class', 'dropdown-menu');
                 $this->setChildrenItem($item, $array, $category);
             }
         }
