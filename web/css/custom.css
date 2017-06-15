@@ -270,18 +270,27 @@ img {
     position: absolute;
 }
 
-#edit_product {
-    width: 280px;
-
-    /*width: 400px;*/
+#productImg {
+    margin-top: 2%;
+    height: initial;
 }
 
 #edit_product div {
-    display: flex;
-    justify-content: space-between;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    overflow: hidden;
     margin-bottom: 1%;
+    /*width: inherit;*/
 }
-div textarea {
-    margin-left: 2%;
+
+#edit_product textarea{
+    resize: none;
+    height: 80px;
+}
+
+input[type="checkbox"] {
+    /*position: absolute;*/
+    /*width: 61%;*/
+    /*height: 8%;*/
 }
 

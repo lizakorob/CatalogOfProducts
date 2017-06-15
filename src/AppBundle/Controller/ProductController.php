@@ -14,7 +14,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class ProductController
  * @package AppBundle\Controller
  * @Route("/products")
-// * @Security("has_role('ROLE_MODERATOR')")
  */
 class ProductController extends Controller
 {
@@ -34,6 +33,7 @@ class ProductController extends Controller
      * @param Request $request
      * @return RedirectResponse|Response
      * @Route("/create", name="product_create")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function createAction(Request $request)
     {
@@ -60,6 +60,7 @@ class ProductController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1},
      *     name="product_details")
+     *     @Security("has_role('ROLE_USER')")
      */
     public function detailsAction($id)
     {
@@ -113,6 +114,7 @@ class ProductController extends Controller
      *     defaults={"id" = 1},
      *     name="product_delete")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function deleteAction($id)
     {
@@ -132,6 +134,7 @@ class ProductController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1})
      * @Method({"POST"})
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function deleteConfirmAction($id)
     {

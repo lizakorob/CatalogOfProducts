@@ -28,7 +28,7 @@
                 </div>
             </form>
             <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
-                {% if is_granted("USER_ROLE") %}
+                {% if is_granted("ROLE_USER") %}
                     Hi {{ app.user.username }}
                 {% else %}
                     {% include ':security:unauthorized.html.twig' %}

@@ -1,1 +1,22 @@
-Details about product
+{% extends ':home:index.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <div class="return col-xs-12 col-md-2">
+        <a href="#">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            <span class="hidden-xs hidden-sm">Вернуться к каталогу</span>
+        </a>
+    </div>
+    <div class="col-md-8" style="margin-top: 3%">
+        <div class="col-md-4">
+            <img src="{{ asset('https://vk.com/images/gifts/256/312.jpg') }}" />
+        </div>
+        <div class="col-md-offset-1 col-md-4">
+            <h1>Конфета №123</h1>
+            <span style="font-size: 16px; color: #bb646d">10 р.</span>
+        </div>
+    </div>
+{% endblock %}

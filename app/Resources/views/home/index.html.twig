@@ -30,7 +30,7 @@
 {% endblock %}
 {% block header %}
     {% include ':menu:header.html.twig' %}
-    {% if not is_granted("USER_ROLE") %}
+    {% if not is_granted("ROLE_USER") %}
         {% include ':security:securityModals.html.twig' %}
     {% endif %}
     {% block nav %}

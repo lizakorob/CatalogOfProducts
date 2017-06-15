@@ -1,1 +1,17 @@
-Create product
+{% extends ':home:index.html.twig' %}
+{% block body %}
+    <div class="col-xs-12 col-sm-offset-1 col-sm-6">
+        <h1 style="margin: 2% 0 4% 0">Добавление нового товара</h1>
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <input type="submit" value="Сохранить" class="col-xs-12 col-md-3 btn btn-default" />
+        {{ form_end(form) }}
+    </div>
+    <img class="col-xs-12 col-md-offset-1 col-md-2" id="productImg"/>
+    <script>
+        var loadFile = function(event) {
+            var output = document.getElementById('productImg');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        };
+    </script>
+{% endblock %}
