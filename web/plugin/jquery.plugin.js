@@ -1,19 +1,27 @@
 (function($) {
     $.fn.ajaxgrid = function( options ) {
         grid = $( '#grid' );
-
         var setup = {
             page: 1,
             sort: null,
+            sortDirection: null,
             filter: null,
-            items : options.itemsPerPage[0]
+            itemsPerPage : options.itemsPerPage[0]
         };
-        options = $.extend( options, setup );
-        console.log(options);
-        createPanel();
-        ajaxMain( options );
 
+        createPanel();
+        options = $.extend( options, setup );
+        ajaxMain( options );
         function ajaxMain( options ) {
+            //посмотреть что за треш выводится
+            console.log(createURL());
+            // $.ajax({
+            //     url: createURL(),
+            //     success: function(data){
+            //         createGrid( data );
+            //     },
+            // });
+            /********заглушка********/
             let data = {
                 product: [
                     {
@@ -75,6 +83,7 @@
                 ]
             };
             createGrid( data );
+            /******************************/
         }
 
         function createPanel() {
@@ -95,6 +104,11 @@
             });
             $( '.sortBlock button' ).click( function() {
                 options.sort = this.id.substring( 6 );
+                if (options.sortDirection === 'desc') {
+                    options.sortDirection = 'asc';
+                } else {
+                    options.sortDirection = 'desc';
+                }
                 clearCatalog();
                 ajaxMain( options );
             });
@@ -113,7 +127,7 @@
                 $( '.pagesBlock' ).append( '<button type="button" class="pages btn btn-link">' + value + '</button>' );
             });
             $( '.pagesBlock button' ).click( function() {
-                options.items = parseInt($(this).text());
+                options.itemsPerPage = parseInt($(this).text());
                 console.log( options );
                 clearCatalog();
                 ajaxMain( options );
@@ -156,7 +170,7 @@
 
         function createPagination( length ) {
             grid.append( '<ul class="pagination"></ul>' );
-            for ( i = 1; i < ( length / options.items ) + 1; i++ ) {
+            for ( i = 1; i < ( length / options.itemsPerPage ) + 1; i++ ) {
                 $( '.pagination' ).append( '<li><a href="#">' + i + '</a></li>' );
                 if ( options.page === i ) {
                     $( '.pagination li' ).addClass( 'active' );
@@ -165,8 +179,32 @@
         }
 
         function clearCatalog() {
-            $('.catalog').remove();
-            $('.pagination').remove();
+            $( '.catalog' ).remove();
+            $( '.pagination' ).remove();
+        }
+
+        function createURL() {
+            url = options.url;
+            query = '';
+            query += checkOptions( options.itemsPerPage, 'items' );
+            query += checkOptions( options.page, 'page' );
+            query += checkOptions( options.sort, 'sortbyfield' );
+            query += checkOptions( options.filter, 'filterbyfield' );
+            query += checkOptions( options.sortDirection, 'order' );
+            if (query.length === 0 ) {
+                return url;
+            } else {
+                return url + '?' + query.substring(1)
+            }
+        }
+
+        function checkOptions(option, call) {
+            console.log(option);
+            if ( option !== null ) {
+               return '&' + call + '=' + option;
+            } else {
+                return '';
+            }
         }
     };
 })(jQuery);

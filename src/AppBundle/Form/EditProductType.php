@@ -50,6 +50,7 @@ class EditProductType extends AbstractType
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr' => array('accept' => 'image/jpeg,image/png',
                     'onchange' => 'loadFile(event)',
-                    'class' => 'col-xs-12 col-md-7'),));
+                    'class' => 'col-xs-12 col-md-7'),
+                'required' => false,));
     }
 }

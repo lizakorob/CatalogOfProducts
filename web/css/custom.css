@@ -106,20 +106,20 @@ label {
     /*background-color: #9ea1ff !important;*/
 /*}*/
 
-.login{
+.login, .register, .forgotPassword{
     /*height: 190px;*/
     overflow: hidden;
 }
 
-.register {
-    /*height: 440px;*/
-    overflow: hidden;
-}
+/*.register {*/
+    /*!*height: 440px;*!*/
+    /*overflow: hidden;*/
+/*}*/
 
-.forgotPassword {
-    /*height: 100px;*/
-    overflow: hidden;
-}
+/*.forgotPassword {*/
+    /*!*height: 100px;*!*/
+    /*overflow: hidden;*/
+/*}*/
 
 .login div {
     display: flex;

@@ -1,8 +1,20 @@
 {% extends ':home:index.html.twig' %}
+{% block javascripts %}
+    {#<script src="{{ 'js/validation.js' }}"></script>#}
+    {{ parent() }}
+    <script src="{{ asset('js/validation.js') }}"></script>
+{% endblock %}
 {% block body %}
     <div class="col-xs-12 col-sm-offset-1 col-sm-6">
         <h1 style="margin: 2% 0 4% 0">Добавление нового товара</h1>
-        {{ form_start(form) }}
+        {{ form_start(form, { 'attr': {
+            'onsubmit': "return productValidate()" },
+            'action': path('product_create'),
+            'method': 'POST'
+        }) }}
+            <div class="error">
+                <span id="productError"></span>
+            </div>
             {{ form_widget(form) }}
             <input type="submit" value="Сохранить" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
