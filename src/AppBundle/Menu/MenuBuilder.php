@@ -25,7 +25,7 @@ class MenuBuilder
         foreach ($categories as $category) {
             if ($category->getParent() != null) {
                 if ($category->getParent()->getId() === $currentCategory->getId()) {
-                    $item->addChild($category->getName(), array('route' => 'register'))->getParent();
+                    $item->addChild($category->getName(), array('route' => 'products'))->getParent();
                     //$this->setChildrenItem($item, $array, $category);
                 }
             }
@@ -80,8 +80,9 @@ class MenuBuilder
             if ($category->getParent() == null) {
                 $item = $menu->addChild( $category->getName(), array('route' => 'login'))
                     ->setLinkAttribute('data-toggle', 'collapse')
-                    ->setLinkAttribute('data-target', '.'.$category->getId())
-                    ->setChildrenAttribute('class', 'collapse '.$category->getId());
+                    ->setLinkAttribute('onclick', 'return false;')
+                    ->setLinkAttribute('data-target', '.' . $category->getId())
+                    ->setChildrenAttribute('class', 'collapse ' . $category->getId());
 
                 $this->setChildrenItem($item, $categories, $category);
             }

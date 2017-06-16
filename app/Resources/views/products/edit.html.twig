@@ -1,1 +1,28 @@
-Edit product
+{% extends ':home:index.html.twig' %}
+
+{% block body %}
+    {% for flash_message in app.session.flashbag.get('error') %}
+        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div class="col-xs-12 col-sm-offset-1 col-sm-6">
+        <h1 style="margin: 2% 0 4% 0">Редаткирование товара</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Сохранить" class="col-xs-12 col-md-3 btn btn-default" />
+        {{ form_end(form) }}
+        <div class="list-group"></div>
+    </div>
+    <img src="{{ relative_path('/uploads/images/') }}{{ product.image }}"
+            class="col-xs-12 col-md-offset-1 col-md-2" id="productImg"/>
+    <script>
+        var loadFile = function(event) {
+            var output = document.getElementById('productImg');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        };
+
+        $('input[type="file"]').css("width", "140px");
+    </script>
+    <script src="{{ asset('bundles/app/js/categoriesList.js') }}"></script>
+{% endblock %}

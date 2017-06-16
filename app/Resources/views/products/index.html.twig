@@ -19,6 +19,11 @@
     <div class="col-xs-12 hidden-md hidden-lg">
         {{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}
     </div>
+    {% for flash_message in app.session.flashbag.get('message') %}
+        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
     <div class="col-xs-12 col-md-offset-1 col-md-9">
         <h1> Категория </h1>
         <div id="catalog_sorter" class="sort" data-current="popular">

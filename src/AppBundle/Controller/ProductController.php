@@ -102,28 +102,28 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException('Product not found');
+            throw new NotFoundHttpException('Продукт не найден');
         }
 
-        $form = $this->createForm(EditProductType::class, $product);
+        $form = $this->createForm(EditProductType::class);
+        $this->get('products')->fillFormWithDataOfProduct($form, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('products')->editProduct($form);
+            $result = $this->get('products')->editProduct($form, $product);
 
             if (!$result) {
-                $this->addFlash('error', 'Product is already created');
-                return $this->redirectToRoute('product_edit_id', array(
-                    'id' => $id,
-                ));
+                $this->addFlash('error', 'Продукт с таким именем уже имеется');
+                return $this->redirectToRoute('product_edit_id');
             }
 
-            $this->addFlash('message', 'Product was changed');
+            $this->addFlash('message', 'Продукт был успешно изменен');
             return $this->redirectToRoute('products');
         }
 
         return $this->render('products/edit.html.twig', array(
             'form' => $form->createView(),
+            'product' => $product,
         ));
     }
 

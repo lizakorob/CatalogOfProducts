@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -52,7 +53,10 @@ class EditProductType extends AbstractType
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr' => array('accept' => 'image/jpeg,image/png',
                     'onchange' => 'loadFile(event)',
-                    'class' => 'col-xs-12 col-md-7'),));
+                    'class' => 'col-xs-12 col-md-7'),
+                'required' => false,))
+            ->add('category_id', HiddenType::class)
+            ->add('manufacturer_id', HiddenType::class)
         ;
     }
 }

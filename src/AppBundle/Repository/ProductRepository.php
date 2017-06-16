@@ -15,11 +15,13 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $productByName = $em->getRepository('AppBundle:Product')->findOneBy($options);
 
-        if ($productByName->getId() != $id) {
-            return false;
+        if ($productByName != null) {
+            if ($productByName->getId() != $id) {
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
     public function getByPage($page, $per_page, $ordered_by, $direction)
