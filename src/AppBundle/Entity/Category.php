@@ -37,7 +37,6 @@ class Category
      */
     private $parent;
 
-
     /**
      * Get id
      *
@@ -73,7 +72,7 @@ class Category
     }
 
     /**
-     * @return mixed
+     * @return Category
      */
     public function getParent()
     {
@@ -81,7 +80,7 @@ class Category
     }
 
     /**
-     * @param mixed $parent
+     * @param Category $parent
      */
     public function setParent($parent)
     {

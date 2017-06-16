@@ -69,14 +69,14 @@ class Product
     /**
     * Many Products have One Category.
     * @ManyToOne(targetEntity="AppBundle\Entity\Category")
-    * @JoinColumn(name="category_id", referencedColumnName="id")
+    * @JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
     */
     private $category;
 
     /**
      * Many Products have One Manufacturer.
      * @ManyToOne(targetEntity="AppBundle\Entity\Manufacturer")
-     * @JoinColumn(name="manufacturer_id", referencedColumnName="id")
+     * @JoinColumn(name="manufacturer_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $manufacturer;
 
@@ -86,6 +86,12 @@ class Product
      * @Assert\Image
      */
     private $image;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="sku", type="integer")
+     */
+    private $sku;
 
     public function __construct()
     {
@@ -272,11 +278,11 @@ class Product
     /**
      * Set category
      *
-     * @param \AppBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return Product
      */
-    public function setCategory(\AppBundle\Entity\Category $category = null)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
         return $this;
@@ -284,7 +290,7 @@ class Product
     /**
      * Get category
      *
-     * @return \AppBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {
@@ -292,25 +298,41 @@ class Product
     }
 
     /**
-     * Set category
+     * Set manufacturer
      *
-     * @param \AppBundle\Entity\Manufacturer $manufacturer
+     * @param Manufacturer $manufacturer
      *
      * @return Product
      */
-    public function setManufacturer(\AppBundle\Entity\Manufacturer $manufacturer = null)
+    public function setManufacturer(Manufacturer $manufacturer = null)
     {
         $this->manufacturer = $manufacturer;
         return $this;
     }
     /**
-     * Get category
+     * Get manufacturer
      *
-     * @return \AppBundle\Entity\Manufacturer
+     * @return Manufacturer
      */
     public function getManufacturer()
     {
         return $this->manufacturer;
+    }
+
+    /**
+     * @param int $sku
+     */
+    public function setSku(int $sku)
+    {
+        $this->sku = $sku;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSku()
+    {
+        return $this->sku;
     }
 }
 

@@ -15,11 +15,12 @@
 {% endblock %}
 {% block header %}
     {% include ':menu:header.html.twig' %}
-{% endblock %}
-{% block nav %}
-    <div class="mainMenu">
+    {% if not is_granted("ROLE_USER") %}
+        {% include ':security:securityModals.html.twig' %}
+    {% endif %}
+    {% block nav %}
         {{ knp_menu_render('main', {'currentClass': 'active'}) }}
-    </div>
+    {% endblock %}
 {% endblock %}
 {% block body %}
     {% for flash_message in app.session.flashbag.get('message') %}

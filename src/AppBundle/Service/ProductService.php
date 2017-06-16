@@ -21,7 +21,7 @@ class ProductService
 
         $productUsed = $em->getRepository('AppBundle:Product')
             ->findBy(array(
-                'name' => $product->getName(),
+                'name' => $product['name'],
             ));
 
         if (is_null($productUsed)) {

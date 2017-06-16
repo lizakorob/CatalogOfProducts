@@ -57,7 +57,7 @@ function forgotValidate() {
             'email': emailItem
         },
         success: function (data) {
-            if(data['status'] == '200') {
+            if(data['status'] === '200') {
                 $("form[name='forgot']").submit();
             } else {
                 showMessage('emailForgotError', data['message']);
@@ -110,7 +110,7 @@ function isRegisterData($username, $email) {
             'email': $email
         },
         success: function (data) {
-            if(data['status'] == '200') {
+            if(data['status'] === '200') {
                 var password = $('#register_password_first').val();
                 $("form[name='register']").submit();
                 $('#username').val($username);
