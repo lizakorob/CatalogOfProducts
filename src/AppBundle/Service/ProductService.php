@@ -1,10 +1,7 @@
 <?php
-
 namespace AppBundle\Service;
-
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
-
 class ProductService
 {
     private $registry;
@@ -18,7 +15,7 @@ class ProductService
         $em = $this->registry->getManager();
         $productUsed = $em->getRepository('AppBundle:Product')
             ->findBy(array(
-                'name' => $product->getName(),
+                'name' => $product['name'],
             ));
         if (is_null($productUsed)) {
             return false;

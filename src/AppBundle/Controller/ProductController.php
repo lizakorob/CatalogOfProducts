@@ -20,6 +20,7 @@ class ProductController extends Controller
     /**
      * @return Response
      * @Route("/", name="products")
+     * @Security("has_role('ROLE_USER')")
      */
     public function indexAction()
     {
@@ -37,16 +38,15 @@ class ProductController extends Controller
      */
     public function createAction(Request $request)
     {
-        $product = new Product();
-        $form = $this->createForm(EditProductType::class, $product);
+        $form = $this->createForm(EditProductType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $result = $this->get('products')->createProduct($form);
             if (!$result) {
-                $this->addFlash('error', 'Product is already created');
+                $this->addFlash('error', 'Попытка создать существующий продукт.');
                 return $this->redirectToRoute('product_create');
             }
-            $this->addFlash('message', 'Product was created');
+            $this->addFlash('message', 'Продукт был успешно создан.');
             return $this->redirectToRoute('products');
         }
         return $this->render('products/create.html.twig', array(
@@ -60,7 +60,7 @@ class ProductController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1},
      *     name="product_details")
-     *     @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function detailsAction($id)
     {
@@ -81,6 +81,7 @@ class ProductController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1},
      *     name="product_edit_id")
+     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function editAction(Request $request, $id)
     {
@@ -144,5 +145,35 @@ class ProductController extends Controller
         $em->flush();
         $this->addFlash('message', 'Product was deleted');
         return $this->redirectToRoute('products');
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_all_categories", name="get_all_categories")
+     * @Method({"POST"})
+     */
+    public function getAllCategoriesAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            $categories = $em->getRepository('AppBundle:Category')->findAll();
+            $response = $this->get('serialize_service')->serializeObjects($categories, ['parent']);
+            return $response;
+        }
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_all_manufacturers", name="get_all_manufacturers")
+     * @Method({"POST"})
+     */
+    public function getAllManufacturersAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            $manufacturers = $em->getRepository('AppBundle:Manufacturer')->findAll();
+            $response = $this->get('serialize_service')->serializeObjects($manufacturers);
+            return $response;
+        }
     }
 }

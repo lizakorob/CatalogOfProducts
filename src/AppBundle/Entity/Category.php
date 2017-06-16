@@ -36,14 +36,6 @@ class Category
      * @JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parent;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="url", type="string", length=50, unique=true)
-     */
-    private $url;
-
     /**
      * Category constructor.
      * @param int $id
@@ -51,12 +43,11 @@ class Category
      * @param $parent
      * @param string $url
      */
-    public function __construct($id, $name, $parent, $url)
+    public function __construct($id, $name, $parent)
     {
         $this->id = $id;
         $this->name = $name;
         $this->parent = $parent;
-        $this->url = $url;
     }
 
 
@@ -109,23 +100,5 @@ class Category
     {
         $this->parent = $parent;
     }
-
-    /**
-     * @return string
-     */
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl(string $url)
-    {
-        $this->url = $url;
-    }
-
-
 }
 

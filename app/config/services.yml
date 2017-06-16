@@ -53,6 +53,12 @@ services:
         arguments:
             - '@doctrine'
 
+    serialize_service:
+        class: AppBundle\Service\SerializeService
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
     app.menu_builder:
         class: AppBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]

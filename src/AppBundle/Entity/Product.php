@@ -2,12 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\AppBundle;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\Validator\Constraints as Assert;
-
 /**
  * Product
  *
@@ -24,70 +22,70 @@ class Product
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
-
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text")
      */
     private $description;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="createDate", type="date")
      */
     private $createDate;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updateDate", type="date")
      */
     private $updateDate;
-
     /**
      * @var int
      *
      * @ORM\Column(name="price", type="integer")
      */
     private $price;
-
     /**
      * @var bool
      *
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive;
-
     /**
-    * Many Products have One Category.
-    * @ManyToOne(targetEntity="AppBundle\Entity\Category")
-    * @JoinColumn(name="category_id", referencedColumnName="id")
-    */
+     * Many Products have One Category.
+     * @ManyToOne(targetEntity="AppBundle\Entity\Category")
+     * @JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
+     */
     private $category;
-
     /**
      * Many Products have One Manufacturer.
      * @ManyToOne(targetEntity="AppBundle\Entity\Manufacturer")
-     * @JoinColumn(name="manufacturer_id", referencedColumnName="id")
+     * @JoinColumn(name="manufacturer_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $manufacturer;
-
     /**
      * @var string
      * @ORM\Column(name="image", type="string", length=150, nullable=true)
      * @Assert\Image
      */
     private $image;
-
+    /**
+     * @var integer
+     * @ORM\Column(name="sku", type="integer")
+     */
+    private $sku;
+    public function __construct()
+    {
+        $this->createDate = new \DateTime();
+        $this->updateDate = new \DateTime();
+    }
     /**
      * Get id
      *
@@ -97,7 +95,6 @@ class Product
     {
         return $this->id;
     }
-
     /**
      * Set name
      *
@@ -108,10 +105,8 @@ class Product
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
-
     /**
      * Get name
      *
@@ -121,7 +116,6 @@ class Product
     {
         return $this->name;
     }
-
     /**
      * Set description
      *
@@ -132,10 +126,8 @@ class Product
     public function setDescription($description)
     {
         $this->description = $description;
-
         return $this;
     }
-
     /**
      * Get description
      *
@@ -145,7 +137,6 @@ class Product
     {
         return $this->description;
     }
-
     /**
      * Set createDate
      *
@@ -156,10 +147,8 @@ class Product
     public function setCreateDate($createDate)
     {
         $this->createDate = $createDate;
-
         return $this;
     }
-
     /**
      * Get createDate
      *
@@ -169,7 +158,6 @@ class Product
     {
         return $this->createDate;
     }
-
     /**
      * Set updateDate
      *
@@ -180,10 +168,8 @@ class Product
     public function setUpdateDate($updateDate)
     {
         $this->updateDate = $updateDate;
-
         return $this;
     }
-
     /**
      * Get updateDate
      *
@@ -193,7 +179,6 @@ class Product
     {
         return $this->updateDate;
     }
-
     /**
      * Set price
      *
@@ -204,10 +189,8 @@ class Product
     public function setPrice($price)
     {
         $this->price = $price;
-
         return $this;
     }
-
     /**
      * Get price
      *
@@ -217,7 +200,6 @@ class Product
     {
         return $this->price;
     }
-
     /**
      * Set isActive
      *
@@ -228,10 +210,8 @@ class Product
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
-
         return $this;
     }
-
     /**
      * Get isActive
      *
@@ -241,7 +221,6 @@ class Product
     {
         return $this->isActive;
     }
-
     /**
      * Set image
      *
@@ -263,15 +242,14 @@ class Product
     {
         return $this->image;
     }
-
     /**
      * Set category
      *
-     * @param \AppBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return Product
      */
-    public function setCategory(\AppBundle\Entity\Category $category = null)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
         return $this;
@@ -279,33 +257,45 @@ class Product
     /**
      * Get category
      *
-     * @return \AppBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {
         return $this->category;
     }
-
     /**
-     * Set category
+     * Set manufacturer
      *
-     * @param \AppBundle\Entity\Manufacturer $manufacturer
+     * @param Manufacturer $manufacturer
      *
      * @return Product
      */
-    public function setManufacturer(\AppBundle\Entity\Manufacturer $manufacturer = null)
+    public function setManufacturer(Manufacturer $manufacturer = null)
     {
         $this->manufacturer = $manufacturer;
         return $this;
     }
     /**
-     * Get category
+     * Get manufacturer
      *
-     * @return \AppBundle\Entity\Manufacturer
+     * @return Manufacturer
      */
     public function getManufacturer()
     {
         return $this->manufacturer;
     }
+    /**
+     * @param int $sku
+     */
+    public function setSku(int $sku)
+    {
+        $this->sku = $sku;
+    }
+    /**
+     * @return int
+     */
+    public function getSku()
+    {
+        return $this->sku;
+    }
 }
-
