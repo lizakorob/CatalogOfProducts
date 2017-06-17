@@ -21,8 +21,10 @@ class MenuBuilder
     {
         foreach ($array as $category) {
             if ($category->getParent() === $currentCategory->getId()) {
-                $item->addChild($category->getName(), array('route' => 'register'
-                    /*'catalog/'.$currentCategory->getUrl().$category->getUrl()*/))->getParent();
+                $item->addChild($category->getName(), array(
+                    'route' => 'products',
+                    'routeParameters' => array(
+                        'category' => $category->getName())))->getParent();
                 //$this->setChildrenItem($item, $array, $category);
             }
         }
@@ -52,7 +54,9 @@ class MenuBuilder
         $menu->setChildrenAttribute('class', 'nav navbar-nav mainMenu col-md-12 hidden-xs hidden-sm');
         foreach ($array as $category) {
             if ($category->getParent() == null) {
-                $item = $menu->addChild($category->getName(), array('route' => 'login',/*'catalog/'.$category->getUrl()*/))
+                $item = $menu->addChild($category->getName(), array(
+                    'route' => 'products',
+                    'routeParameters' => array('category' => $category->getName())))
                     ->setAttribute('class', 'dropdown col-xs-6 col-sm-2')
                     ->setAttribute('icon', 'fa fa-home')
                     ->setLinkAttribute('data-toggle', 'dropdown')
@@ -87,13 +91,13 @@ class MenuBuilder
             $category7, $category8, $category8, $category9, $category10, $category11, $category22, $category32, $category223];
 
         $menu = $this->factory->createItem('accordeon');
-//        if (isset($options['homepage']) && $options['homepage']) {
         $menu->setChildrenAttribute('class', 'sidebar');
         foreach ($array as $category) {
             if ($category->getParent() == null) {
-                $item = $menu->addChild( $category->getName(), array('route' => 'login'))
+                $item = $menu->addChild( $category->getName(), array(
+                    'route' => 'products',
+                    'routeParameters' => array('category' => $category->getName())))
                     ->setLinkAttribute('data-toggle', 'collapse')
-                    ->setLinkAttribute('onclick', 'return false;')
                     ->setLinkAttribute('data-target', '.'.$category->getId())
                     ->setChildrenAttribute('class', 'collapse '.$category->getId());
                 $this->setChildrenItem($item, $array, $category);
@@ -122,25 +126,18 @@ class MenuBuilder
             $category7, $category8, $category8, $category9, $category10, $category11, $category22, $category32, $category223];
 
         $menu = $this->factory->createItem('sidebar');
-//        if (isset($options['homepage']) && $options['homepage']) {
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
         foreach ($array as $category) {
             if ($category->getParent() == null) {
-                $item = $menu->addChild( $category->getName(), array('route' => 'login'))
-//                    ->setAttribute('class', 'dropdown');
+                $item = $menu->addChild( $category->getName(), array(
+                    'route' => 'login',
+                    'routeParameters' => array('category' => $category->getName())))
                     ->setAttribute('class', 'dropdown')
                     ->setLinkAttribute('class', 'dropdown-toggle')
                     ->setLinkAttribute('data-toggle', 'dropdown')
-//                    ->setLinkAttribute('data-toggle', 'collapse')
-//                    ->setLinkAttribute('data-target', '.'.$category->getUrl())
-//                    ->setChildrenAttribute('class', 'collapse '.$category->getUrl());
                     ->setChildrenAttribute('class', 'dropdown-menu');
                 $this->setChildrenItem($item, $array, $category);
             }
-        }
-
-        if ($this->container->get('session')->has('real_user_id')) {
-            $menu->addChild('Deimpersonate', array('route' => 'login'));
         }
         return $menu;
     }
