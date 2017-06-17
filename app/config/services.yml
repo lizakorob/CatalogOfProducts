@@ -72,6 +72,13 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
 
+    filter_service:
+        class: AppBundle\Service\FilterService
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@serialize_service'
+
     app.menu_builder:
           class: AppBundle\Menu\MenuBuilder
           arguments: ["@knp_menu.factory"]

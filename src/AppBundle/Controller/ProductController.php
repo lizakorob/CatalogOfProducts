@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ProductController extends Controller
 {
     /**
+     * @param Request $request
      * @return Response
      * @Route("/", name="products")
      * @Security("has_role('ROLE_USER')")
@@ -29,23 +30,7 @@ class ProductController extends Controller
     public function indexAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $request->getSession()->set('page', 1);
-            $request->getSession()->set('items', 8);
-            $request->getSession()->set('order', null);
-            $request->getSession()->set('sortbyfield', null);
-            $request->getSession()->set('filterbyfield', null);
-            $request->getSession()->set('pattern', null);
-
-            $products = $em->getRepository('AppBundle:Product')
-                ->findByPage();
-
-            $response = $this->get('serialize_service')->serializeObjects($products, [
-                'createDate',
-                'updateDate',
-                'sku'
-            ]);
+            $response = $this->get('filter_service')->getByFilters($request);
 
             return $response;
         }
@@ -225,39 +210,6 @@ class ProductController extends Controller
             $manufacturers = $em->getRepository('AppBundle:Manufacturer')->findAll();
 
             $response = $this->get('serialize_service')->serializeObjects($manufacturers);
-
-            return $response;
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route("/?page={page}",
-     *     requirements={"page" = "\d+"},
-     *     defaults={"page" = 1})
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function getByPageAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $request->getSession()->set('page', 2);
-            $request->getSession()->set('items', 8);
-            $request->getSession()->set('order', null);
-            $request->getSession()->set('sortbyfield', null);
-            $request->getSession()->set('filterbyfield', null);
-            $request->getSession()->set('pattern', null);
-
-            $products = $em->getRepository('AppBundle:Product')
-                ->findByPage(2);
-
-            $response = $this->get('serialize_service')->serializeObjects($products, [
-                'createDate',
-                'updateDate',
-                'sku'
-            ]);
 
             return $response;
         }

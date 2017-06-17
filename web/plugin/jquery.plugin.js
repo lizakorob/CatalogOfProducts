@@ -2,11 +2,20 @@
     $.fn.ajaxgrid = function( options ) {
         grid = $( '#grid' );
         var setup = {
-            page: 1,
-            sort: null,
-            sortDirection: null,
-            filter: null,
-            itemsPerPage : options.itemsPerPage[0]
+            url: options.url,
+            settings: {
+                page: 1,
+                items: options.itemsPerPage[0],
+                sort_by_field: 'id',
+                order: 'asc',
+                filter_by_field: null,
+                pattern: null
+            }
+        };
+
+        var sort_by = {
+            'name': 'Название',
+            'price': 'Цена'
         };
 
         createPanel();
@@ -14,12 +23,11 @@
         ajaxMain( options );
 
         function ajaxMain( options ) {
+            clearGrid();
             $.ajax({
                 type: 'GET',
                 url: options.url,
-                data: {
-                    'page': options.page
-                },
+                data: setup.settings,
                 success: function(data){
                     createGrid( data );
                 }
@@ -32,7 +40,7 @@
             this.panel.addClass( 'panel' );
             createSortableItems( this.panel );
             createFilterFields( this.panel );
-            createPageSetting( this.panel );
+            createItemsSetting( this.panel );
             return this;
         }
 
@@ -40,16 +48,14 @@
             that.append( '<span class="sortBlock col-xs-12 col-md-6">Сортировать по:</span>' );
             $.each( options.sortableColumns, function ( key, value ) {
                 $( '.sortBlock' ).append('<button type="button" class="sort btn btn-link" id="sortby' + value +
-                    '">' + value + '</button>');
+                    '">' + sort_by[value] + '</button>');
+                setEventForSort($('.sortBlock button#sortby' + value), value);
             });
-            $( '.sortBlock button' ).click( function() {
-                options.sort = this.id.substring( 6 );
-                if (options.sortDirection === 'desc') {
-                    options.sortDirection = 'asc';
-                } else {
-                    options.sortDirection = 'desc';
-                }
-                clearCatalog();
+        }
+
+        function setEventForSort(element, value) {
+            $( element ).click( function() {
+                setup.settings.sort_by_field = value;
                 ajaxMain( options );
             });
         }
@@ -61,22 +67,24 @@
             // });
         }
 
-        function createPageSetting( that ) {
-            that.append( '<span class="pagesBlock col-xs-12 col-md-6">Показывать по:</span>' );
+        function createItemsSetting( that ) {
+            that.append( '<span class="itemsBlock col-xs-12 col-md-6">Показывать по:</span>' );
             $.each( options.itemsPerPage, function ( key, value ) {
-                $( '.pagesBlock' ).append( '<button type="button" class="pages btn btn-link">' + value + '</button>' );
+                $( '.itemsBlock' ).append( '<button type="button" class="items btn btn-link" id="' + key + '">' + value + '</button>' );
+                setEventForItems($('.itemsBlock button#' + key), value);
             });
-            $( '.pagesBlock button' ).click( function() {
-                options.itemsPerPage = parseInt($(this).text());
-                console.log( options );
-                clearCatalog();
+        }
+
+        function setEventForItems(element, items) {
+            $( element ).click( function() {
+                setup.settings.items = items;
                 ajaxMain( options );
             });
         }
 
         function createGrid( data ) {
             grid.append( '<div class="catalog"></div>' );
-            data.forEach( function ( item, i ) {
+            data.forEach( function ( item ) {
                 createProductItem( item );
             });
             createPagination( data.length );
@@ -109,42 +117,28 @@
         }
 
         function createPagination( length ) {
+            length = 23; //
             grid.append( '<ul class="pagination"></ul>' );
-            for ( i = 1; i < ( length / options.itemsPerPage ) + 1; i++ ) {
-                $( '.pagination' ).append( '<li><a href="#">' + i + '</a></li>' );
-                if ( options.page === i ) {
-                    $( '.pagination li' ).addClass( 'active' );
+            for ( var i = 1; i <= ( length / options.settings.items ) + 1; i++ ) {
+                $( '.pagination' ).append( '<li id="' + i + '"><a>' + i + '</a></li>' );
+                if ( setup.settings.page === i ) {
+                    $( '.pagination li#' + i ).addClass( 'active' );
+                } else {
+                    setEventForPage($('.pagination li#' + i), i);
                 }
             }
         }
 
-        function clearCatalog() {
-            $( '.catalog' ).remove();
-            $( '.pagination' ).remove();
+        function setEventForPage(element, page) {
+            $(element).click(function () {
+                setup.settings.page = page;
+                ajaxMain(options);
+            });
         }
 
-        function createURL() {
-            url = options.url;
-            query = '';
-            query += checkOptions( options.itemsPerPage, 'items' );
-            query += checkOptions( options.page, 'page' );
-            query += checkOptions( options.sort, 'sortbyfield' );
-            query += checkOptions( options.filter, 'filterbyfield' );
-            query += checkOptions( options.sortDirection, 'order' );
-            if (query.length === 0 ) {
-                return url;
-            } else {
-                return url + '?' + query.substring(1)
-            }
-        }
-
-        function checkOptions(option, call) {
-            console.log(option);
-            if ( option !== null ) {
-               return '&' + call + '=' + option;
-            } else {
-                return '';
-            }
+        function clearGrid() {
+            $('.catalog').remove();
+            $('.pagination').remove();
         }
     };
 })(jQuery);

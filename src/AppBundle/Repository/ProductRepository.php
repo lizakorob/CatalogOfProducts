@@ -26,34 +26,33 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
 
     public function findByPage($page = 1,
                                $items = 8,
-                               $sortbyfield = null,
-                               $order = null,
-                               $filterbyfield = null,
+                               $sort_by_field = 'id',
+                               $order = 'asc',
+                               $filter_by_field = null,
                                $pattern = null)
     {
-        $products = $this->_em
-            ->createQueryBuilder()
-            ->select('p')
-            ->from('AppBundle:Product', 'p')
-            ->setFirstResult(($page - 1) * $items)
-            ->setMaxResults($items)
-            ->getQuery()
-            ->getResult();
-
-        /*if ($sortbyfield != null && $order != null) {
-            $query->orderBy('p.' . $sortbyfield, $order);
+        if ($filter_by_field == null && $pattern == null) {
+            $products = $this->_em
+                ->createQueryBuilder()
+                ->select('p')
+                ->from('AppBundle:Product', 'p')
+                ->orderBy('p.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items)
+                ->getQuery()
+                ->getResult();
+        } else {
+            $products = $this->_em
+                ->createQueryBuilder()
+                ->select('p')
+                ->from('AppBundle:Product', 'p')
+                ->where('p.' . $filter_by_field . ' = ' . $pattern)
+                ->orderBy('p.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items)
+                ->getQuery()
+                ->getResult();
         }
-
-        if ($filterbyfield != null && $pattern != null) {
-            $query->where('p.' . $filterbyfield . ' = ' . $pattern);
-        }
-
-        $query
-            ->setFirstResult(($page - 1) * $items)
-            ->setMaxResults($items)
-            ->getQuery();
-
-        $products = $query->getResult();*/
 
         return $products;
     }
