@@ -12,6 +12,7 @@
         createPanel();
         options = $.extend( options, setup );
         ajaxMain( options );
+
         function ajaxMain( options ) {
             //посмотреть что за треш выводится
             console.log(createURL());
@@ -146,7 +147,7 @@
             $( '.catalog' ).append(
                 '<div class="product col-xs-12 col-sm-6 col-md-3" id="prod' + item.id + '">' +
                     '<img src="https://vk.com/images/gifts/256/312.jpg" />' +
-                    '<strong>' + item.name + '</strong><br>' +
+                    '<strong><a href="details/' + item.id + '">' + item.name + '</a></strong><br>' +
                     '<span>' + item.price + '</span><br>' +
                 '</div>'
             );
@@ -155,13 +156,18 @@
             }
         }
 
+        function confirmDelete() {
+            return confirm("Вы действительно хотите удалить данный товар?");
+        }
+
         function createCRUD( product, item ) {
             product.prepend(
                 '<div class="admin btn-group btn-group-sm" role="group"  style="display: none;">' +
-                    '<a href="/edit/' + item.id + '" class="btn btn-default " >' +
+                    '<a href="edit/' + item.id + '" class="btn btn-default " >' +
                         '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>' +
                     '</a>' +
-                    '<a href="/delete/' + item.id + '" class="btn btn-default " >' +
+                    '<a href="delete/' + item.id + '" class="btn btn-default"' +
+                    'onclick="return confirmDelete();" >' +
                         '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
                     '</a>' +
                 '</div>'
