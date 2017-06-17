@@ -27,7 +27,7 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150)
+     * @ORM\Column(name="name", type="string", length=150, unique=true)
      */
     private $name;
 
@@ -53,9 +53,9 @@ class Product
     private $updateDate;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="float")
      */
     private $price;
 
@@ -88,8 +88,8 @@ class Product
     private $image;
 
     /**
-     * @var integer
-     * @ORM\Column(name="sku", type="integer")
+     * @var string
+     * @ORM\Column(name="sku", type="string", length=12, unique=true)
      */
     private $sku;
 
@@ -208,7 +208,7 @@ class Product
     /**
      * Set price
      *
-     * @param integer $price
+     * @param float $price
      *
      * @return Product
      */
@@ -222,7 +222,7 @@ class Product
     /**
      * Get price
      *
-     * @return int
+     * @return float
      */
     public function getPrice()
     {
@@ -320,15 +320,15 @@ class Product
     }
 
     /**
-     * @param int $sku
+     * @param string $sku
      */
-    public function setSku(int $sku)
+    public function setSku(string $sku)
     {
         $this->sku = $sku;
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getSku()
     {

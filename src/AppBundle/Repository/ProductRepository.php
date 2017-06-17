@@ -24,23 +24,36 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         return false;
     }
 
-    public function getByPage($page, $per_page, $ordered_by, $direction)
+    public function findByPage($page = 1,
+                               $items = 8,
+                               $sortbyfield = null,
+                               $order = null,
+                               $filterbyfield = null,
+                               $pattern = null)
     {
-        if ($direction) {
-            $directionDQL = 'ASC';
-        } else {
-            $directionDQL = 'DESC';
-        }
-
         $products = $this->_em
             ->createQueryBuilder()
             ->select('p')
             ->from('AppBundle:Product', 'p')
-            ->orderBy('p.' . $ordered_by, $directionDQL)
-            ->setFirstResult(($page - 1) * $per_page)
-            ->setMaxResults($per_page)
+            ->setFirstResult(($page - 1) * $items)
+            ->setMaxResults($items)
             ->getQuery()
             ->getResult();
+
+        /*if ($sortbyfield != null && $order != null) {
+            $query->orderBy('p.' . $sortbyfield, $order);
+        }
+
+        if ($filterbyfield != null && $pattern != null) {
+            $query->where('p.' . $filterbyfield . ' = ' . $pattern);
+        }
+
+        $query
+            ->setFirstResult(($page - 1) * $items)
+            ->setMaxResults($items)
+            ->getQuery();
+
+        $products = $query->getResult();*/
 
         return $products;
     }
@@ -51,7 +64,7 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
             ->createQueryBuilder()
             ->select('p')
             ->from('AppBundle:Product', 'p')
-            ->where('p.category=' . $category_id)
+            ->where('p.category.id = ' . $category_id)
             ->getQuery();
 
         return $products;

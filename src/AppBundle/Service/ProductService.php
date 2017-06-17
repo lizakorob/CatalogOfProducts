@@ -5,7 +5,9 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Product;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductService
 {
@@ -20,15 +22,6 @@ class ProductService
     {
         $em = $this->registry->getManager();
 
-        $productUsed = $em->getRepository('AppBundle:Product')
-            ->findBy(array(
-                'name' => $form->get('name')->getData(),
-            ));
-
-        if (is_null($productUsed)) {
-            return false;
-        }
-
         $product = new Product();
 
         $this->setDataInProduct($form, $product);
@@ -42,18 +35,6 @@ class ProductService
     public function editProduct(Form $form, Product $product): bool
     {
         $em = $this->registry->getManager();
-
-        if ($em->getRepository('AppBundle:Product')->isExist(array(
-            'name' => $form->get('name')->getData(),
-        ), $product->getId())) {
-            return false;
-        }
-
-        if ($em->getRepository('AppBundle:Product')->isExist(array(
-            'sku' => $form->get('sku')->getData(),
-        ), $product->getId())) {
-            return false;
-        }
 
         $this->setDataInProduct($form, $product);
         $product->setUpdateDate(new \DateTime());
@@ -74,6 +55,11 @@ class ProductService
         $form->get('isActive')->setData($product->getIsActive());
         $form->get('category_id')->setData($product->getCategory()->getId());
         $form->get('manufacturer_id')->setData($product->getManufacturer()->getId());
+        /** @var File $file */
+        $file = new File('./uploads/images/' . $product->getImage());
+        if ($file != null) {
+            $form->get('image')->setData($file);
+        }
     }
 
     private function setDataInProduct(Form $form, Product $product)
@@ -86,14 +72,20 @@ class ProductService
 
         /** @var UploadedFile $file */
         $file = $form->get('image')->getData();
-        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
-        $file->move(
-            'uploads/images',
-            $fileName
-        );
+        if ($file != null) {
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
-        $product->setImage($fileName);
+            $file->move(
+                'uploads/images',
+                $fileName
+            );
+
+            if ($product->getImage() != null) {
+                unlink('./uploads/images/' . $product->getImage());
+            }
+            $product->setImage($fileName);
+        }
 
         $categoryId = $form->get('category_id')->getData();
         $manufacturerId = $form->get('manufacturer_id')->getData();
@@ -105,5 +97,78 @@ class ProductService
 
         $product->setCategory($category);
         $product->setManufacturer($manufacturer);
+    }
+
+    /**
+     * @param $name
+     * @param $sku
+     * @return JsonResponse
+     */
+    public function isExistProductAdd($name, $sku)
+    {
+        $em = $this->registry->getManager();
+
+        $productUsed = $em->getRepository('AppBundle:Product')
+            ->findOneBy(array(
+                'name' => $name,
+            ));
+
+        if (!is_null($productUsed)) {
+            return new JsonResponse(array(
+                'status' => '400',
+                'message' => 'Продукт с таким именем уже существует'
+            ));
+        }
+
+        $productUsed = $em->getRepository('AppBundle:Product')
+            ->findOneBy(array(
+                'sku' => $sku,
+            ));
+
+        if (!is_null($productUsed)) {
+            return new JsonResponse(array(
+                'status' => '400',
+                'message' => 'Продукт с таким sku уже существует'
+            ));
+        }
+
+        return new JsonResponse(array(
+            'status' => '200',
+            'message' => ''
+        ));
+    }
+
+    /**
+     * @param $name
+     * @param $sku
+     * @param Product $product
+     * @return JsonResponse
+     */
+    public function isExistProductEdit($name, $sku, Product $product)
+    {
+        $em = $this->registry->getManager();
+
+        if ($em->getRepository('AppBundle:Product')->isExist(array(
+            'name' => $name,
+        ), $product->getId())) {
+            return new JsonResponse(array(
+                'status' => '400',
+                'message' => 'Продукт с таким именем уже существует'
+            ));
+        }
+
+        if ($em->getRepository('AppBundle:Product')->isExist(array(
+            'sku' => $sku,
+        ), $product->getId())) {
+            return new JsonResponse(array(
+                'status' => '400',
+                'message' => 'Продукт с таким sku уже существует'
+            ));
+        }
+
+        return new JsonResponse(array(
+            'status' => '200',
+            'message' => ''
+        ));
     }
 }

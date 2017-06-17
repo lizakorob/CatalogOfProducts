@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,19 +26,36 @@ class ProductController extends Controller
      * @Route("/", name="products")
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $products = $em->getRepository('AppBundle:Product')->findAll();
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
 
-        return $this->render('products/index.html.twig', array(
-            'products' => $products,
-        ));
+            $request->getSession()->set('page', 1);
+            $request->getSession()->set('items', 8);
+            $request->getSession()->set('order', null);
+            $request->getSession()->set('sortbyfield', null);
+            $request->getSession()->set('filterbyfield', null);
+            $request->getSession()->set('pattern', null);
+
+            $products = $em->getRepository('AppBundle:Product')
+                ->findByPage();
+
+            $response = $this->get('serialize_service')->serializeObjects($products, [
+                'createDate',
+                'updateDate',
+                'sku'
+            ]);
+
+            return $response;
+        }
+
+        return $this->render('products/index.html.twig');
     }
 
     /**
      * @param Request $request
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Response|JsonResponse
      * @Route("/create", name="product_create")
      * @Security("has_role('ROLE_MODERATOR')")
      */
@@ -46,13 +64,15 @@ class ProductController extends Controller
         $form = $this->createForm(EditProductType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('products')->createProduct($form);
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $sku = $request->request->get('sku');
 
-            if (!$result) {
-                $this->addFlash('error', 'Попытка создать существующий продукт.');
-                return $this->redirectToRoute('product_create');
-            }
+            return $this->get('products')->isExistProductAdd($name, $sku);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('products')->createProduct($form);
 
             $this->addFlash('message', 'Продукт был успешно создан.');
             return $this->redirectToRoute('products');
@@ -78,7 +98,7 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Продукт не найден');
         }
 
         return $this->render('products/details.html.twig', array(
@@ -109,13 +129,15 @@ class ProductController extends Controller
         $this->get('products')->fillFormWithDataOfProduct($form, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('products')->editProduct($form, $product);
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $sku = $request->request->get('sku');
 
-            if (!$result) {
-                $this->addFlash('error', 'Продукт с таким именем уже имеется');
-                return $this->redirectToRoute('product_edit_id');
-            }
+            return $this->get('products')->isExistProductEdit($name, $sku, $product);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('products')->editProduct($form, $product);
 
             $this->addFlash('message', 'Продукт был успешно изменен');
             return $this->redirectToRoute('products');
@@ -203,6 +225,39 @@ class ProductController extends Controller
             $manufacturers = $em->getRepository('AppBundle:Manufacturer')->findAll();
 
             $response = $this->get('serialize_service')->serializeObjects($manufacturers);
+
+            return $response;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/?page={page}",
+     *     requirements={"page" = "\d+"},
+     *     defaults={"page" = 1})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function getByPageAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $request->getSession()->set('page', 2);
+            $request->getSession()->set('items', 8);
+            $request->getSession()->set('order', null);
+            $request->getSession()->set('sortbyfield', null);
+            $request->getSession()->set('filterbyfield', null);
+            $request->getSession()->set('pattern', null);
+
+            $products = $em->getRepository('AppBundle:Product')
+                ->findByPage(2);
+
+            $response = $this->get('serialize_service')->serializeObjects($products, [
+                'createDate',
+                'updateDate',
+                'sku'
+            ]);
 
             return $response;
         }

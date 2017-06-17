@@ -30,7 +30,7 @@ class EditProductType extends AbstractType
                 'label' => 'Стоимость',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'col-xs-12 col-md-9',
-                    'min' => '0', 'max' => '100', 'step' => '0.01')))
+                    'min' => '0.01', 'max' => '100', 'step' => '0.01')))
             ->add('manufacturer', TextType::class, array(
                 'label' => 'Производитель',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
@@ -43,7 +43,7 @@ class EditProductType extends AbstractType
                 'label' => 'SKU',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'col-xs-12 col-md-9',
-                    'min' => '0', 'max' => '999999999999', 'step' => '')))
+                    'min' => '100000000000', 'max' => '999999999999')))
             ->add('isActive', CheckboxType::class, array(
                 'label' => 'В наличии',
                 'label_attr' => array('class' => 'col-xs-5 col-md-3'),
