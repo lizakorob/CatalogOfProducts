@@ -24,7 +24,7 @@ class EditProductType extends AbstractType
             ->add('category', TextType::class, array(
                 'label' => 'Категория',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
-                'attr'       => array('class' => 'col-xs-12 col-md-9')))
+                'attr'       => array('class' => 'categoryField col-xs-12 col-md-9')))
             ->add('price', NumberType::class, array(
                 'label' => 'Стоимость',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
@@ -32,7 +32,7 @@ class EditProductType extends AbstractType
             ->add('manufacturer', TextType::class, array(
                 'label' => 'Производитель',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
-                'attr'       => array('class' => 'col-xs-12 col-md-9'),))
+                'attr'       => array('class' => 'manufacturerField col-xs-12 col-md-9'),))
             ->add('description', TextareaType::class, array(
                 'label' => 'Описание',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),

@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,21 +19,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ProductController extends Controller
 {
     /**
+     * @param Request $request
      * @return Response
      * @Route("/", name="products")
      * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $products = $em->getRepository('AppBundle:Product')->findAll();
-        return $this->render('products/index.html.twig', array(
-            'products' => $products,
-        ));
+        if ($request->isXmlHttpRequest()) {
+            $response = $this->get('filter_service')->getByFilters($request, [
+                'createDate',
+                'updateDate',
+                'sku'
+            ]);
+            return $response;
+        }
+        return $this->render('products/index.html.twig');
     }
     /**
      * @param Request $request
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Response|JsonResponse
      * @Route("/create", name="product_create")
      * @Security("has_role('ROLE_MODERATOR')")
      */
@@ -40,12 +46,13 @@ class ProductController extends Controller
     {
         $form = $this->createForm(EditProductType::class);
         $form->handleRequest($request);
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $sku = $request->request->get('sku');
+            return $this->get('products')->isExistProductAdd($name, $sku);
+        }
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('products')->createProduct($form);
-            if (!$result) {
-                $this->addFlash('error', 'Попытка создать существующий продукт.');
-                return $this->redirectToRoute('product_create');
-            }
+            $this->get('products')->createProduct($form);
             $this->addFlash('message', 'Продукт был успешно создан.');
             return $this->redirectToRoute('products');
         }
@@ -67,7 +74,7 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
         if (is_null($product)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Продукт не найден');
         }
         return $this->render('products/details.html.twig', array(
             'product' => $product,
@@ -88,23 +95,24 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
         if (is_null($product)) {
-            throw new NotFoundHttpException('Product not found');
+            throw new NotFoundHttpException('Продукт не найден');
         }
-        $form = $this->createForm(EditProductType::class, $product);
+        $form = $this->createForm(EditProductType::class);
+        $this->get('products')->fillFormWithDataOfProduct($form, $product);
         $form->handleRequest($request);
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $sku = $request->request->get('sku');
+            return $this->get('products')->isExistProductEdit($name, $sku, $product);
+        }
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('products')->editProduct($form);
-            if (!$result) {
-                $this->addFlash('error', 'Product is already created');
-                return $this->redirectToRoute('product_edit_id', array(
-                    'id' => $id,
-                ));
-            }
-            $this->addFlash('message', 'Product was changed');
+            $this->get('products')->editProduct($form, $product);
+            $this->addFlash('message', 'Продукт был успешно изменен');
             return $this->redirectToRoute('products');
         }
         return $this->render('products/edit.html.twig', array(
             'form' => $form->createView(),
+            'product' => $product,
         ));
     }
     /**
@@ -122,7 +130,7 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
         if (is_null($product)) {
-            throw new NotFoundHttpException('Product not found');
+            throw new NotFoundHttpException('Продукт не найден');
         }
         return $this->render('products/delete.html.twig', array(
             'product' => $product,
@@ -141,9 +149,12 @@ class ProductController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
+        if (is_null($product)) {
+            throw new NotFoundHttpException('Продукт не найден');
+        }
         $em->remove($product);
         $em->flush();
-        $this->addFlash('message', 'Product was deleted');
+        $this->addFlash('message', 'Продукт был успешно удален');
         return $this->redirectToRoute('products');
     }
     /**

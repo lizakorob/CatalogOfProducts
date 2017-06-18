@@ -28,6 +28,34 @@ body {
 .navbar-nav {
     margin: 0;
 }
+
+.navbar-nav p{
+    float: right;
+    margin-top: 3%;
+}
+
+.logout {
+    float:right;
+}
+
+p>a {
+    color: #ffe9d8;
+    font-size: 16px;
+    font-family: 'Roboto, sans-serif', sans-serif;
+}
+
+p>a:hover {
+    color: #fff8e7;
+}
+
+.admin>a>span {
+    color: #fff8e7;
+}
+
+a>span {
+    font-size: medium;
+    color: black;
+}
 .openLoginForm {
     float: right;
 }
@@ -50,6 +78,10 @@ body {
     height: 35px;
     border: none;
     text-shadow: none;
+}
+
+.btn-default.disabled:hover {
+    background-color: #f3848d;
 }
 
 .form-control {
@@ -264,8 +296,8 @@ ol.breadcrumb {
 }
 
 img {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 300px;
 }
 
 .details span{
@@ -286,7 +318,6 @@ img {
 
 }
 .return * {
-
     color: #974c53;
     padding-top: 1%;
 }
@@ -309,7 +340,7 @@ img {
     height: initial;
 }
 
-#edit_product div {
+#edit_product div, #edit_category div {
     overflow: hidden;
     margin-bottom: 1%;
 }

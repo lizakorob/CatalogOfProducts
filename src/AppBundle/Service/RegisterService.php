@@ -9,40 +9,50 @@ use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 class RegisterService
 {
     private $registry;
+
     public function __construct(RegistryInterface $registry)
     {
         $this->registry = $registry;
     }
+
     public function register(Form $form)
     {
         $user = $form->getData();
         $password = $user->getPassword();
+
         $encoder = new BCryptPasswordEncoder(12);
         $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+
         $em = $this->registry->getEntityManager();
         $em->persist($user);
         $em->flush();
     }
+
     public function IsRegisterLogin(string $username): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(
             'username' => $username,
         ));
+
         if ($user != null) {
             return true;
         }
+
         return false;
     }
+
     public function IsRegisterEmail(string $email): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(
             'email' => $email,
         ));
+
         if ($user != null) {
             return true;
         }
+
         return false;
     }
 }

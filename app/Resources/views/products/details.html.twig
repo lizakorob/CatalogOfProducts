@@ -17,7 +17,7 @@
         <div class="col-md-offset-1 col-md-6">
             <h1> {{ product.name }} </h1>
             {% if is_granted("ROLE_MODERATOR")%}
-                <span style="color: #e0dfe1; font-size: 14px;">
+                <span style="color: #858486; font-size: 14px;">
                         Дата создания: {{ product.createDate|date('d.m.Y') }} <br>
                         Дата последнего изменения: {{ product.updateDate|date('d.m.Y') }}
                 </span>
@@ -32,7 +32,8 @@
                     {{ product.description }}
                 </p>
                 <p>
-                    <span>Производитель: </span> {{ product.manufacturer }}
+                    <span>Производитель: </span>
+                    {{ product.getManufacturer.name }}, {{ product.getManufacturer.country }}
                 </p>
                 <p>
                     <span>SKU: </span> {{ product.sku }}

@@ -1,5 +1,9 @@
 {% block javascripts %}
-    <script src="{{ 'js/validation.js' }}"></script>
+    {#<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>#}
+    {#<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>#}
+    {#<script src="{{ 'js/validation/clientValidation.js' }}"></script>#}
+    <script src="{{ 'js/validation/validationFromDatabase.js' }}"></script>
+
 {% endblock %}
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -14,17 +18,25 @@
                         <div class="error">
                             <span id="loginError"></span>
                         </div>
-                        <label for="username">Логин:</label>
-                        <input type="text" id="username" name="_username" />
-                        <label for="password">Пароль:</label>
-                        <input type="password" id="password" name="_password" />
+                        <div class="form-group">
+                            <label for="username">Логин:</label>
+                            <input type="text" id="username" name="_username" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Пароль:</label>
+                            <input type="password" id="password" name="_password" />
+                        </div>
                         <div style="display: inline">
-                            <input type="button" id="login_user" value="Войти" class="btn btn-default col-xs-12 col-sm-6"
-                                   style="margin-right: 16px; margin-top: 10px;"/>
-                            <a href="#" data-toggle="modal" data-target="#forgotPasswordModal" style="padding-top: 7px;"
+                            {#<div class="form-group" style="display: inline">#}
+                                <button type="button" id="login_user" class="btn btn-default col-xs-12 col-sm-6"
+                                        style="margin-right: 16px; margin-top: 10px;">
+                                    Войти
+                                </button>
+                            <a href="#" data-toggle="modal" data-target="#forgotPasswordModal" style="padding-top: 5%;"
                                data-dismiss="modal" aria-hidden="true" class="col-xs-12 col-sm-5">
                                 Забыли пароль?
                             </a>
+                        {#</div>#}
                         </div>
                     </div>
                 </form>
@@ -41,8 +53,7 @@
             </div>
             <div class="modal-body">
                 {{ form_start(registerForm, { 'attr': {
-                    'class': 'register',
-                    'onsubmit': "return registrationValidate()" },
+                    'class': 'register' },
                     'action': path('register'),
                     'method': 'POST'
                 }) }}

@@ -43,7 +43,7 @@ class Category
      * @param $parent
      * @param string $url
      */
-    public function __construct($id, $name, $parent)
+   public function __construct($id, $name, $parent)
     {
         $this->id = $id;
         $this->name = $name;

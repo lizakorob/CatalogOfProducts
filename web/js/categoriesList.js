@@ -7,7 +7,7 @@ $.ajax({
     url: '/products/get_all_categories',
     success: function (data) {
         categories = data;
-        keyUpForInput($('#edit_product_category'), true, categories);
+        keyUpForInput($('.categoryField'), true, categories);
     }
 });
 
@@ -16,14 +16,13 @@ $.ajax({
     url: '/products/get_all_manufacturers',
     success: function (data) {
         manufacturers = data;
-        keyUpForInput($('#edit_product_manufacturer'), false, manufacturers);
+        keyUpForInput($('.manufacturerField'), false, manufacturers);
     }
 });
 function keyUpForInput(element, isCategory, entity) {
     $(element).keyup(function () {
         var listCategories = $("div.list-group");
         stylesList(listCategories, this);
-        console.log('aaa');
         var text = $(this).val().toLowerCase();
         var count = 0; var body = "";
         listCategories.html("");

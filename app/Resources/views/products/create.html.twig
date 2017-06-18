@@ -1,23 +1,29 @@
 {% extends ':home:index.html.twig' %}
 {% block javascripts %}
-    {#<script src="{{ 'js/validation.js' }}"></script>#}
     {{ parent() }}
-    <script src="{{ asset('js/validation.js') }}"></script>
+    <script src="{{ 'js/validation/clientValidation.js' }}"></script>
+    <script src="{{ '/js/categoriesList.js' }}"></script>
 {% endblock %}
 {% block body %}
+    {% for flash_message in app.session.flashbag.get('error') %}
+        <div class="alert alert-warning" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
     <div class="col-xs-12 col-sm-offset-1 col-sm-6">
-        <h1 style="margin: 2% 0 4% 0">Добавление нового товара</h1>
+        <h2 style="margin: 2% 0 4% 0">Добавление нового товара</h2>
         {{ form_start(form, { 'attr': {
-            'onsubmit': "return productValidate()" },
-            'action': path('product_create'),
-            'method': 'POST'
-        }) }}
+        'class' : 'productItem'},
+        'action': path('product_create'),
+        'method': 'POST' })
+        }}
             <div class="error">
                 <span id="productError"></span>
             </div>
             {{ form_widget(form) }}
-            <input type="submit" value="Сохранить" class="col-xs-12 col-md-3 btn btn-default" />
+            <input type="submit" value="Сохранить" id="saveProduct" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
+        <div class="list-group"></div>
     </div>
     <img class="col-xs-12 col-md-offset-1 col-md-2" id="productImg"/>
     <script>
@@ -25,6 +31,10 @@
             var output = document.getElementById('productImg');
             output.src = URL.createObjectURL(event.target.files[0]);
         };
+
+        $('#saveProduct').click(function () {
+            productValidate(null);
+        });
     </script>
     {#<script src="{{ '/js/categoriesList.js' }}"></script>#}
 {% endblock %}

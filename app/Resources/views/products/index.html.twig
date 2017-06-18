@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ '/plugin/jquery.plugin.js' }}"></script>
+    <script src="{{ '/js/plugin/jquery.plugin.js' }}"></script>
     <script>
         $(document).ready(function () {
             $(document).on('mouseenter', '.product', function () {
@@ -32,7 +32,7 @@
                 filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
                 itemsPerPage: [6, 12, 20], // количество единиц на страницу для пагинации
                 page: 1,
-                admin: true
+                role: admin
             });
         </script>
     {% else %}
@@ -43,7 +43,8 @@
                 filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
                 itemsPerPage: [6, 12, 20], // количество единиц на страницу для пагинации
                 page: 1,
-                admin: false
+                role: 'user',
+                view: 'bricks'
             });
         </script>
     {% endif %}

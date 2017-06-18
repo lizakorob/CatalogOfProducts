@@ -11,9 +11,13 @@ class EditCategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('parent', TextType::class)
-            ->add('Save', SubmitType::class)
-        ;
+            ->add('name', TextType::class, array(
+                'label' => 'Название категории',
+                'label_attr' => array('class' => 'col-xs-12 col-md-4'),
+                'attr'       => array('class' => 'col-xs-12 col-md-6'),))
+            ->add('parent', TextType::class, array(
+                'label' => 'Родительская категория',
+                'label_attr' => array('class' => 'col-xs-12 col-md-4'),
+                'attr' => array('class' => 'categoryField col-xs-12 col-md-6')));
     }
 }
