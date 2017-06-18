@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Roboto, sans-serif', sans-serif;
+            background: linear-gradient(to bottom,  #fff4e6, #ffffff);
+            background-repeat: no-repeat;
+        }
+        h1 {
+            margin-top: 10%;
+        }
+        .error {
+            margin: 10%;
+        }
+        p {
+            line-height: 30px ;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="error">
+        <h1>Страница не найдена</h1>
+        <p>
+            Возможно, искомая страница уже удалена либо еще не создана. <br>
+            Попробуйте перейти по другому адресу, либо перейти на
+            <a href="{{ path('homepage') }}"><strong>главную страницу</strong></a>.
+        </p>
+    </div>
+{% endblock %}

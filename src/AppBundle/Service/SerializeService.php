@@ -22,19 +22,14 @@ class SerializeService
     {
         $encoder = new JsonEncoder();
         $normalizer = new ObjectNormalizer();
-
         $normalizer->setCircularReferenceHandler(function ($object) {
             return $object->getName();
         });
-
         $normalizer->setCircularReferenceLimit(0);
         $normalizer->setIgnoredAttributes($options);
-
         $serializer = new Serializer([$normalizer], [$encoder]);
-
         $response = new Response($serializer->serialize($entity, 'json'));
         $response->headers->set('Content-Type', 'application/vnd.api+json');
-
         return $response;
     }
 }

@@ -1,1 +1,23 @@
-Table of users
+{% extends ':home:index.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ '/js/plugin/jquery.plugin.js' }}"></script>
+{% endblock %}
+{% block body %}
+    <div class="col-xs-12 col-md-offset-1 col-md-10">
+        <h1> Управление пользователями </h1> {#<h1>{{ category.name }}</h1>#} <a></a>
+        <div id="grid"></div>
+    </div>
+    <script>
+        $('#grid').ajaxgrid({
+            url: '/users', // URL, с которого тянуть данные
+            sortableColumns: ['name'], // массив с именами полей сущности, по которым должна быть возможна сортировка
+            filterableColumns: ['name'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
+            itemsPerPage: [6, 12, 20], // количество единиц на страницу для пагинации
+            page: 1,
+            view: 'table',
+            headers: ['#', 'Полное имя', 'Логин', 'E-mail', 'Роль']
+        });
+    </script>
+{% endblock %}

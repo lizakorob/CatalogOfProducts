@@ -62,6 +62,7 @@ class SecurityController extends Controller
         }
         $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted()) {
             $result = $this->get('forgot_password')->sendResetPasswordEmail($form);
             if (!$result) {
@@ -91,6 +92,8 @@ class SecurityController extends Controller
             return $this->redirectToRoute('forgot_password');
         }
         $form = $this->createForm(ResetType::class);
+        $registerForm = $this->createForm(UserRegistrationType::class);
+        $forgotForm = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $result = $this->get('reset_password')->resetPassword($form, $hash);
@@ -103,6 +106,8 @@ class SecurityController extends Controller
         }
         return $this->render('security/forgot_password.html.twig', array(
             'form' => $form->createView(),
+            'registerForm' => $registerForm->createView(),
+            'forgotPasswordForm' => $forgotForm->createView(),
         ));
     }
 }

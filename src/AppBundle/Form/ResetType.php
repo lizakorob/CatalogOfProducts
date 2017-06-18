@@ -12,8 +12,10 @@ class ResetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('new_password', PasswordType::class)
-            ->add('Reset', SubmitType::class)
+            ->add('new_password', PasswordType::class, array(
+                'label' => 'Новый пароль',
+                'label_attr' => array('class' => 'col-xs-12 col-md-4'),
+                'attr'       => array('class' => 'col-xs-12 col-md-6'),))
         ;
     }
 }

@@ -18,6 +18,12 @@
             'price': 'Цена'
         };
 
+        var roles = {
+            'ROLE_ADMIN':'Администратор',
+            'ROLE_MODERATOR': 'Модератор',
+            'ROLE_USER': 'Пользователь',
+        };
+
         if (options.settings) {
             setup.settings.filter_by_field = options.settings.filter_by_field;
             setup.settings.pattern = options.settings.pattern;
@@ -107,21 +113,24 @@
             $.each( options.headers, function ( key, value ) {
                 $( '.header' ).append( '<th>' + value + '</th>' );
             });
-            $('.header').append('<th>Функции</th>');
+            $( '.header' ).append( '<th>Функции</th>' );
         }
 
         function createItem( item, view ) {
             if ( view === 'bricks' ) {
                 createBrickItem();
-            }
-            else {
-                createTableItem(item);
+            } else {
+                if ( options.url === '/categories' ) {
+                    createCategoryTableItem( item );
+                } else {
+                    createUserTableItem( item );
+                }
             }
         }
 
         function createBrickItem() {
-            if (item.image !== null) {
-                $('.catalog').append(
+            if ( item.image !== null ) {
+                $( '.catalog' ).append(
                     '<div class="product col-xs-12 col-sm-6 col-md-3" id="prod' + item.id + '">' +
                     '<img src="../uploads/images/' + item.image + '" />' +
                     '<strong><a href="details/' + item.id + '">' + item.name + '</a></strong><br>' +
@@ -129,7 +138,7 @@
                     '</div>'
                 );
             } else {
-                $('.catalog').append(
+                $( '.catalog' ).append(
                     '<div class="product col-xs-12 col-sm-6 col-md-3" id="prod' + item.id + '">' +
                     '<img src="../uploads/noimage.jpg" />' +
                     '<strong><a href="details/' + item.id + '">' + item.name + '</a></strong><br>' +
@@ -138,22 +147,43 @@
                 );
             }
             if (options.role === 'admin') {
-                createCRUD($('#prod' + item.id), item);
+                createCRUD( $('#prod' + item.id), item );
             }
         }
 
-        function createTableItem(item) {
-            ('.table').append('<tr>');
+        function createCategoryTableItem( item ) {
+            ( '.table' ).append( '<tr>' );
             //вывод по полям объекта
-            ('tr').append( '<td>' + item + '</td>' );
-            ('tr').append( '<td>' + item + '</td>' );
-            ('tr').append( '<td>' + item + '</td>' );
-            ('tr').append( '<td>' + '<a href="edit/' + item.id + '">' +
+            ( 'tr' ).append( '<td>' + item + '</td>' );
+            ( 'tr' ).append( '<td>' + item + '</td>' );
+            ( 'tr' ).append( '<td>' + item + '</td>' );
+            ( 'tr' ).append( '<td>' + '<a href="edit/' + item.id + '">' +
                 '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>' +
                 '<a id="' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
                 '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>' +
                 '</td>' );
-            ('.table').append('</tr>');
+            ( '.table' ).append('</tr>');
+        }
+
+        function createUserTableItem( item ) {
+            ( '.table' ).append( '<tr>' );
+            ( 'tr' ).append( '<td>' + item.id + '</td>' );
+            ( 'tr' ).append( '<td>' + item.fullName + '</td>' );
+            ( 'tr' ).append( '<td>' + item.username + '</td>' );
+            ( 'tr' ).append( '<td>' + item.email + '</td>' );
+            ( 'tr' ).append( '<td><select id="' + item.id + '"><option>Пользователь</option>' +
+                '<option>Модератор</option><option>Администратор</option></select></td>' );
+            ( 'tr' ).append( '<td>' + '<a href="edit/' + item.id + '">' +
+                '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>' +
+                '<a id="' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
+                '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>' +
+                '</td>' );
+            setSelectedUserRole(item)
+            ( '.table' ).append('</tr>');
+        }
+
+        function setSelectedUserRole(item) {
+            $("select#" + item.id).val(roles[item.role]);
         }
 
         function createCRUD( field, item ) {

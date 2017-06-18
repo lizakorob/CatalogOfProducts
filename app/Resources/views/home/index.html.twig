@@ -30,10 +30,13 @@
     {% include ':menu:header.html.twig' %}
     {% if not is_granted("ROLE_USER") %}
         {% include ':security:securityModals.html.twig' %}
+    {% else %}
+        {% block nav %}
+            {% set menu = knp_menu_get('main', [], {'user': app.user.role}) %}
+            {#{{ knp_menu_render('main', {'currentClass': 'active', 'user': app.user.role}) }}#}
+            {{ knp_menu_render(menu) }}
+        {% endblock %}
     {% endif %}
-    {% block nav %}
-        {{ knp_menu_render('main', {'currentClass': 'active'}) }}
-    {% endblock %}
 {% endblock %}
 {% block body %}
 {% endblock %}

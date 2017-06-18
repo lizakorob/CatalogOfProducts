@@ -39,7 +39,7 @@ class ForgotService
     {
         $message = \Swift_Message::newInstance()
             ->setSubject('Reset password')
-            ->setFrom('sweets@mail.ru')
+            ->setFrom('lizakoshak@gmail.com')
             ->setTo($email)
             ->setBody('To reset you password please
                     follow this link http://localhost:8000/reset_password/' . $hash);
