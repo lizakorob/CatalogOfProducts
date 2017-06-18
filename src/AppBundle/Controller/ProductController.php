@@ -30,7 +30,7 @@ class ProductController extends Controller
     public function indexAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $response = $this->get('filter_service')->getByFilters($request, [
+            $response = $this->get('filter_service')->getByFilters($request, 'AppBundle:Product', [
                 'createDate',
                 'updateDate',
                 'sku'
@@ -199,7 +199,7 @@ class ProductController extends Controller
             $em = $this->getDoctrine()->getManager();
             $categories = $em->getRepository('AppBundle:Category')->findAll();
 
-            $response = $this->get('serialize_service')->serializeObjects($categories, ['parent']);
+            $response = $this->get('serialize_service')->serializeObjects($categories);
 
             return $response;
         }
@@ -220,6 +220,20 @@ class ProductController extends Controller
             $response = $this->get('serialize_service')->serializeObjects($manufacturers);
 
             return $response;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_count")
+     */
+    public function getCountRows(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $length = $this->get('filter_service')->getCountRows($request, 'AppBundle:Product');
+
+            return $length;
         }
     }
 }

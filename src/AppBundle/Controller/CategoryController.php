@@ -22,17 +22,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CategoryController extends Controller
 {
     /**
+     * @param Request $request
      * @Route("/", name="categories")
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository('AppBundle:Category')->findAll();
+        if ($request->isXmlHttpRequest()) {
+            $response = $this->get('filter_service')->getByFilters($request, 'AppBundle:Category', [
+                'createDate',
+                'updateDate',
+                'sku'
+            ]);
 
-        return $this->render('category/index.html.twig', array(
-            'categories' => $categories,
-        ));
+            return $response;
+        }
+
+        return $this->render('category/index.html.twig');
     }
 
     /**
@@ -42,19 +48,19 @@ class CategoryController extends Controller
      */
     public function createAction(Request $request)
     {
-        $category = new Category();
-        $form = $this->createForm(EditCategoryType::class, $category);
+        $form = $this->createForm(EditCategoryType::class);
         $form->handleRequest($request);
 
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+
+            return $this->get('category')->isExistCategoryAdd($name);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('category')->addCategory($form);
+            $this->get('category')->addCategory($form);
 
-            if (!$result) {
-                $this->addFlash('error', 'Category is already created');
-                return $this->redirectToRoute('create_category');
-            }
-
-            $this->addFlash('message', 'Category was created');
+            $this->addFlash('message', 'Категория была успешно создана');
             return $this->redirectToRoute('categories');
         }
 
@@ -104,20 +110,20 @@ class CategoryController extends Controller
             throw new NotFoundHttpException('Category not found');
         }
 
-        $form = $this->createForm(EditCategoryType::class, $category);
+        $form = $this->createForm(EditCategoryType::class);
+        $this->get('category')->fillFormWithDataOfCategory($form, $category);
         $form->handleRequest($request);
 
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+
+            return $this->get('category')->isExistProductEdit($name, $category);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('category')->editCategory($form);
+            $this->get('category')->editCategory($form, $category);
 
-            if ($result) {
-                $this->addFlash('error', 'Category is already created');
-                return $this->redirectToRoute('category_edit_id', array(
-                    'id' => $id,
-                ));
-            }
-
-            $this->addFlash('message', 'Category was changed');
+            $this->addFlash('message', 'Категория успешно изменена');
             return $this->redirectToRoute('categories');
         }
 
@@ -167,5 +173,19 @@ class CategoryController extends Controller
 
         $this->addFlash('message', 'Category was deleted');
         return $this->redirectToRoute('categories');
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_count")
+     */
+    public function getCountRows(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $length = $this->get('filter_service')->getCountRows($request, 'AppBundle:Category');
+
+            return $length;
+        }
     }
 }

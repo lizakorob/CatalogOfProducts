@@ -19,7 +19,6 @@
         {% include ':security:securityModals.html.twig' %}
     {% endif %}
     {% block nav %}
-        {{ knp_menu_render('main', {'currentClass': 'active'}) }}
     {% endblock %}
 {% endblock %}
 {% block body %}
@@ -28,7 +27,6 @@
             {{ flash_message }}
         </div>
     {% endfor %}
-    {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
 {% endblock %}
 
 

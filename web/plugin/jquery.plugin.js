@@ -23,21 +23,27 @@
             setup.settings.pattern = options.settings.pattern;
         }
 
-        createPanel();
+        //createPanel();
         options = $.extend( options, setup );
         ajaxMain( options );
 
         function ajaxMain( options ) {
-            clearGrid();
+            grid.html('');
+            createPanel();
+            //clearGrid();
             $.ajax({
                 type: 'GET',
                 url: options.url,
+                async: false,
                 data: setup.settings,
                 success: function(data){
                     createGrid( data );
                     createModalForm();
                 }
             });
+
+            var length = getCountOfElement();
+            createPagination( length );
         }
 
         function createPanel() {
@@ -45,7 +51,6 @@
             this.panel = $( '.panel' );
             this.panel.addClass( 'panel' );
             createSortableItems( this.panel );
-            //createFilterFields( this.panel );
             createItemsSetting( this.panel );
             return this;
         }
@@ -62,22 +67,20 @@
         function setEventForSort(element, value) {
             $( element ).click( function() {
                 setup.settings.sort_by_field = value;
+                if (setup.settings.order === 'asc') {
+                    setup.settings.order = 'desc';
+                } else {
+                    setup.settings.order = 'asc';
+                }
                 ajaxMain( options );
             });
         }
 
-        /*function createFilterFields( that ) {
-            // that.append('<span class="sort">Сортировать по:</span>');
-            // $.each(options.filterableColumns, function (key, value) {
-            //     $('.sort').append("<a href='#'>" + value + ' ' + "</a>");
-            // });
-        }*/
-
         function createItemsSetting( that ) {
-            that.append( '<span class="itemsBlock col-xs-12 col-md-6">Показывать по:</span>' );
+            that.append( '<span class="itemsBlock col-xs-12 col-md-6" name="itemsOnPage">Показывать по:</span>' );
             $.each( options.itemsPerPage, function ( key, value ) {
-                $( '.itemsBlock' ).append( '<button type="button" class="items btn btn-link" id=itemsper"' + value + '">' + value + '</button>' );
-                setEventForItems($('.itemsBlock button#itemsper' + value), value);
+                $( 'span[name="itemsOnPage"]' ).append( '<button type="button" class="items btn btn-link" id="' + value + '">' + value + '</button>' );
+                setEventForItems('span[name="itemsOnPage"] button#' + value, value);
             });
         }
 
@@ -89,14 +92,49 @@
         }
 
         function createGrid( data ) {
-            grid.append( '<div class="catalog"></div>' );
+            if ( options.view === 'bricks' ) {
+                grid.append( '<div class="catalog"></div>' );
+            } else {
+                grid.append( '<table class="table table-striped"></table>' );
+                createTableHeaders();
+            }
             data.forEach( function ( item ) {
-                createProductItem( item );
+                createItem( item, options.view );
             });
-            createPagination( data.length );
         }
 
-        function createProductItem( item ) {
+        function createTableHeaders() {
+            $('.table').append('<thead><tr class="header"></tr></thead>');
+            $.each( options.headers, function ( key, value ) {
+                $( '.header' ).append( '<th>' + value + '</th>' );
+            });
+            $('.header').append('<th>Функции</th>');
+        }
+        
+        function getCountOfElement() {
+            var length;
+            $.ajax({
+                type: 'GET',
+                url: options.url + '/get_count',
+                async: false,
+                data: setup.settings,
+                success: function(data){
+                    length = data;
+                }
+            });
+            return parseInt(length);
+        }
+
+        function createItem( item, view ) {
+            if ( view === 'bricks' ) {
+                createBrickItem(item);
+            }
+            else {
+                createTableItem(item);
+            }
+        }
+
+        function createBrickItem( item ) {
             if (item.image !== null) {
                 $('.catalog').append(
                     '<div class="product col-xs-12 col-sm-6 col-md-3" id="prod' + item.id + '">' +
@@ -114,9 +152,30 @@
                     '</div>'
                 );
             }
-            if ( options.admin ) {
-                createCRUD ( $( '#prod' + item.id ), item );
+            if ( options.role === 'moderator' ) {
+                createCRUD ( $( 'div#prod' + item.id ), item );
             }
+        }
+
+        function createTableItem(item) {
+            $('.table').append('<tr id="' + item.id + '">');
+            //вывод по полям объекта
+            $('tr#' + item.id).append( '<td>' + item.id + '</td>' );
+            $('tr#' + item.id).append( '<td>' + item.name + '</td>' );
+            if (item.parent != null) {
+                $('tr#' + item.id).append('<td>' + item.parent.name + '</td>');
+            } else {
+                $('tr#' + item.id).append('<td>' + item.parent + '</td>');
+            }
+            $('tr#' + item.id).append( '<td>' + '<a href="edit/' + item.id + '">' +
+                '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>' +
+                '<a id=del"' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
+                '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>' +
+                '</td>' );
+            $('.table').append('</tr>');
+            $('table a#del' + item.id).click(function () {
+                $('#elementId').val(item.id);
+            });
         }
 
         function createCRUD( product, item ) {
@@ -131,26 +190,25 @@
                 '</div>'
             );
             $('div.admin a#del' + item.id).click(function () {
-                $('#productId').val(item.id);
+                $('#elementId').val(item.id);
             });
         }
 
         function createPagination( length ) {
-            length = 23; //
-            grid.append( '<ul class="pagination col-xs-12"></ul>' );
+            grid.append( '<ul class="pagination col-xs-12" name="pagination"></ul>' );
             for ( var i = 1; i <= ( length / options.settings.items ) + 1; i++ ) {
-                $( '.pagination' ).append( '<li id="' + i + '"><a>' + i + '</a></li>' );
+                $( 'ul[name="pagination"].pagination' ).append( '<li id="' + i + '"><a>' + i + '</a></li>' );
                 if ( setup.settings.page === i ) {
-                    $( '.pagination li#' + i ).addClass( 'active' );
+                    $( 'ul[name="pagination"].pagination li#' + i ).addClass( 'active' );
                 } else {
-                    setEventForPage($('.pagination li#' + i), i);
+                    setEventForPage($('ul[name="pagination"].pagination li#' + i));
                 }
             }
         }
 
-        function setEventForPage(element, page) {
+        function setEventForPage(element) {
             $(element).click(function () {
-                setup.settings.page = page;
+                setup.settings.page = parseInt(this.id);
                 ajaxMain(options);
             });
         }
@@ -159,29 +217,24 @@
             grid.append('<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog"><div class="modal-content"><div class="modal-header">' +
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '<h4 class="modal-title" id="myModalLabel">Вы действительно хотите удалить продукт?</h4></div><div class="modal-body">' +
+                '<h4 class="modal-title" id="myModalLabel">Вы действительно хотите удалить?</h4></div><div class="modal-body">' +
                 '<form class="delete" action="/products/delete" method="post">' +
                 '<div class="col-sm-offset-2 col-sm-8"><div class="error"><span id="registrationError"></span></div>' +
-                '<input type="hidden" id="productId">' +
+                '<input type="hidden" id="elementId">' +
                 '<input type="button" id="yes" value="Да" class="btn btn-default" />' +
                 '<input type="button" data-dismiss="modal" value="Нет" class="btn btn-default" />' +
                 '</div></form></div></div></div></div>');
 
             $('#yes').click(function () {
-                var productId = $('#productId').val();
+                var elementId = $('#elementId').val();
                 $.ajax({
                     type: 'POST',
-                    url: '/products/delete/' + productId,
+                    url: options.url + '/delete/' + elementId,
                     success: function () {
                         window.location.replace("/products");
                     }
                 });
             });
-        }
-
-        function clearGrid() {
-            $('.catalog').remove();
-            $('.pagination').remove();
         }
     };
 })(jQuery);

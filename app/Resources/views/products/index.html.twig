@@ -14,44 +14,42 @@
     </script>
 {% endblock %}
 {% block body %}
-    <div class="col-md-2 hidden-xs hidden-sm">
-        {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
-    </div>
-    <div class="col-xs-12 hidden-md hidden-lg">
-        {{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}
-    </div>
+    {% include 'menu/sidebar.html.twig' %}
+    {#<div class="col-md-2 hidden-xs hidden-sm">#}
+        {#{{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}#}
+    {#</div>#}
+    {#<div class="col-xs-12 hidden-md hidden-lg">#}
+        {#{{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}#}
+    {#</div>#}
     {% for flash_message in app.session.flashbag.get('message') %}
         <div class="alert alert-info" role="alert" style="margin: 1% 15%">
             {{ flash_message }}
         </div>
     {% endfor %}
 
+    <input type="hidden" id="userRole">
     <div class="col-xs-12 col-md-9">
         <h1> Каталог товаров </h1>
         <div id="grid"></div>
     </div>
 
+    <script>
+        var role = 'user';
     {% if is_granted("ROLE_MODERATOR") %}
-        <script>
-            $('#grid').ajaxgrid({
-                url: '/products', // URL, с которого тянуть данные
-                sortableColumns: ['name', 'price'], // массив с именами полей сущности, по которым должна быть возможна сортировка
-                filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
-                itemsPerPage: [8, 12, 20], // количество единиц на страницу для пагинации
-                page: 1,
-                admin: true
-            });
-        </script>
+        role = 'moderator';
     {% else %}
-        <script>
-            $('#grid').ajaxgrid({
-                url: '/products', // URL, с которого тянуть данные
-                sortableColumns: ['name', 'price'], // массив с именами полей сущности, по которым должна быть возможна сортировка
-                filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
-                itemsPerPage: [8, 12, 20], // количество единиц на страницу для пагинации
-                page: 1,
-                admin: false
-            });
-        </script>
+        role = 'user';
     {% endif %}
+        $('#userRole').val(role);
+
+        $('#grid').ajaxgrid({
+            url: '/products', // URL, с которого тянуть данные
+            sortableColumns: ['name', 'price'], // массив с именами полей сущности, по которым должна быть возможна сортировка
+            filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
+            itemsPerPage: [8, 12, 20], // количество единиц на страницу для пагинации
+            page: 1,
+            role: role,
+            view: 'bricks'
+        });
+    </script>
 {% endblock %}

@@ -47,7 +47,9 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
                 ->select('p')
                 ->from('AppBundle:Product', 'p')
                 ->innerJoin('p.category', 'cat')
-                ->where('cat.name = :name')
+                ->orWhere('cat.name = :name')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->orWhere('cat_p.name = :name')
                 ->setParameter('name', $pattern)
                 ->orderBy('p.' . $sort_by_field, $order)
                 ->setFirstResult(($page - 1) * $items)
@@ -57,6 +59,32 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $products;
+    }
+
+    public function countRows(
+                              $filter_by_field = null,
+                              $pattern = null)
+    {
+        if ($filter_by_field == null && $pattern == null) {
+            $length = $this->_em
+                ->createQueryBuilder()
+                ->select('count(p.id)')
+                ->from('AppBundle:Product', 'p')
+                ->getQuery()->getSingleScalarResult();
+        } else {
+            $length = $this->_em
+                ->createQueryBuilder()
+                ->select('count(p.id)')
+                ->from('AppBundle:Product', 'p')
+                ->innerJoin('p.category', 'cat')
+                ->where('cat.name = :name')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->orWhere('cat_p.name = :name')
+                ->setParameter('name', $pattern)
+                ->getQuery()->getSingleScalarResult();
+        }
+
+        return $length;
     }
 
     public function getByCategory($category_id)

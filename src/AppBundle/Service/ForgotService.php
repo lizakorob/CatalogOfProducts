@@ -38,8 +38,8 @@ class ForgotService
     private function sendMessage(string $email, string $hash)
     {
         $message = \Swift_Message::newInstance()
-            ->setSubject('Reset password')
-            ->setFrom('sweets@mail.ru')
+            ->setSubject('Hello Email')
+            ->setFrom('allexuss@list.ru')
             ->setTo($email)
             ->setBody('To reset you password please
                     follow this link http://localhost:8000/reset_password/' . $hash);

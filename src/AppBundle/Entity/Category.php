@@ -33,7 +33,7 @@ class Category
     /**
      * Many Categories have One Category.
      * @ManyToOne(targetEntity="Category")
-     * @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     private $parent;
 

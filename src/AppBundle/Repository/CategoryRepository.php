@@ -21,4 +21,63 @@ class CategoryRepository extends \Doctrine\ORM\EntityRepository
 
         return true;
     }
+
+    public function findByPage($page = 1,
+                               $items = 8,
+                               $sort_by_field = 'id',
+                               $order = 'asc',
+                               $filter_by_field = null,
+                               $pattern = null)
+    {
+        if ($filter_by_field == null && $pattern == null) {
+            $categories = $this->_em
+                ->createQueryBuilder()
+                ->select('cat')
+                ->from('AppBundle:Category', 'cat')
+                ->orderBy('cat.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items)
+                ->getQuery()
+                ->getResult();
+        } else {
+            $categories = $this->_em
+                ->createQueryBuilder()
+                ->select('cat')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat.name = :name')
+                ->setParameter('name', $pattern)
+                ->orderBy('cat.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items)
+                ->getQuery()
+                ->getResult();
+        }
+
+        return $categories;
+    }
+
+    public function countRows(
+        $filter_by_field = null,
+        $pattern = null)
+    {
+        if ($filter_by_field == null && $pattern == null) {
+            $length = $this->_em
+                ->createQueryBuilder()
+                ->select('count(cat.id)')
+                ->from('AppBundle:Category', 'cat')
+                ->getQuery()->getSingleScalarResult();
+        } else {
+            $length = $this->_em
+                ->createQueryBuilder()
+                ->select('count(cat.id)')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat.name = :name')
+                ->setParameter('name', $pattern)
+                ->getQuery()->getSingleScalarResult();
+        }
+
+        return $length;
+    }
 }

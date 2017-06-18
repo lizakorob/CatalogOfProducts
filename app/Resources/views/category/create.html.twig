@@ -1,1 +1,32 @@
-Create category
+{% extends ':home:index.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ '/js/categoriesList.js' }}"></script>
+{% endblock %}
+{% block body %}
+    {% for flash_message in app.session.flashbag.get('error') %}
+        <div class="alert alert-warning" role="alert" style="margin: 1% 15%">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div class="col-xs-12 col-sm-offset-1 col-sm-6">
+        <h2 style="margin: 2% 0 4% 0">Добавление новой категории</h2>
+        {{ form_start(form, { 'attr': {
+            'class': 'category'},
+            'action': path('create_category'),
+            'method': 'POST' })
+        }}
+        <div class="error">
+            <span id="loginError"></span>
+        </div>
+        {{ form_widget(form) }}
+        <input type="button" value="Сохранить" id="saveCategory" class="col-xs-12 col-md-3 btn btn-default" />
+        {{ form_end(form) }}
+        <div class="list-group"></div>
+    </div>
+    <script>
+        $('#saveCategory').click(function () {
+            //categoryValidate(null);
+        });
+    </script>
+{% endblock %}
