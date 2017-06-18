@@ -17,7 +17,7 @@ class FilterService
         $this->serialize = $serialize;
     }
 
-    public function getByFilters(Request $request)
+    public function getByFilters(Request $request, array $ignored)
     {
         $page = $request->get('page') ? $request->get('page') : 1;
         $items = $request->get('items') ? $request->get('items') : 8;
@@ -29,11 +29,7 @@ class FilterService
         $products = $this->em->getRepository('AppBundle:Product')
             ->findByPage($page, $items, $sort_by_field, $order, $filter_by_field, $pattern);
 
-        $response = $this->serialize->serializeObjects($products, [
-            'createDate',
-            'updateDate',
-            'sku'
-        ]);
+        $response = $this->serialize->serializeObjects($products, $ignored);
 
         return $response;
     }

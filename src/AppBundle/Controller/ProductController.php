@@ -30,7 +30,11 @@ class ProductController extends Controller
     public function indexAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $response = $this->get('filter_service')->getByFilters($request);
+            $response = $this->get('filter_service')->getByFilters($request, [
+                'createDate',
+                'updateDate',
+                'sku'
+            ]);
 
             return $response;
         }
@@ -150,7 +154,7 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException('Product not found');
+            throw new NotFoundHttpException('Продукт не найден');
         }
 
         return $this->render('products/delete.html.twig', array(
@@ -172,10 +176,14 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
+        if (is_null($product)) {
+            throw new NotFoundHttpException('Продукт не найден');
+        }
+
         $em->remove($product);
         $em->flush();
 
-        $this->addFlash('message', 'Product was deleted');
+        $this->addFlash('message', 'Продукт был успешно удален');
         return $this->redirectToRoute('products');
     }
 
