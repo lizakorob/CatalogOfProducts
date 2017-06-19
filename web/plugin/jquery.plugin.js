@@ -15,7 +15,14 @@
 
         var sort_by = {
             'name': 'Название',
-            'price': 'Цена'
+            'price': 'Цена',
+            'username': 'Логин'
+        };
+
+        var roles = {
+            'ROLE_ADMIN':'Администратор',
+            'ROLE_MODERATOR': 'Модератор',
+            'ROLE_USER': 'Пользователь'
         };
 
         if (options.settings) {
@@ -72,6 +79,7 @@
                 } else {
                     setup.settings.order = 'asc';
                 }
+                setup.settings.page = 1;
                 ajaxMain( options );
             });
         }
@@ -87,6 +95,7 @@
         function setEventForItems(element, items) {
             $( element ).click( function() {
                 setup.settings.items = items;
+                setup.settings.page = 1;
                 ajaxMain( options );
             });
         }
@@ -128,9 +137,12 @@
         function createItem( item, view ) {
             if ( view === 'bricks' ) {
                 createBrickItem(item);
-            }
-            else {
-                createTableItem(item);
+            } else {
+                if ( options.url === '/categories' ) {
+                    createCategoryTableItem( item );
+                } else {
+                    createUserTableItem( item );
+                }
             }
         }
 
@@ -157,25 +169,79 @@
             }
         }
 
-        function createTableItem(item) {
-            $('.table').append('<tr id="' + item.id + '">');
-            //вывод по полям объекта
-            $('tr#' + item.id).append( '<td>' + item.id + '</td>' );
-            $('tr#' + item.id).append( '<td>' + item.name + '</td>' );
+        function createCategoryTableItem(item) {
+            $('.table').append('<tr name="row' + parseInt(item.id) + '">');
+            $('tr[name="row' + parseInt(item.id) + '"]').append( '<td>' + item.id + '</td>' );
+            $('tr[name="row' + parseInt(item.id) + '"]').append( '<td>' + item.name + '</td>' );
             if (item.parent != null) {
-                $('tr#' + item.id).append('<td>' + item.parent.name + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.parent.name + '</td>');
             } else {
-                $('tr#' + item.id).append('<td>' + item.parent + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.parent + '</td>');
             }
-            $('tr#' + item.id).append( '<td>' + '<a href="edit/' + item.id + '">' +
+            $('tr[name="row' + parseInt(item.id) + '"]').append( '<td>' + '<a href="edit/' + item.id + '">' +
                 '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>' +
-                '<a id=del"' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
+                '<a name="del' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
                 '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>' +
                 '</td>' );
             $('.table').append('</tr>');
-            $('table a#del' + item.id).click(function () {
+            $('tr a[name="del' + item.id + '"]').click(function () {
                 $('#elementId').val(item.id);
             });
+        }
+
+        function createUserTableItem( item ) {
+            if (item.username !== options.username) {
+                $('.table').append('<tr name="row' + parseInt(item.id) + '">');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.id + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.firstName + " " + item.surname + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.username + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td>' + item.email + '</td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td><select name="sel' + item.id + '"><option>Пользователь</option>' +
+                    '<option>Модератор</option><option>Администратор</option></select></td>');
+                $('tr[name="row' + parseInt(item.id) + '"]').append('<td><a>' +
+                    '<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></a>' +
+                    '<a name="del' + item.id + '" data-toggle="modal" data-target="#deleteModal">' +
+                    '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>' +
+                    '</td>');
+                setSelectedUserRole(item);
+                $('.table').append('</tr>');
+                $('tr[name="row' + parseInt(item.id) + '"] a').click(function () {
+                    var el = $('select[name="sel' + item.id + '"]').val();
+                    var roleUser = 'ROLE_USER';
+                    $.each(roles, function (index, item) {
+                        if (el === item) {
+                            roleUser = index;
+                        }
+                    });
+
+                    if (el !== roles[item.role]) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/users/set_role',
+                            data: {
+                                userId: item.id,
+                                role: roleUser
+                            },
+                            success: function (data) {
+                                $('#messageInfo').html(data);
+                                $('.alert').css("display", 'block');
+                                ajaxMain(options);
+
+                                setTimeout(function () {
+                                    $('.alert').css("display", 'none');
+                                }, 2000)
+                            }
+                        });
+                    }
+                });
+                $('tr a[name="del' + item.id + '"]').click(function () {
+                    $('#elementId').val(item.id);
+                });
+            }
+        }
+
+        function setSelectedUserRole(item) {
+            $('select[name="sel' + item.id + '"]').val(roles[item.role]);
         }
 
         function createCRUD( product, item ) {
@@ -194,14 +260,14 @@
             });
         }
 
-        function createPagination( length ) {
-            grid.append( '<ul class="pagination col-xs-12" name="pagination"></ul>' );
+        function createPagination(length) {
+            grid.append('<ul class="pagination col-xs-12" name="pagination"></ul>');
             for ( var i = 1; i <= ( length / options.settings.items ) + 1; i++ ) {
-                $( 'ul[name="pagination"].pagination' ).append( '<li id="' + i + '"><a>' + i + '</a></li>' );
+                $('ul[name="pagination"].pagination').append( '<li name="page' + i + '" id="' + i + '"><a>' + i + '</a></li>' );
                 if ( setup.settings.page === i ) {
-                    $( 'ul[name="pagination"].pagination li#' + i ).addClass( 'active' );
+                    $('ul[name="pagination"].pagination li[name="page' + i + '"]').addClass('active');
                 } else {
-                    setEventForPage($('ul[name="pagination"].pagination li#' + i));
+                    setEventForPage($('ul[name="pagination"].pagination li[name="page' + i + '"]'));
                 }
             }
         }
@@ -218,7 +284,7 @@
                 '<div class="modal-dialog"><div class="modal-content"><div class="modal-header">' +
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
                 '<h4 class="modal-title" id="myModalLabel">Вы действительно хотите удалить?</h4></div><div class="modal-body">' +
-                '<form class="delete" action="/products/delete" method="post">' +
+                '<form class="delete" method="post">' +
                 '<div class="col-sm-offset-2 col-sm-8"><div class="error"><span id="registrationError"></span></div>' +
                 '<input type="hidden" id="elementId">' +
                 '<input type="button" id="yes" value="Да" class="btn btn-default" />' +
@@ -231,7 +297,7 @@
                     type: 'POST',
                     url: options.url + '/delete/' + elementId,
                     success: function () {
-                        window.location.replace("/products");
+                        window.location.replace(options.url);
                     }
                 });
             });

@@ -15,14 +15,10 @@
 {% endblock %}
 {% block body %}
     {% include 'menu/sidebar.html.twig' %}
-    {#<div class="col-md-2 hidden-xs hidden-sm">#}
-        {#{{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}#}
-    {#</div>#}
-    {#<div class="col-xs-12 hidden-md hidden-lg">#}
-        {#{{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}#}
-    {#</div>#}
+
     {% for flash_message in app.session.flashbag.get('message') %}
-        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+        <div class="alert alert-info" role="alert" style="margin: 5% 5% 1% 25%">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ flash_message }}
         </div>
     {% endfor %}

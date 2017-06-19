@@ -86,16 +86,4 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
 
         return $length;
     }
-
-    public function getByCategory($category_id)
-    {
-        $products = $this->_em
-            ->createQueryBuilder()
-            ->select('p')
-            ->from('AppBundle:Product', 'p')
-            ->where('p.category.id = ' . $category_id)
-            ->getQuery();
-
-        return $products;
-    }
 }

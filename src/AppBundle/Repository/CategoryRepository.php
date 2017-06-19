@@ -15,7 +15,11 @@ class CategoryRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $categoryByName = $em->getRepository('AppBundle:Category')->findOneBy($options);
 
-        if ($categoryByName->getId() != $id) {
+        if ($categoryByName == null) {
+            return false;
+        }
+
+        if ($categoryByName->getId() == $id) {
             return false;
         }
 
@@ -79,5 +83,22 @@ class CategoryRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $length;
+    }
+
+    public function findByFilter(string $filter, string $categoryName)
+    {
+        $categories = $this->_em
+            ->createQueryBuilder()
+            ->select('c')
+            ->from('AppBundle:Category', 'c')
+            ->where('c.name != :catName')
+            ->andWhere('c.name LIKE :name')
+            ->setParameter('catName', $categoryName)
+            ->setParameter('name', '%' . $filter . '%')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        return $categories;
     }
 }

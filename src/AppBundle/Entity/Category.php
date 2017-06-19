@@ -82,7 +82,7 @@ class Category
     /**
      * @param Category $parent
      */
-    public function setParent($parent)
+    public function setParent($parent = null)
     {
         $this->parent = $parent;
     }

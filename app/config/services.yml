@@ -85,8 +85,6 @@ services:
           public: true
           tags:
               - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
-              - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
-              - { name: knp_menu.menu_builder, method: createSmallMenu, alias: accordeon }
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:

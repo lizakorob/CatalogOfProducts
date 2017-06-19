@@ -45,6 +45,7 @@ class CategoryService
         $form->get('name')->setData($category->getName());
         if ($category->getParent() != null) {
             $form->get('parent')->setData($category->getParent()->getName());
+            $form->get('category_id')->setData($category->getParent()->getId());
         }
     }
 
@@ -53,6 +54,10 @@ class CategoryService
         $category->setName($form->get('name')->getData());
 
         $categoryId = $form->get('category_id')->getData();
+        $categoryId = $this->registry->getManager()->getRepository('AppBundle:Category')
+            ->findBy(array(
+                'name' => $form->get('parent')->getData(),
+            ));
 
         if ($form->get('parent')->getData() != '') {
             $category_parent = $this->registry->getEntityManager()
@@ -76,17 +81,18 @@ class CategoryService
                 'name' => $name,
             ));
 
-        if (!is_null($categoryUsed)) {
+        if ($categoryUsed != null) {
             return new JsonResponse(array(
                 'status' => '400',
                 'message' => 'Категория с таким именем уже существует'
             ));
-        }
+        } else {
 
-        return new JsonResponse(array(
-            'status' => '200',
-            'message' => ''
-        ));
+            return new JsonResponse(array(
+                'status' => '200',
+                'message' => ''
+            ));
+        }
     }
 
     /**

@@ -140,30 +140,6 @@ class ProductController extends Controller
 
     /**
      * @param $id
-     * @return Response
-     * @Route("/delete/{id}",
-     *     requirements={"id" = "\d+"},
-     *     defaults={"id" = 1},
-     *     name="product_delete")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_MODERATOR')")
-     */
-    public function deleteAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('AppBundle:Product')->find($id);
-
-        if (is_null($product)) {
-            throw new NotFoundHttpException('Продукт не найден');
-        }
-
-        return $this->render('products/delete.html.twig', array(
-            'product' => $product,
-        ));
-    }
-
-    /**
-     * @param $id
      * @return RedirectResponse
      * @Route("/delete/{id}",
      *     requirements={"id" = "\d+"},

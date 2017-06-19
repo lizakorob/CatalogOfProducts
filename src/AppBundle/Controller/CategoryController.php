@@ -29,11 +29,7 @@ class CategoryController extends Controller
     public function indexAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $response = $this->get('filter_service')->getByFilters($request, 'AppBundle:Category', [
-                'createDate',
-                'updateDate',
-                'sku'
-            ]);
+            $response = $this->get('filter_service')->getByFilters($request, 'AppBundle:Category');
 
             return $response;
         }
@@ -83,7 +79,7 @@ class CategoryController extends Controller
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
         if (is_null($category)) {
-            throw new NotFoundHttpException('Category not found');
+            throw new NotFoundHttpException('Категория не найдена');
         }
 
         return $this->render('category/details.html.twig', array(
@@ -107,7 +103,7 @@ class CategoryController extends Controller
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
         if (is_null($category)) {
-            throw new NotFoundHttpException('Category not found');
+            throw new NotFoundHttpException('Категория не найдена');
         }
 
         $form = $this->createForm(EditCategoryType::class);
@@ -117,7 +113,7 @@ class CategoryController extends Controller
         if ($request->isXmlHttpRequest()) {
             $name = $request->request->get('name');
 
-            return $this->get('category')->isExistProductEdit($name, $category);
+            return $this->get('category')->isExistCategoryEdit($name, $category);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -129,28 +125,6 @@ class CategoryController extends Controller
 
         return $this->render('category/edit.html.twig', array(
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @param $id
-     * @return Response
-     * @Route("/delete/{id}",
-     *     requirements={"id" = "\d+"},
-     *     defaults={"id" = 1},
-     *     name="categories_delete_id")
-     * @Method("GET")
-     */
-    public function deleteAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:Category')->find($id);
-
-        if (is_null($category)) {
-            throw new NotFoundHttpException('Category is not found');
-        }
-
-        return $this->render('category/delete.html.twig', array(
             'category' => $category,
         ));
     }
@@ -168,10 +142,14 @@ class CategoryController extends Controller
         $em = $this->getDoctrine()->getManager();
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
+        if (is_null($category)) {
+            throw new NotFoundHttpException('Категория не найдена');
+        }
+
         $em->remove($category);
         $em->flush();
 
-        $this->addFlash('message', 'Category was deleted');
+        $this->addFlash('message', 'Категория быда успешно удалена');
         return $this->redirectToRoute('categories');
     }
 
@@ -186,6 +164,27 @@ class CategoryController extends Controller
             $length = $this->get('filter_service')->getCountRows($request, 'AppBundle:Category');
 
             return $length;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_by_filter")
+     */
+    public function getByFilter(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $filter = $request->get('filter');
+            $categoryName = $request->get('category');
+
+            $em = $this->getDoctrine()->getManager();
+            $categories = $em->getRepository('AppBundle:Category')
+                ->findByFilter($filter, $categoryName);
+
+            $response = $this->get('serialize_service')->serializeObjects($categories);
+
+            return $response;
         }
     }
 }

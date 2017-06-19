@@ -17,13 +17,17 @@
     {% include ':menu:header.html.twig' %}
     {% if not is_granted("ROLE_USER") %}
         {% include ':security:securityModals.html.twig' %}
+    {% else %}
+        {% block nav %}
+            {% set menu = knp_menu_get('main', [], {'user': app.user.role}) %}
+            {{ knp_menu_render(menu) }}
+        {% endblock %}
     {% endif %}
-    {% block nav %}
-    {% endblock %}
 {% endblock %}
 {% block body %}
     {% for flash_message in app.session.flashbag.get('message') %}
-        <div class="alert alert-info" role="alert" style="margin: 1% 15%">
+        <div class="alert alert-info" role="alert" style="margin: 5% 15% 1%">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ flash_message }}
         </div>
     {% endfor %}
