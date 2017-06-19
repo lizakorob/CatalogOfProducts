@@ -1,4 +1,5 @@
 CatalogOfProducts
 =================
 
-A Symfony project created on June 7, 2017, 12:04 am.
+The project was developed by students of Itransition courses
+Alexander Lapkovsky & Elizaveta Korob &copy 2017
