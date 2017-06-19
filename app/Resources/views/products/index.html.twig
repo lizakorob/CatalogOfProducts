@@ -25,7 +25,18 @@
 
     <input type="hidden" id="userRole">
     <div class="col-xs-12 col-md-9">
-        <h1> Каталог товаров </h1>
+        <h1>
+            {% if filter %}
+                Поиск по "{{ filter }}"
+            {% else %}
+                Каталог товаров
+            {% endif %}
+            {% if is_granted("ROLE_MODERATOR") %}
+                <a href="{{ path('product_create') }}" class="btn btn-default ">
+                    <span class="glyphicon glyphicon-plus" style="color: #fff8e7"></span>
+                </a>
+            {% endif %}
+        </h1>
         <div id="grid"></div>
     </div>
 
@@ -36,16 +47,27 @@
     {% else %}
         role = 'user';
     {% endif %}
+
+        var settings = null;
+
+        {% if filter %}
+            settings = {
+                filter_by_field: 'product',
+                pattern: '{{ filter }}'
+            };
+        {% endif %}
+
         $('#userRole').val(role);
 
         $('#grid').ajaxgrid({
-            url: '/products', // URL, с которого тянуть данные
-            sortableColumns: ['name', 'price'], // массив с именами полей сущности, по которым должна быть возможна сортировка
-            filterableColumns: ['name', 'price', 'manufacturer'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
-            itemsPerPage: [8, 12, 20], // количество единиц на страницу для пагинации
+            url: '/products',
+            sortableColumns: ['name', 'price'],
+            filterableColumns: ['name', 'price', 'manufacturer'],
+            itemsPerPage: [8, 12, 20],
             page: 1,
             role: role,
-            view: 'bricks'
+            view: 'bricks',
+            settings: settings
         });
     </script>
 {% endblock %}

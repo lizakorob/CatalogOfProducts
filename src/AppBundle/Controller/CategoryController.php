@@ -49,8 +49,9 @@ class CategoryController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $name = $request->request->get('name');
+            $parent = $request->request->get('parent');
 
-            return $this->get('category')->isExistCategoryAdd($name);
+            return $this->get('category')->isExistCategoryAdd($name, $parent);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,28 +63,6 @@ class CategoryController extends Controller
 
         return $this->render('category/create.html.twig', array(
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @param $id
-     * @Route("/details/{id}",
-     *     requirements={"id" = "\d+"},
-     *     defaults={"id" = 1},
-     *     name="category_by_id")
-     * @return Response
-     */
-    public function infoAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:Category')->find($id);
-
-        if (is_null($category)) {
-            throw new NotFoundHttpException('Категория не найдена');
-        }
-
-        return $this->render('category/details.html.twig', array(
-            'category' => $category,
         ));
     }
 
@@ -112,8 +91,9 @@ class CategoryController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $name = $request->request->get('name');
+            $parent = $request->request->get('parent');
 
-            return $this->get('category')->isExistCategoryEdit($name, $category);
+            return $this->get('category')->isExistCategoryEdit($name, $category, $parent);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {

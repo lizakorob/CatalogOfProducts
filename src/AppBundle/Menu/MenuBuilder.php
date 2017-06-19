@@ -23,9 +23,8 @@ class MenuBuilder
     public function createMainMenu(array $options)
     {
         $menuItems = array (
-//            '/' => 'Главная',
+            'homepage' => 'Главная',
             'products' => 'Каталог',
-//            'about' => 'О нас',
         );
         $menu = $this->factory->createItem('main');
         $menu->setChildrenAttribute('class', 'nav navbar-nav mainMenu col-md-12 hidden-xs hidden-sm');
@@ -44,6 +43,11 @@ class MenuBuilder
                 'route' => 'users',
             ));
         }
+
+        $menu->addChild('О нас', array(
+            'route' => 'about',
+        ));
+
         return $menu;
     }
 }

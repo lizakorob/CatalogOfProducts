@@ -53,13 +53,13 @@ class CategoryService
     {
         $category->setName($form->get('name')->getData());
 
-        $categoryId = $form->get('category_id')->getData();
+        //$categoryById = $form->get('category_id')->getData();
         $categoryId = $this->registry->getManager()->getRepository('AppBundle:Category')
             ->findBy(array(
                 'name' => $form->get('parent')->getData(),
             ));
 
-        if ($form->get('parent')->getData() != '') {
+        if ($categoryId != null) {
             $category_parent = $this->registry->getEntityManager()
                 ->getReference('AppBundle:Category', intval($categoryId));
             $category->setParent($category_parent);
@@ -70,9 +70,10 @@ class CategoryService
 
     /**
      * @param $name
+     * @param $parent
      * @return JsonResponse
      */
-    public function isExistCategoryAdd($name)
+    public function isExistCategoryAdd($name, $parent)
     {
         $em = $this->registry->getManager();
 
@@ -86,21 +87,35 @@ class CategoryService
                 'status' => '400',
                 'message' => 'Категория с таким именем уже существует'
             ));
-        } else {
-
-            return new JsonResponse(array(
-                'status' => '200',
-                'message' => ''
-            ));
         }
+
+        if ($parent != '') {
+            $parentCategory = $em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $parent,
+                ));
+
+            if ($parentCategory == null) {
+                return new JsonResponse(array(
+                    'status' => '400',
+                    'message' => 'Имя родительской категории не найдено'
+                ));
+            }
+        }
+
+        return new JsonResponse(array(
+            'status' => '200',
+            'message' => ''
+        ));
     }
 
     /**
      * @param $name
      * @param Category $product
+     * @param $parent
      * @return JsonResponse
      */
-    public function isExistCategoryEdit($name, Category $product)
+    public function isExistCategoryEdit($name, Category $product, $parent)
     {
         $em = $this->registry->getManager();
 
@@ -111,6 +126,20 @@ class CategoryService
                 'status' => '400',
                 'message' => 'Категория с таким именем уже существует'
             ));
+        }
+
+        if ($parent != '') {
+            $parentCategory = $em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $parent,
+                ));
+
+            if ($parentCategory == null) {
+                return new JsonResponse(array(
+                    'status' => '400',
+                    'message' => 'Имя родительской категории не найдено'
+                ));
+            }
         }
 
         return new JsonResponse(array(

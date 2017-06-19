@@ -39,7 +39,9 @@ class ProductController extends Controller
             return $response;
         }
 
-        return $this->render('products/index.html.twig');
+        return $this->render('products/index.html.twig', array(
+            'filter' => '',
+        ));
     }
 
     /**
@@ -211,5 +213,31 @@ class ProductController extends Controller
 
             return $length;
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_by_filter", name="get_by_filter")
+     */
+    public function getByFilter(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $filter = $request->get('filter');
+
+            $em = $this->getDoctrine()->getManager();
+            $products = $em->getRepository('AppBundle:Product')
+                ->findByFilter($filter);
+
+            $response = $this->get('serialize_service')->serializeObjects($products);
+
+            return $response;
+        }
+
+        $filter = $request->get('searchInput');
+
+        return $this->render('products/index.html.twig', array(
+            'filter' => $filter,
+        ));
     }
 }

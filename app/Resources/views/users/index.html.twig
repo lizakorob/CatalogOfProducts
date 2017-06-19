@@ -20,10 +20,10 @@
     </div>
     <script>
         $('#grid').ajaxgrid({
-            url: '/users', // URL, с которого тянуть данные
-            sortableColumns: ['username'], // массив с именами полей сущности, по которым должна быть возможна сортировка
-            filterableColumns: ['username'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
-            itemsPerPage: [6, 12, 20], // количество единиц на страницу для пагинации
+            url: '/users',
+            sortableColumns: ['username'],
+            filterableColumns: ['username'],
+            itemsPerPage: [6, 12, 20],
             page: 1,
             view: 'table',
             headers: ['#', 'Полное имя', 'Логин', 'E-mail', 'Роль'],

@@ -41,20 +41,41 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
                 ->setMaxResults($items)
                 ->getQuery()
                 ->getResult();
+        } elseif ($filter_by_field == 'product'){
+            $products = $this->findByFilter($pattern);
         } else {
-            $products = $this->_em
+            $category = $this->_em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $pattern,
+                ));
+
+            $categories = $this->_em
                 ->createQueryBuilder()
-                ->select('p')
+                ->select('cat.id')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat_p.id = :id')
+                ->setParameter('id', $category->getId())
+                ->getQuery()
+                ->getResult();
+
+            $id = array();
+            foreach ($categories as $value) {
+                array_push($id, $value['id']);
+            }
+            array_push($id, $category->getId());
+
+            $qb = $this->getEntityManager()
+                ->createQueryBuilder();
+            $qb->select('p')
                 ->from('AppBundle:Product', 'p')
                 ->innerJoin('p.category', 'cat')
-                ->orWhere('cat.name = :name')
-                ->innerJoin('cat.parent', 'cat_p')
-                ->orWhere('cat_p.name = :name')
-                ->setParameter('name', $pattern)
+                ->where($qb->expr()->in('cat.id', $id))
                 ->orderBy('p.' . $sort_by_field, $order)
                 ->setFirstResult(($page - 1) * $items)
-                ->setMaxResults($items)
-                ->getQuery()
+                ->setMaxResults($items);
+
+            $products = $qb->getQuery()
                 ->getResult();
         }
 
@@ -71,19 +92,56 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
                 ->select('count(p.id)')
                 ->from('AppBundle:Product', 'p')
                 ->getQuery()->getSingleScalarResult();
+        } elseif ($filter_by_field == 'product'){
+            $length = count($this->findByFilter($pattern));
         } else {
-            $length = $this->_em
+            $category = $this->_em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $pattern,
+                ));
+
+            $categories = $this->_em
                 ->createQueryBuilder()
-                ->select('count(p.id)')
+                ->select('cat.id')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat_p.id = :id')
+                ->setParameter('id', $category->getId())
+                ->getQuery()
+                ->getResult();
+
+            $id = array();
+            foreach ($categories as $value) {
+                array_push($id, $value['id']);
+            }
+            array_push($id, $category->getId());
+
+            $qb = $this->getEntityManager()
+                ->createQueryBuilder();
+            $qb->select('count(p.id)')
                 ->from('AppBundle:Product', 'p')
                 ->innerJoin('p.category', 'cat')
-                ->where('cat.name = :name')
-                ->innerJoin('cat.parent', 'cat_p')
-                ->orWhere('cat_p.name = :name')
-                ->setParameter('name', $pattern)
-                ->getQuery()->getSingleScalarResult();
+                ->where($qb->expr()->in('cat.id', $id));
+
+            $length = $qb->getQuery()
+                ->getSingleScalarResult();
         }
 
         return $length;
+    }
+
+    public function findByFilter(string $filter)
+    {
+        $products = $this->_em
+            ->createQueryBuilder()
+            ->select('p')
+            ->from('AppBundle:Product', 'p')
+            ->andWhere('p.name LIKE :name')
+            ->setParameter('name', '%' . $filter . '%')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        return $products;
     }
 }

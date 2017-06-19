@@ -30,22 +30,24 @@
             setup.settings.pattern = options.settings.pattern;
         }
 
-        //createPanel();
         options = $.extend( options, setup );
         ajaxMain( options );
 
         function ajaxMain( options ) {
             grid.html('');
             createPanel();
-            //clearGrid();
             $.ajax({
                 type: 'GET',
                 url: options.url,
                 async: false,
                 data: setup.settings,
                 success: function(data){
-                    createGrid( data );
-                    createModalForm();
+                    if (data.length !== 0) {
+                        createGrid(data);
+                        createModalForm();
+                    } else {
+                        createWarning();
+                    }
                 }
             });
 
@@ -301,6 +303,11 @@
                     }
                 });
             });
+        }
+
+        function createWarning() {
+            grid.append('<div class="alert alert-danger">' +
+                'По вашему запросу ничего не найдено</div>');
         }
     };
 })(jQuery);

@@ -12,15 +12,21 @@
         </div>
     {% endfor %}
     <div class="col-xs-12 col-md-offset-1 col-md-10">
-        <h1> Управление категориями </h1>
+        <h1> Управление категориями
+            {% if is_granted("ROLE_MODERATOR") %}
+                <a href="{{ path('create_category') }}" class="btn btn-default ">
+                    <span class="glyphicon glyphicon-plus" style="color: #fff8e7"></span>
+                </a>
+            {% endif %}
+        </h1>
         <div id="grid"></div>
     </div>
     <script>
         $('#grid').ajaxgrid({
-            url: '/categories', // URL, с которого тянуть данные
-            sortableColumns: ['name'], // массив с именами полей сущности, по которым должна быть возможна сортировка
-            filterableColumns: ['name'], // массив с именами полей сущности, по которым должна быть возможна фильтрация
-            itemsPerPage: [6, 12, 20], // количество единиц на страницу для пагинации
+            url: '/categories',
+            sortableColumns: ['name'],
+            filterableColumns: ['name'],
+            itemsPerPage: [6, 12, 20],
             page: 1,
             view: 'table',
             headers: ['#', 'Название категории', 'Родительская категория']

@@ -41,15 +41,17 @@
                     </a>
                 {% endif %}
             </div>
-            <form class="navbar-form navbar-left col-sm-12 hidden-xs" id="searchForm" role="search"
-                  onsubmit="alert('submit!');return false;">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Ищу...">
-                    <span class="input-group-btn">
-                                <button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
-                            </span>
-                </div>
-            </form>
+            {% if is_granted("ROLE_USER") %}
+                <div name="searchList" class="list-group" style="z-index: 100;"></div>
+                <form action="{{ path('get_by_filter') }}" class="navbar-form navbar-left col-sm-12 hidden-xs" name="searchForm" role="search">
+                    <div class="input-group" style="width: 400px">
+                        <input name="searchInput" id="searchInput" type="text" class="form-control" placeholder="Ищу...">
+                        <span class="input-group-btn">
+                            <button id="searchSubmit" class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+                        </span>
+                    </div>
+                </form>
+            {% endif %}
             <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
                 {% if is_granted("ROLE_USER") %}
                     <p>
@@ -68,4 +70,10 @@
             </div>
         </div>
     </nav>
+    <script src="{{ asset('bundles/app/js/listOfProducts.js') }}"></script>
+    <script>
+        $('#searchSubmit').click(function () {
+            $('form[name="searchForm"]').submit();
+        });
+    </script>
 {% endblock %}
