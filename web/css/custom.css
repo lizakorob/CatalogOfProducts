@@ -25,6 +25,34 @@ body {
     /*border-color: inherit;*/
 }
 
+.customCarousel {
+    width: 100%;
+    overflow: hidden;
+}
+
+footer {
+    background-color: rgba(255, 194, 195, 0.19);
+    overflow: hidden;
+    margin-top: 2%;
+    height: 20%;
+}
+
+footer a{
+    font-size: medium;
+    color: #bb646d;
+    font-family: 'Roboto, sans-serif', sans-serif;
+}
+
+.info {
+
+    color: #bb646d;
+    font-size: 13px;
+    font-family: 'Roboto, sans-serif', sans-serif;
+    margin-top: 2%;
+    /*overflow: hidden;*/
+
+}
+
 .navbar-nav {
     margin: 0;
 }
@@ -295,10 +323,10 @@ ol.breadcrumb {
     color: black;
 }
 
-img {
-    max-width: 100%;
-    max-height: 300px;
-}
+/*img {*/
+    /*max-width: 100%;*/
+    /*max-height: 300px;*/
+/*}*/
 
 .details span{
     font-size: 16px;
@@ -370,4 +398,22 @@ img {
     background-color: #f3848d;
 }
 
+.carousel-slide {
+    height: 60%;
+    max-width: 100%;
+}
 
+.item img{
+
+}
+
+/*.carousel-inner {
+    height: 600px;
+}*/
+.carousel-control.left{
+    background-image: -webkit-linear-gradient(left, #f2dede 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.carousel-control.right {
+    background-image: -webkit-linear-gradient(right, #f2dede 0%, rgba(255, 255, 255, 0) 100%);
+}

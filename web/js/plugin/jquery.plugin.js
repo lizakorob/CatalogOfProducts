@@ -105,6 +105,7 @@
             data.forEach( function ( item ) {
                 createItem( item, options.view );
             });
+
             createPagination( data.length );
         }
 

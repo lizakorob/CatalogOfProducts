@@ -22,10 +22,13 @@
         <header>
             {% block header %}{% endblock %}
         </header>
-        {% block sidebar %} {% endblock %}
-        <content>
+        {#{% block sidebar %} {% endblock %}#}
+        <div class="content">
             {% block body %}  {% endblock %}
-        </content>
+        </div>
+        <footer>
+            {% block footer %} {% endblock %}
+        </footer>
     </body>
 
 </html>
