@@ -1,1 +1,73 @@
-Table of products
+{% extends ':home:index.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ '/plugin/jquery.plugin.js' }}"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on('mouseenter', '.product', function () {
+                $(this).find(".admin").show();
+            }).on('mouseleave', '.product', function () {
+                $(this).find(".admin").hide();
+            });
+        });
+    </script>
+{% endblock %}
+{% block body %}
+    {% include 'menu/sidebar.html.twig' %}
+
+    {% for flash_message in app.session.flashbag.get('message') %}
+        <div class="alert alert-info" role="alert" style="margin: 5% 5% 1% 25%">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <input type="hidden" id="userRole">
+    <div class="col-xs-12 col-md-9">
+        <h1>
+            {% if filter %}
+                Поиск по "{{ filter }}"
+            {% else %}
+                Каталог товаров
+            {% endif %}
+            {% if is_granted("ROLE_MODERATOR") %}
+                <a href="{{ path('product_create') }}" class="btn btn-default ">
+                    <span class="glyphicon glyphicon-plus" style="color: #fff8e7"></span>
+                </a>
+            {% endif %}
+        </h1>
+        <div id="grid"></div>
+    </div>
+
+    <script>
+        var role = 'user';
+    {% if is_granted("ROLE_MODERATOR") %}
+        role = 'moderator';
+    {% else %}
+        role = 'user';
+    {% endif %}
+
+        var settings = null;
+
+        {% if filter %}
+            settings = {
+                filter_by_field: 'product',
+                pattern: '{{ filter }}'
+            };
+        {% endif %}
+
+        $('#userRole').val(role);
+
+        $('#grid').ajaxgrid({
+            url: '/products',
+            sortableColumns: ['name', 'price'],
+            filterableColumns: ['name', 'price', 'manufacturer'],
+            itemsPerPage: [8, 12, 20],
+            page: 1,
+            role: role,
+            view: 'bricks',
+            settings: settings
+        });
+    </script>
+{% endblock %}

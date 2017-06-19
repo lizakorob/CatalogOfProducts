@@ -28,7 +28,7 @@ class RegisterService
         $em->flush();
     }
 
-    public function IsRegisterLogin(string $username): bool
+    public function IsRegisterLogin(string $username, int $id = null): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(
@@ -36,13 +36,15 @@ class RegisterService
         ));
 
         if ($user != null) {
-            return true;
+            if ($id != null && $id != $user->getId()) {
+                return true;
+            }
         }
 
         return false;
     }
 
-    public function IsRegisterEmail(string $email): bool
+    public function IsRegisterEmail(string $email, int $id = null): bool
     {
         $em = $this->registry->getEntityManager();
         $user = $em->getRepository('AppBundle:User')->findOneBy(array(
@@ -50,7 +52,9 @@ class RegisterService
         ));
 
         if ($user != null) {
-            return true;
+            if ($id != null && $id != $user->getId()) {
+                return true;
+            }
         }
 
         return false;

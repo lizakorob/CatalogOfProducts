@@ -33,10 +33,9 @@ class Category
     /**
      * Many Categories have One Category.
      * @ManyToOne(targetEntity="Category")
-     * @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     private $parent;
-
 
     /**
      * Get id
@@ -73,7 +72,7 @@ class Category
     }
 
     /**
-     * @return mixed
+     * @return Category
      */
     public function getParent()
     {
@@ -81,9 +80,9 @@ class Category
     }
 
     /**
-     * @param mixed $parent
+     * @param Category $parent
      */
-    public function setParent($parent)
+    public function setParent($parent = null)
     {
         $this->parent = $parent;
     }

@@ -77,4 +77,12 @@ class HomeController extends Controller
             return $this->redirectToRoute('homepage');
         }
     }
+
+    /**
+     * @return Response
+     * @Route("/about", name="about")
+     */
+    public function aboutAction() {
+        return $this->render('home/about.html.twig');
+    }
 }

@@ -17,73 +17,52 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class CategoryController
  * @package AppBundle\Controller
  * @Route("/categories")
+ * @Security("has_role('ROLE_MODERATOR')")
  */
 class CategoryController extends Controller
 {
     /**
+     * @param Request $request
      * @Route("/", name="categories")
      * @return Response
-     * @Security("has_role('ROLE_USER')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository('AppBundle:Category')->findAll();
+        if ($request->isXmlHttpRequest()) {
+            $response = $this->get('filter_service')->getByFilters($request, 'AppBundle:Category');
 
-        return $this->render('category/index.html.twig', array(
-            'categories' => $categories,
-        ));
+            return $response;
+        }
+
+        return $this->render('category/index.html.twig');
     }
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
      * @Route("/create", name="create_category")
-     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function createAction(Request $request)
     {
-        $category = new Category();
-        $form = $this->createForm(EditCategoryType::class, $category);
+        $form = $this->createForm(EditCategoryType::class);
         $form->handleRequest($request);
 
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $parent = $request->request->get('parent');
+
+            return $this->get('category')->isExistCategoryAdd($name, $parent);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('category')->addCategory($form);
+            $this->get('category')->addCategory($form);
 
-            if (!$result) {
-                $this->addFlash('error', 'Category is already created');
-                return $this->redirectToRoute('create_category');
-            }
-
-            $this->addFlash('message', 'Category was created');
+            $this->addFlash('message', 'Категория была успешно создана');
             return $this->redirectToRoute('categories');
         }
 
         return $this->render('category/create.html.twig', array(
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @param $id
-     * @Route("/details/{id}",
-     *     requirements={"id" = "\d+"},
-     *     defaults={"id" = 1},
-     *     name="category_by_id")
-     * @return Response
-     * @Security("has_role('ROLE_USER')")
-     */
-    public function infoAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:Category')->find($id);
-
-        if (is_null($category)) {
-            throw new NotFoundHttpException('Category not found');
-        }
-
-        return $this->render('category/details.html.twig', array(
-            'category' => $category,
         ));
     }
 
@@ -96,7 +75,6 @@ class CategoryController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1},
      *     name="category_edit_id")
-     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function editAction(Request $request, $id)
     {
@@ -104,51 +82,29 @@ class CategoryController extends Controller
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
         if (is_null($category)) {
-            throw new NotFoundHttpException('Category not found');
+            throw new NotFoundHttpException('Категория не найдена');
         }
 
-        $form = $this->createForm(EditCategoryType::class, $category);
+        $form = $this->createForm(EditCategoryType::class);
+        $this->get('category')->fillFormWithDataOfCategory($form, $category);
         $form->handleRequest($request);
 
+        if ($request->isXmlHttpRequest()) {
+            $name = $request->request->get('name');
+            $parent = $request->request->get('parent');
+
+            return $this->get('category')->isExistCategoryEdit($name, $category, $parent);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->get('category')->editCategory($form);
+            $this->get('category')->editCategory($form, $category);
 
-            if ($result) {
-                $this->addFlash('error', 'Category is already created');
-                return $this->redirectToRoute('category_edit_id', array(
-                    'id' => $id,
-                ));
-            }
-
-            $this->addFlash('message', 'Category was changed');
+            $this->addFlash('message', 'Категория успешно изменена');
             return $this->redirectToRoute('categories');
         }
 
         return $this->render('category/edit.html.twig', array(
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * @param $id
-     * @return Response
-     * @Route("/delete/{id}",
-     *     requirements={"id" = "\d+"},
-     *     defaults={"id" = 1},
-     *     name="categories_delete_id")
-     * @Method("GET")
-     * @Security("has_role('ROLE_MODERATOR')")
-     */
-    public function deleteAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $category = $em->getRepository('AppBundle:Category')->find($id);
-
-        if (is_null($category)) {
-            throw new NotFoundHttpException('Category is not found');
-        }
-
-        return $this->render('category/delete.html.twig', array(
             'category' => $category,
         ));
     }
@@ -160,17 +116,55 @@ class CategoryController extends Controller
      *     requirements={"id" = "\d+"},
      *     defaults={"id" = 1})
      * @Method("POST")
-     * @Security("has_role('ROLE_MODERATOR')")
      */
     public function deleteConfirmAction($id)
     {
         $em = $this->getDoctrine()->getManager();
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
+        if (is_null($category)) {
+            throw new NotFoundHttpException('Категория не найдена');
+        }
+
         $em->remove($category);
         $em->flush();
 
-        $this->addFlash('message', 'Category was deleted');
+        $this->addFlash('message', 'Категория быда успешно удалена');
         return $this->redirectToRoute('categories');
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_count")
+     */
+    public function getCountRows(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $length = $this->get('filter_service')->getCountRows($request, 'AppBundle:Category');
+
+            return $length;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/get_by_filter")
+     */
+    public function getByFilter(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $filter = $request->get('filter');
+            $categoryName = $request->get('category');
+
+            $em = $this->getDoctrine()->getManager();
+            $categories = $em->getRepository('AppBundle:Category')
+                ->findByFilter($filter, $categoryName);
+
+            $response = $this->get('serialize_service')->serializeObjects($categories);
+
+            return $response;
+        }
     }
 }

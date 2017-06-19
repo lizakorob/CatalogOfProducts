@@ -8,8 +8,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends Controller
@@ -92,6 +94,9 @@ class SecurityController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $hash
+     * @return Response|RedirectResponse
      * @Route("/reset_password/{hash}", name="reset_password")
      */
     public function resetPasswordAction(Request $request, $hash)
@@ -104,8 +109,8 @@ class SecurityController extends Controller
 
         if (date_diff(new \DateTime(), $userReset->getCreateDate())->h > 2) {
             $this->get('reset_password')->deleteHash($hash);
-            $this->addFlash('message', 'Link is not valid');
-            return $this->redirectToRoute('forgot_password');
+            $this->addFlash('message', 'Ссылка недействительна');
+            return $this->redirectToRoute('homepage');
         }
 
         $form = $this->createForm(ResetType::class);
@@ -115,16 +120,16 @@ class SecurityController extends Controller
             $result = $this->get('reset_password')->resetPassword($form, $hash);
 
             if (!$result) {
-                $this->addFlash('message', 'Link is not correct');
-                return $this->redirectToRoute('forgot_password');
+                throw new NotFoundHttpException();
             }
 
-            $this->addFlash('message', 'Password has been changed');
-            return $this->redirectToRoute('login');
+            $this->addFlash('message', 'Пароль был успешно изменен');
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('security/forgot_password.html.twig', array(
             'form' => $form->createView(),
+            'hash' => $hash,
         ));
     }
 }

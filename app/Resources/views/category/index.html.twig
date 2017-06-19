@@ -2,84 +2,34 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ '/plugin/jquery.plugin.js' }}"></script>
 {% endblock %}
 {% block body %}
-    <div class="col-md-1 hidden-xs hidden-sm">
-        {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
+    {% for flash_message in app.session.flashbag.get('message') %}
+        <div class="alert alert-info" role="alert" style="margin: 5% 15% 1%">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div class="col-xs-12 col-md-offset-1 col-md-10">
+        <h1> Управление категориями
+            {% if is_granted("ROLE_MODERATOR") %}
+                <a href="{{ path('create_category') }}" class="btn btn-default ">
+                    <span class="glyphicon glyphicon-plus" style="color: #fff8e7"></span>
+                </a>
+            {% endif %}
+        </h1>
+        <div id="grid"></div>
     </div>
-    {#{{ knp_menu_render('accordeon', {'currentClass': 'active'}) }}#}
-
-    <div class="col-md-offset-1 col-md-9">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
-
-        <h3 style="margin-top: 0"> Категория </h3>
-        <div id="catalog_sorter" class="sort" data-current="popular">
-            <span>Сортировать по:</span>
-            </a> |
-            <a id="price" data-value="price" href="#">
-                <span>цене</span>
-            </a> |
-            <a id="sale" data-value="sale" href="#">
-                <span>названию</span>
-            </a>
-        </div>
-        <div class="pager">
-            <div class="pageToInsert" data-current="1" data-show-prefix="True">
-                <span class="total many">
-                    Товаров:
-                        <span>767</span>
-                </span>
-                <span class="active">1</span>
-                <a href="#">2</a>
-                <span>...</span>
-                <a href="#">755</a>
-                <a class="next" href="#">→</a>
-            </div>
-            <div class="count">
-                <!--noindex-->
-                <div class="pageSizer">
-                    <span>Показывать по:</span>
-                    <a class="pagesize_10" href="#">10</a>
-                    <a class="active pagesize_20" href="#">20</a>
-                    <a class="pagesize_30" href="#">30</a>
-                </div>
-                <!--/noindex-->
-            </div>
-        </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-            </div>
-            <strong>Конфета №123</strong><br>
-            <span>10 р.</span><br>
-        </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-            </div>
-            <strong>Антон №Волк</strong><br>
-            <span>10 р.</span><br>
-        </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-            </div>
-            <strong>Подарки №123</strong><br>
-            <span>10 р.</span><br>
-        </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-            </div>
-            <strong>Подарки №123</strong><br>
-            <span>10 р.</span>
-        </div>
-        <div class="product col-xs-12 col-md-3">
-            <div>
-            </div>
-            <strong>Подарки №123</strong><br>
-            <span>10 р.</span>
-        </div>
-        {#<h1>{{ category.name }}</h1>#}
-    </div>
+    <script>
+        $('#grid').ajaxgrid({
+            url: '/categories',
+            sortableColumns: ['name'],
+            filterableColumns: ['name'],
+            itemsPerPage: [6, 12, 20],
+            page: 1,
+            view: 'table',
+            headers: ['#', 'Название категории', 'Родительская категория']
+        });
+    </script>
 {% endblock %}

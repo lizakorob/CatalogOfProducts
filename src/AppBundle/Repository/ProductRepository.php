@@ -15,10 +15,133 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         $em = $this->getEntityManager();
         $productByName = $em->getRepository('AppBundle:Product')->findOneBy($options);
 
-        if ($productByName->getId() != $id) {
-            return false;
+        if ($productByName != null) {
+            if ($productByName->getId() != $id) {
+                return true;
+            }
         }
 
-        return true;
+        return false;
+    }
+
+    public function findByPage($page = 1,
+                               $items = 8,
+                               $sort_by_field = 'id',
+                               $order = 'asc',
+                               $filter_by_field = null,
+                               $pattern = null)
+    {
+        if ($filter_by_field == null && $pattern == null) {
+            $products = $this->_em
+                ->createQueryBuilder()
+                ->select('p')
+                ->from('AppBundle:Product', 'p')
+                ->orderBy('p.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items)
+                ->getQuery()
+                ->getResult();
+        } elseif ($filter_by_field == 'product'){
+            $products = $this->findByFilter($pattern);
+        } else {
+            $category = $this->_em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $pattern,
+                ));
+
+            $categories = $this->_em
+                ->createQueryBuilder()
+                ->select('cat.id')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat_p.id = :id')
+                ->setParameter('id', $category->getId())
+                ->getQuery()
+                ->getResult();
+
+            $id = array();
+            foreach ($categories as $value) {
+                array_push($id, $value['id']);
+            }
+            array_push($id, $category->getId());
+
+            $qb = $this->getEntityManager()
+                ->createQueryBuilder();
+            $qb->select('p')
+                ->from('AppBundle:Product', 'p')
+                ->innerJoin('p.category', 'cat')
+                ->where($qb->expr()->in('cat.id', $id))
+                ->orderBy('p.' . $sort_by_field, $order)
+                ->setFirstResult(($page - 1) * $items)
+                ->setMaxResults($items);
+
+            $products = $qb->getQuery()
+                ->getResult();
+        }
+
+        return $products;
+    }
+
+    public function countRows(
+                              $filter_by_field = null,
+                              $pattern = null)
+    {
+        if ($filter_by_field == null && $pattern == null) {
+            $length = $this->_em
+                ->createQueryBuilder()
+                ->select('count(p.id)')
+                ->from('AppBundle:Product', 'p')
+                ->getQuery()->getSingleScalarResult();
+        } elseif ($filter_by_field == 'product'){
+            $length = count($this->findByFilter($pattern));
+        } else {
+            $category = $this->_em->getRepository('AppBundle:Category')
+                ->findOneBy(array(
+                    'name' => $pattern,
+                ));
+
+            $categories = $this->_em
+                ->createQueryBuilder()
+                ->select('cat.id')
+                ->from('AppBundle:Category', 'cat')
+                ->innerJoin('cat.parent', 'cat_p')
+                ->where('cat_p.id = :id')
+                ->setParameter('id', $category->getId())
+                ->getQuery()
+                ->getResult();
+
+            $id = array();
+            foreach ($categories as $value) {
+                array_push($id, $value['id']);
+            }
+            array_push($id, $category->getId());
+
+            $qb = $this->getEntityManager()
+                ->createQueryBuilder();
+            $qb->select('count(p.id)')
+                ->from('AppBundle:Product', 'p')
+                ->innerJoin('p.category', 'cat')
+                ->where($qb->expr()->in('cat.id', $id));
+
+            $length = $qb->getQuery()
+                ->getSingleScalarResult();
+        }
+
+        return $length;
+    }
+
+    public function findByFilter(string $filter)
+    {
+        $products = $this->_em
+            ->createQueryBuilder()
+            ->select('p')
+            ->from('AppBundle:Product', 'p')
+            ->andWhere('p.name LIKE :name')
+            ->setParameter('name', '%' . $filter . '%')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        return $products;
     }
 }

@@ -27,7 +27,7 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150)
+     * @ORM\Column(name="name", type="string", length=150, unique=true)
      */
     private $name;
 
@@ -53,9 +53,9 @@ class Product
     private $updateDate;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="string")
      */
     private $price;
 
@@ -69,14 +69,14 @@ class Product
     /**
     * Many Products have One Category.
     * @ManyToOne(targetEntity="AppBundle\Entity\Category")
-    * @JoinColumn(name="category_id", referencedColumnName="id")
+    * @JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
     */
     private $category;
 
     /**
      * Many Products have One Manufacturer.
      * @ManyToOne(targetEntity="AppBundle\Entity\Manufacturer")
-     * @JoinColumn(name="manufacturer_id", referencedColumnName="id")
+     * @JoinColumn(name="manufacturer_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $manufacturer;
 
@@ -86,6 +86,12 @@ class Product
      * @Assert\Image
      */
     private $image;
+
+    /**
+     * @var string
+     * @ORM\Column(name="sku", type="string", length=12, unique=true)
+     */
+    private $sku;
 
     public function __construct()
     {
@@ -202,7 +208,7 @@ class Product
     /**
      * Set price
      *
-     * @param integer $price
+     * @param float $price
      *
      * @return Product
      */
@@ -216,7 +222,7 @@ class Product
     /**
      * Get price
      *
-     * @return int
+     * @return float
      */
     public function getPrice()
     {
@@ -272,11 +278,11 @@ class Product
     /**
      * Set category
      *
-     * @param \AppBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return Product
      */
-    public function setCategory(\AppBundle\Entity\Category $category = null)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
         return $this;
@@ -284,7 +290,7 @@ class Product
     /**
      * Get category
      *
-     * @return \AppBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {
@@ -292,25 +298,41 @@ class Product
     }
 
     /**
-     * Set category
+     * Set manufacturer
      *
-     * @param \AppBundle\Entity\Manufacturer $manufacturer
+     * @param Manufacturer $manufacturer
      *
      * @return Product
      */
-    public function setManufacturer(\AppBundle\Entity\Manufacturer $manufacturer = null)
+    public function setManufacturer(Manufacturer $manufacturer = null)
     {
         $this->manufacturer = $manufacturer;
         return $this;
     }
     /**
-     * Get category
+     * Get manufacturer
      *
-     * @return \AppBundle\Entity\Manufacturer
+     * @return Manufacturer
      */
     public function getManufacturer()
     {
         return $this->manufacturer;
+    }
+
+    /**
+     * @param string $sku
+     */
+    public function setSku(string $sku)
+    {
+        $this->sku = $sku;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSku()
+    {
+        return $this->sku;
     }
 }
 

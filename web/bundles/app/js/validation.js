@@ -57,7 +57,7 @@ function forgotValidate() {
             'email': emailItem
         },
         success: function (data) {
-            if(data['status'] == '200') {
+            if(data['status'] === '200') {
                 $("form[name='forgot']").submit();
             } else {
                 showMessage('emailForgotError', data['message']);
@@ -110,7 +110,7 @@ function isRegisterData($username, $email) {
             'email': $email
         },
         success: function (data) {
-            if(data['status'] == '200') {
+            if(data['status'] === '200') {
                 var password = $('#register_password_first').val();
                 $("form[name='register']").submit();
                 $('#username').val($username);
@@ -132,11 +132,106 @@ function isRegisterUser($username, $password) {
             'password': $password
         },
         success: function (data) {
-            if(data['status'] == '200') {
+            if(data['status'] === '200') {
                 $("form[name='login']").submit();
             } else {
                 showMessage('loginError', data['message']);
                 $('#password').val('');
+            }
+        }
+    });
+}
+
+function productValidate(productId) {
+    var productName = document.getElementById('edit_product_name').value;
+    var productCategory = document.getElementById('edit_product_category').value;
+    var productPrice = document.getElementById('edit_product_price').value;
+    var productManufacturer = document.getElementById('edit_product_manufacturer').value;
+    var productDescription = document.getElementById('edit_product_description').value;
+    var productSku = document.getElementById('edit_product_sku').value;
+
+    if (!productNameValidate(productName)) {
+        showMessage('productError', 'Название должно быть длиной от 2 до 100 символов');
+        return false;
+    }
+
+    if (!productCategoryValidate(productCategory)) {
+        showMessage('productError', 'Категория должно быть длиной от 2 до 100 символов');
+        return false;
+    }
+
+    if(!productPriceValidate(productPrice)) {
+        showMessage('productError', 'Поле стоимости заполнено некорректно');
+        return false;
+    }
+
+    if(!productManufacturerValidate(productManufacturer)) {
+        showMessage('productError', 'Поле производителя должно быть длиной от 2 до 100 символов');
+        return false;
+    }
+
+    if(!productDescriptionValidate(productDescription)) {
+        showMessage('productError', 'Описание должно быть длиной от 5 до 500 символов');
+        return false;
+    }
+
+    if (!isExistCategory(productCategory)) {
+        showMessage('productError', 'Категория не найдена');
+        return false;
+    }
+
+    if (!isExistManufacturer(productManufacturer)) {
+        showMessage('productError', 'Производитель не найден');
+        return false;
+    }
+
+    if (productId === null) {
+        isExistsProduct(productName, productSku, '/products/create');
+    }
+    else {
+        isExistsProduct(productName, productSku, '/products/edit/' + productId);
+    }
+}
+
+function filledField(item) {
+    var pattern = /^[\s]+$/;
+    return !(item.match(pattern));
+}
+
+function productNameValidate(productName) {
+    return (productName.length > 2 && productName.length < 100 && filledField(productName));
+}
+
+function productCategoryValidate(productCategory) {
+    return (productCategory.length > 2 && productCategory.length < 100 && filledField(productCategory));
+}
+
+function productPriceValidate(productPrice) {
+    var pattern = /^\d+$/;
+    return (productPrice.match(pattern) && productPrice > 0.01 && productPrice < 100);
+}
+
+function productManufacturerValidate(productManufacturer) {
+    return (productManufacturer.length > 2 && productManufacturer.length < 100 && filledField(productManufacturer));
+}
+
+function productDescriptionValidate(productDescription) {
+    return (productDescription.length > 5 && productDescription.length < 500 && filledField(productDescription));
+}
+
+function isExistsProduct(name, sku, url) {
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            'name': name,
+            'sku': sku
+        },
+        success: function (data) {
+            if(data['status'] === '200') {
+                $("form[name='edit_product']").submit();
+            } else {
+                showMessage('productError', data['message']);
             }
         }
     });

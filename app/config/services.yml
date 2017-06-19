@@ -66,13 +66,25 @@ services:
         arguments:
             - '@doctrine'
 
+    serialize_service:
+        class: AppBundle\Service\SerializeService
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    filter_service:
+        class: AppBundle\Service\FilterService
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@serialize_service'
+
     app.menu_builder:
-            class: AppBundle\Menu\MenuBuilder
-            arguments: ["@knp_menu.factory"]
-            public: true
-            tags:
-                - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
-                - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar }
+          class: AppBundle\Menu\MenuBuilder
+          arguments: ["@knp_menu.factory"]
+          public: true
+          tags:
+              - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
