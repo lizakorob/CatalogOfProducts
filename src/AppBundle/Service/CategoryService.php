@@ -53,15 +53,14 @@ class CategoryService
     {
         $category->setName($form->get('name')->getData());
 
-        //$categoryById = $form->get('category_id')->getData();
-        $categoryId = $this->registry->getManager()->getRepository('AppBundle:Category')
-            ->findBy(array(
+        $categoryParent = $this->registry->getManager()->getRepository('AppBundle:Category')
+            ->findOneBy(array(
                 'name' => $form->get('parent')->getData(),
             ));
 
-        if ($categoryId != null) {
+        if ($categoryParent != null) {
             $category_parent = $this->registry->getEntityManager()
-                ->getReference('AppBundle:Category', intval($categoryId));
+                ->getReference('AppBundle:Category', intval($categoryParent->getId()));
             $category->setParent($category_parent);
         } else {
             $category->setParent(null);

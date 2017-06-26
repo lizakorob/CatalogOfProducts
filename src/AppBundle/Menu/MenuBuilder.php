@@ -24,7 +24,7 @@ class MenuBuilder
     {
         $menuItems = array (
             'homepage' => 'Главная',
-            'products' => 'Каталог',
+            'products' => 'Каталог товаров',
         );
         $menu = $this->factory->createItem('main');
         $menu->setChildrenAttribute('class', 'nav navbar-nav mainMenu col-md-12 hidden-xs hidden-sm');

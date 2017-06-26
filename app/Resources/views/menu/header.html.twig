@@ -19,7 +19,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid ">
             <div class="navbar-header col-xs-4 col-sm-2">
-                <a class="navbar-brand" href="/">Brand</a>
+                <a class="navbar-brand" href="/">Sweetland</a>
             </div>
             <div class="icon-bar hidden-sm hidden-md hidden-lg">
                 <a class="active" href="#" onclick="openSearchForm()">
@@ -45,7 +45,7 @@
                 <div name="searchList" class="list-group" style="z-index: 100;"></div>
                 <form action="{{ path('get_by_filter') }}" class="navbar-form navbar-left col-sm-12 hidden-xs" name="searchForm" role="search">
                     <div class="input-group" style="width: 400px">
-                        <input name="searchInput" id="searchInput" type="text" class="form-control" placeholder="Ищу...">
+                        <input name="searchInput" id="searchInput" type="text" class="form-control" placeholder="{{ 'Ищу...'|trans }}">
                         <span class="input-group-btn">
                             <button id="searchSubmit" class="btn btn-default glyphicon glyphicon-search" type="button"></button>
                         </span>
@@ -61,7 +61,7 @@
                         </a>
                         <a style="margin-left: 30px" href="/logout">
                             <i class="glyphicon glyphicon-log-out"></i>
-                            Выйти
+                            {{ 'Выйти'|trans }}
                         </a>
                     </p>
                 {% else %}

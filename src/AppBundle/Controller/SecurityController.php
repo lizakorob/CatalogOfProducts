@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\ForgotType;
+use AppBundle\Form\RegisterType;
 use AppBundle\Form\ResetType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -114,6 +115,8 @@ class SecurityController extends Controller
         }
 
         $form = $this->createForm(ResetType::class);
+        $registerForm = $this->createForm(RegisterType::class);
+        $forgotForm = $this->createForm(ForgotType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -129,6 +132,8 @@ class SecurityController extends Controller
 
         return $this->render('security/forgot_password.html.twig', array(
             'form' => $form->createView(),
+            'registerForm' => $registerForm->createView(),
+            'forgotPasswordForm' => $forgotForm->createView(),
             'hash' => $hash,
         ));
     }

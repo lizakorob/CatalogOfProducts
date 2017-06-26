@@ -53,9 +53,9 @@ class Product
     private $updateDate;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="price", type="string")
+     * @ORM\Column(name="price", type="integer")
      */
     private $price;
 

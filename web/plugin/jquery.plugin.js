@@ -119,7 +119,6 @@
             $.each( options.headers, function ( key, value ) {
                 $( '.header' ).append( '<th>' + value + '</th>' );
             });
-            $('.header').append('<th>Функции</th>');
         }
         
         function getCountOfElement() {
