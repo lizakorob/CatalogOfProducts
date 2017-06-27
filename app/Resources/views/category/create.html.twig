@@ -9,12 +9,12 @@
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a onclick="javascript:history.back(); return false;">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">{{ 'Назад'|trans }}</span>
+            <span class="hidden-xs">{{ 'return'|trans }}</span>
         </a>
     </div>
     <div class="list-group"></div>
     <div class="col-xs-12 col-sm-offset-1 col-sm-6">
-        <h2 style="margin: 2% 0 4% 0">{{ 'Добавление новой категории'|trans }}</h2>
+        <h2 style="margin: 2% 0 4% 0">{{ 'category.add'|trans }}</h2>
         {{ form_start(form, { 'attr': {
             'class': 'category'},
             'action': path('create_category'),
@@ -24,7 +24,7 @@
             <span id="categoryError"></span>
         </div>
         {{ form_widget(form) }}
-        <input type="button" value="{{ 'Сохранить'|trans }}" id="saveCategory" class="col-xs-12 col-md-3 btn btn-default" />
+        <input type="button" value="{{ 'save'|trans }}" id="saveCategory" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
         <div class="list-group"></div>
     </div>

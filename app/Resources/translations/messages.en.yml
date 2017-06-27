@@ -1,54 +1,83 @@
-Главная: Home
-Каталог товаров: Catalog of products
-Управление категориями: Control of categories
-Управление пользователями: Control of users
-Вход: Log in
-Зарегистрироваться: Registration
-Регистрация: Registration
-О нас: About us
-Выйти: Logout
-Имя: Name
-Фамилия: Surname
-Логин: Login
-Пароль: Password
-Подтверждение пароль: Confirm password
-Электронная почта: E-mail
-E-mail: E-mail
-Забыли пароль: Forgot password
-Войти: Sign in
-Восстановление пароля: Reset password
-Отправить: Send
-Назад: Return
-Добавление новой категории: Add new category
-Редактирование категории: Edit category
-Лучшие подарки: The best gifts
-Дарите подарки по поводу и без: Give gifts about and without
-Только свежая выпечка: Only fresh pastries
-Выпечка из местных кулинарий: Baking from local cookery
-Сладкое для настроения: Sweet for the mood
-Радуйте себя и близких!: Rejoice yourself and your loved ones!
-Ищу...: Search...
-Добавление нового товара: Add new product
-Сохранить: Save
-Вернуться к каталогу: Return to catalog
-Дата создания: Create date
-Дата последнего изменения: Last update date
-Описание: Description
-Производитель: Manufacturer
-Редаткирование товара: Edit product
-Поиск по: Search by
-Смена пароля: Change password
-Сменить пароль: Change password
-Профиль пользователя: User profile
-Полное имя: Full name
-Роль: Role
-администратор: admin
-модератор: moderator
-пользователь: user
-Вернуться к профилю: Return to profile
-Редактирование профиля: Edit profile
-Название категории: Name of category
-Родительская категория: Parent category
-Функции: Functions
-Сортировать по: Sorted by
-Показывать по: Show by
+navbar.home: Home
+navbar.catalog_of_products: Catalog of products
+navbar.contol_category: Control of categories
+navbar.control_user: Control of users
+navbar.login: Log in
+navbar.register: Registration
+navbar.registration: Registration
+navbar.about: About us
+navbar.logout: Logout
+modal.name: Name
+modal.surname: Surname
+modal.username: Login
+modal.password: Password
+modal.confirm_password: Confirm password
+modal.email: E-mail
+modal.forgot: Forgot password
+modal.signin: Sign in
+modal.reset: Reset password
+modal.send: Send
+modal.new_password: New password
+return: Return
+category.add: Add new category
+category.edit: Edit category
+first.name: The best gifts
+first.description: Give gifts about and without
+second.name: Only fresh pastries
+second.description: Baking from local cookery
+third.name: Sweet for the mood
+third.description: Rejoice yourself and your loved ones!
+navbar.search: Search...
+product.add: Add new product
+save: Save
+return_catalog: Return to catalog
+product.name: Name
+product.category: Category
+product.cost: Cost
+product.is_active: In stock
+product.image: Image
+product.date_create: Create date
+product.date_update: Last update date
+product.description: Description
+product.manufacturer: Manufacturer
+product.edit: Edit product
+search_by: Search by
+user.change_pass: Change password
+user.change_password: Change password
+user.profile: User profile
+user.fullname: Full name
+user.role: Role
+role.admin: admin
+role.moderator: moderator
+role.user: user
+return_to_profile: Return to profile
+user.edit: Edit profile
+category.name: Name
+category.parent: Parent
+functions: Functions
+sorted_by: Sorted by
+show_by: Show by
+category.add_success: Category was created
+category.not_found: Category not found
+category.edit_success: Category was changed
+category.delete: Category was deleted
+error.login_used: Login is already used
+error.email_used: E-mail is already used
+product.add_success: Product was created
+product.not_found: Product not found
+product.edit_success: Product was changed
+product.delete: Product was deleted
+error.not_correct_data: Not correct login or password
+error.not_correct_email: User with this e-mail not found
+info.instruction: The message with instruction was send on your e-mail
+error.link: The link is not correct
+info.password: Password was changed
+error.user_not_found: User not found
+info.user_delete: User was deleted
+info.role_change: User role was changed
+user.change_info: Your account information has been changed
+category.exist_name: The name of category is alredy used
+category.parent_not_found: Parent category not found in list
+product.exist_name: The name of product is already used
+product.exist_sku: This sku is already used
+name: Name

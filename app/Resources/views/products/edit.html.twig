@@ -13,11 +13,11 @@
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a onclick="javascript:history.back(); return false;">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">{{ 'Назад'|trans }}</span>
+            <span class="hidden-xs">{{ 'return_catalog'|trans }}</span>
         </a>
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h1 style="margin: 2% 0 4% 0">{{ 'Редаткирование товара'|trans }}</h1>
+        <h1 style="margin: 2% 0 4% 0">{{ 'product.edit'|trans }}</h1>
         {{ form_start(form, {
             'action': path('product_edit_id'),
             'method': 'POST'
@@ -26,7 +26,7 @@
             <span id="productError"></span>
         </div>
         {{ form_widget(form) }}
-        <input type="button" value="{{ 'Сохранить'|trans }}" id="saveProduct" class="col-xs-12 col-md-3 btn btn-default" />
+        <input type="button" value="{{ 'save'|trans }}" id="saveProduct" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
         <div class="list-group"></div>
     </div>

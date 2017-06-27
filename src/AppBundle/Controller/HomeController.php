@@ -48,14 +48,14 @@ class HomeController extends Controller
             if ($this->get('register_service')->IsRegisterLogin($username)) {
                 return new JsonResponse(array(
                         'status' => '400',
-                        'message' => 'Логин уже используется'
+                        'message' => 'error.login_used'
                     ));
             }
 
             if ($this->get('register_service')->IsRegisterEmail($email)) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'E-mail уже используется'
+                    'message' => 'error.email_used'
                 ));
             }
 
@@ -84,5 +84,32 @@ class HomeController extends Controller
      */
     public function aboutAction() {
         return $this->render('home/about.html.twig');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/change_language")
+     * @Method({"POST"})
+     */
+    public function changeLanguageAction(Request $request) {
+        $locale = $request->request->get('locale');
+        $request->getSession()->set('_locale', $locale);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/get_language")
+     * @Method({"POST"})
+     */
+    public function getLanguageAction(Request $request) {
+        if ($locale = $request->getSession()->get('_locale')) {
+            return new JsonResponse($locale);
+        }
+
+        return new JsonResponse('en');
     }
 }

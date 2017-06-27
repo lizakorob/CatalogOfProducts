@@ -84,7 +84,7 @@ class CategoryService
         if ($categoryUsed != null) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Категория с таким именем уже существует'
+                'message' => 'category.exist_name'
             ));
         }
 
@@ -97,7 +97,7 @@ class CategoryService
             if ($parentCategory == null) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Имя родительской категории не найдено'
+                    'message' => 'category.parent_not_found'
                 ));
             }
         }
@@ -123,7 +123,7 @@ class CategoryService
         ), $product->getId())) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Категория с таким именем уже существует'
+                'message' => 'category.exist_name'
             ));
         }
 
@@ -136,7 +136,7 @@ class CategoryService
             if ($parentCategory == null) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Имя родительской категории не найдено'
+                    'message' => 'category.parent_not_found'
                 ));
             }
         }

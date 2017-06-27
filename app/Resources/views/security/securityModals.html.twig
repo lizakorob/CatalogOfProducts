@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{{ 'Вход'|trans }}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ 'navbar.login'|trans }}</h4>
             </div>
             <div class="modal-body">
                 <form action="{{ path('login') }}" method="post" class="login" name="login">
@@ -11,16 +11,16 @@
                         <div class="error">
                             <span id="loginError"></span>
                         </div>
-                        <label for="username">{{ 'Логин'|trans }}:</label>
+                        <label for="username">{{ 'modal.username'|trans }}:</label>
                         <input type="text" id="username" name="_username" />
-                        <label for="password">{{ 'Пароль'|trans }}:</label>
+                        <label for="password">{{ 'modal.password'|trans }}:</label>
                         <input type="password" id="password" name="_password" />
                         <div style="display: inline">
-                            <input type="button" id="login_user" value="{{ 'Войти'|trans }}" class="btn btn-default col-xs-12 col-sm-6"
+                            <input type="button" id="login_user" value="{{ 'modal.signin'|trans }}" class="btn btn-default col-xs-12 col-sm-6"
                                    style="margin-right: 16px; margin-top: 10px;"/>
                             <a href="#" data-toggle="modal" data-target="#forgotPasswordModal" style="padding-top: 7px;"
                                data-dismiss="modal" aria-hidden="true" class="col-xs-12 col-sm-5">
-                                {{ 'Забыли пароль'|trans }}?
+                                {{ 'modal.forgot'|trans }}?
                             </a>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{{ 'Регистрация'|trans }}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ 'navbar.registration'|trans }}</h4>
             </div>
             <div class="modal-body">
                 {{ form_start(registerForm, { 'attr': {
@@ -47,7 +47,7 @@
                         <span id="registrationError"></span>
                     </div>
                     {{ form_widget(registerForm) }}
-                    <input type="button" id="register_user" value="{{ 'Зарегистрироваться'|trans }}" class="btn btn-default" />
+                    <input type="button" id="register_user" value="{{ 'navbar.register'|trans }}" class="btn btn-default" />
                 </div>
                 {{ form_end(registerForm) }}
             </div>
@@ -59,7 +59,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{{ 'Восстановление пароля'|trans }}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ 'modal.reset'|trans }}</h4>
             </div>
             <div class="modal-body">
                 {{ form_start(forgotPasswordForm, { 'attr': {
@@ -72,7 +72,7 @@
                         <span id="emailForgotError"></span>
                     </div>
                     {{ form_widget(forgotPasswordForm) }}
-                    <input type="button" id="send_email" value="{{ 'Отправить'|trans }}" class="btn btn-default" />
+                    <input type="button" id="send_email" value="{{ 'modal.send'|trans }}" class="btn btn-default" />
                 </div>
                 {{ form_end(forgotPasswordForm) }}
             </div>

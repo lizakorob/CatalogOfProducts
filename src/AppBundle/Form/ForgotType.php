@@ -13,7 +13,7 @@ class ForgotType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, array(
-                'label' => 'Электронная почта' ))
+                'label' => 'modal.email' ))
         ;
     }
 }

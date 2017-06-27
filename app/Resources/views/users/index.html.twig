@@ -15,7 +15,7 @@
         <span id="messageInfo"></span>
     </div>
     <div class="col-xs-12 col-md-offset-1 col-md-10">
-        <h1>{{ 'Управление пользователями'|trans }}</h1>
+        <h1>{{ 'navbar.control_user'|trans }}</h1>
         <div id="grid"></div>
     </div>
     <script>
@@ -26,7 +26,7 @@
             itemsPerPage: [6, 12, 20],
             page: 1,
             view: 'table',
-            headers: ['#', '{{ 'Полное имя'|trans }}', '{{ 'Логин'|trans }}', 'E-mail', '{{ 'Роль'|trans }}', '{{ 'Функции'|trans }}'],
+            headers: ['#', '{{ 'user.fullname'|trans }}', '{{ 'modal.username'|trans }}', '{{ 'modal.email'|trans }}', '{{ 'user.role'|trans }}', '{{ 'functions'|trans }}'],
             username: '{{ app.user.username }}'
         });
     </script>

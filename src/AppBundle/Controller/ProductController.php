@@ -65,7 +65,7 @@ class ProductController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('products')->createProduct($form);
 
-            $this->addFlash('message', 'Продукт был успешно создан.');
+            $this->addFlash('message', 'product.add_success');
             return $this->redirectToRoute('products');
         }
 
@@ -89,7 +89,7 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException('Продукт не найден');
+            throw new NotFoundHttpException('product.not_found');
         }
 
         return $this->render('products/details.html.twig', array(
@@ -113,7 +113,7 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException('Продукт не найден');
+            throw new NotFoundHttpException('product.not_found');
         }
 
         $form = $this->createForm(EditProductType::class);
@@ -130,7 +130,7 @@ class ProductController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('products')->editProduct($form, $product);
 
-            $this->addFlash('message', 'Продукт был успешно изменен');
+            $this->addFlash('message', 'product.edit_success');
             return $this->redirectToRoute('products');
         }
 
@@ -155,13 +155,13 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (is_null($product)) {
-            throw new NotFoundHttpException('Продукт не найден');
+            throw new NotFoundHttpException('product.not_found');
         }
 
         $em->remove($product);
         $em->flush();
 
-        $this->addFlash('message', 'Продукт был успешно удален');
+        $this->addFlash('message', 'product.delete');
         return $this->redirectToRoute('products');
     }
 

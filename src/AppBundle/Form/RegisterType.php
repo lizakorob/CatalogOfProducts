@@ -14,17 +14,17 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add('firstName', TextType::class, array(
-                'label' => 'Имя' ))
+                'label' => 'modal.name' ))
             ->add('surname', TextType::class, array(
-                'label' => 'Фамилия' ))
+                'label' => 'modal.surname' ))
             ->add('username', TextType::class, array(
-                'label' => 'Логин' ))
+                'label' => 'modal.username' ))
             ->add('email', EmailType::class, array(
-                'label' => 'E-mail' ))
+                'label' => 'modal.email' ))
             ->add('password', RepeatedType::class, array(
                 'type' => PasswordType::class,
-                'first_options'  => array('label' => 'Пароль'),
-                'second_options' => array('label' => 'Подтверждение пароль'),
+                'first_options'  => array('label' => 'modal.password'),
+                'second_options' => array('label' => 'modal.confirm_password'),
             ))
         ;
     }

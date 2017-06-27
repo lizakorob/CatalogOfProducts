@@ -440,3 +440,14 @@ button:focus {
 .carousel-control.right {
     background-image: -webkit-linear-gradient(right, #f2dede 0%, rgba(255, 255, 255, 0) 100%);
 }
+
+p.language>a {
+    cursor: pointer;
+}
+
+p.language>a.active,
+p.language>a.active:hover {
+    color: #253562;
+    text-decoration: none;
+    cursor: default; !important;
+}

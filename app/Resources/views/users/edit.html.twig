@@ -3,11 +3,11 @@
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a href="{{ path('user_details', { 'id': app.user.id }) }}">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">{{ 'Вернуться к профилю'|trans }}</span>
+            <span class="hidden-xs">{{ 'return_to_profile'|trans }}</span>
         </a>
     </div>
     <div style="margin: 2%" class="col-xs-12 col-md-offset-1 col-md-4">
-        <h2>{{ 'Редактирование профиля'|trans }}</h2>
+        <h2>{{ 'user.edit'|trans }}</h2>
         {{ form_start(form, { 'attr': {
             'class' : 'register'},
             'action': path('user_edit_id', { 'id': app.user.id }),
@@ -16,7 +16,7 @@
             <span id="editError"></span>
         </div>
         {{ form_widget(form) }}
-        <input type="button" value="{{ 'Сохранить'|trans }}" id="saveUser" class="col-xs-12 col-md-3 btn btn-default" />
+        <input type="button" value="{{ 'save'|trans }}" id="saveUser" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
         <div class="list-group"></div>
     </div>

@@ -4,7 +4,7 @@
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a onclick="javascript:history.back(); return false;">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">{{ 'Назад'|trans }}</span>
+            <span class="hidden-xs">{{ 'return'|trans }}</span>
         </a>
     </div>
 
@@ -17,7 +17,7 @@
 
     <div style="margin-top: 2%" class="col-xs-12 col-md-4">
         <h2>
-            {{ 'Профиль пользователя'|trans }}
+            {{ 'user.profile'|trans }}
             {% if user.id == app.user.id %}
                 <a href="/users/edit/{{ user.id }}" class="btn btn-link">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -26,22 +26,22 @@
         </h2>
         <div class="details">
             <p>
-                <span>{{ 'Полное имя'|trans }}: </span> {{ user.firstName }} {{ user.surname }}
+                <span>{{ 'user.fullname'|trans }}: </span> {{ user.firstName }} {{ user.surname }}
             </p>
             <p>
-                <span>{{ 'Логин'|trans }}: </span> {{ user.username }}
+                <span>{{ 'modal.username'|trans }}: </span> {{ user.username }}
             </p>
             <p>
-                <span>{{ 'Электронная почта'|trans }}: </span> {{ user.email }}
+                <span>{{ 'modal.email'|trans }}: </span> {{ user.email }}
             </p>
             <p>
-                <span>{{ 'Роль'|trans }}: </span>
+                <span>{{ 'user.role'|trans }}: </span>
                 {% if user.role == 'ROLE_ADMIN' %}
-                    {{ 'администратор'|trans }}
+                    {{ 'role.admin'|trans }}
                 {% elseif user.role == 'ROLE_MODERATE' %}
-                    {{ 'модератор'|trans }}
+                    {{ 'role.moderator'|trans }}
                 {% else %}
-                    {{ 'пользователь'|trans }}
+                    {{ 'role.user'|trans }}
                 {% endif %}
             </p>
         </div>

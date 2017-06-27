@@ -44,7 +44,7 @@ class SecurityController extends Controller
             if (!$flag) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Некорректный логин или пароль'
+                    'message' => 'error.not_correct_data'
                 ));
             }
 
@@ -75,7 +75,7 @@ class SecurityController extends Controller
             if(!$this->get('forgot_password')->IsRegisterEmail($email)) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Пользователь с таким e-mail не найден'
+                    'message' => 'error.not_correct_email'
                 ));
             }
 
@@ -90,7 +90,7 @@ class SecurityController extends Controller
 
         $this->get('forgot_password')->sendResetPasswordEmail($form);
 
-        $this->addFlash('message', 'Письмо с инструкцией по восстановлению пароля отправлено на ваш e-mail');
+        $this->addFlash('message', 'info.instruction');
         return $this->redirectToRoute('homepage');
     }
 
@@ -110,7 +110,7 @@ class SecurityController extends Controller
 
         if (date_diff(new \DateTime(), $userReset->getCreateDate())->h > 2) {
             $this->get('reset_password')->deleteHash($hash);
-            $this->addFlash('message', 'Ссылка недействительна');
+            $this->addFlash('message', 'error.link');
             return $this->redirectToRoute('homepage');
         }
 
@@ -126,7 +126,7 @@ class SecurityController extends Controller
                 throw new NotFoundHttpException();
             }
 
-            $this->addFlash('message', 'Пароль был успешно изменен');
+            $this->addFlash('message', 'info.password');
             return $this->redirectToRoute('homepage');
         }
 

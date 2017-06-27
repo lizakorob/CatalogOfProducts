@@ -116,7 +116,7 @@ class ProductService
         if (!is_null($productUsed)) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Продукт с таким именем уже существует'
+                'message' => 'product.exist_name'
             ));
         }
 
@@ -128,7 +128,7 @@ class ProductService
         if (!is_null($productUsed)) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Продукт с таким sku уже существует'
+                'message' => 'product.exist_sku'
             ));
         }
 
@@ -153,7 +153,7 @@ class ProductService
         ), $product->getId())) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Продукт с таким именем уже существует'
+                'message' => 'product.exist_name'
             ));
         }
 
@@ -162,7 +162,7 @@ class ProductService
         ), $product->getId())) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Продукт с таким sku уже существует'
+                'message' => 'product.exist_sku'
             ));
         }
 
