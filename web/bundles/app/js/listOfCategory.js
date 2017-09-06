@@ -84,12 +84,14 @@ function setEventForSubmit(url, isEdit) {
         }
 
         var name = $('#edit_category_name').val();
+        var parent = $('#edit_category_parent').val();
 
         $.ajax({
             type: 'POST',
             url: url,
             data: {
-                name: name
+                name: name,
+                parent: parent
             },
             success: function (data) {
                 if(data['status'] === '200') {

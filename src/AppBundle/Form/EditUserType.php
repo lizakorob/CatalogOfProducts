@@ -14,13 +14,13 @@ class EditUserType extends AbstractType
     {
         $builder
             ->add('firstName', TextType::class, array(
-                'label' => 'Имя' ))
+                'label' => 'modal.name' ))
             ->add('surname', TextType::class, array(
-                'label' => 'Фамилия' ))
+                'label' => 'modal.surname' ))
             ->add('username', TextType::class, array(
-                'label' => 'Логин' ))
+                'label' => 'modal.username' ))
             ->add('email', EmailType::class, array(
-                'label' => 'E-mail' ))
+                'label' => 'modal.email' ))
         ;
     }
 }

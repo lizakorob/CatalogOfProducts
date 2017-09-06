@@ -1,0 +1,83 @@
+navbar.home: Главная
+navbar.catalog_of_products: Каталог товаров
+navbar.contol_category: Управление категориями
+navbar.control_user: Управление пользователями
+navbar.login: Вход
+navbar.register: Зарегистрироваться
+navbar.registration: Регистрация
+navbar.about: О нас
+navbar.logout: Выйти
+modal.name: Имя
+modal.surname: Фамилия
+modal.username: Логин
+modal.password: Пароль
+modal.confirm_password: Подтверждение пароль
+modal.email: Электронная почта
+modal.forgot: Забыли пароль
+modal.signin: Войти
+modal.reset: Восстановление пароля
+modal.send: Отправить
+modal.new_password: Новый пароль
+return: Назад
+category.add: Добавление новой категории
+category.edit: Редактирование категории
+first.name: Лучшие подарки
+first.description: Дарите подарки по поводу и без
+second.name: Только свежая выпечка
+second.description: Выпечка из местных кулинарий
+third.name: Сладкое для настроения
+third.description: Радуйте себя и близких!
+navbar.search: Ищу...
+product.add: Добавление нового товара
+save: Сохранить
+Return to catalog: Вернуться к каталогу
+product.name: Название
+product.category: Категория
+product.cost: Стоимость
+product.is_active: В наличии
+product.image: Изображение
+product.date_create: Дата создания
+product.date_update: Дата последнего изменения
+product.description: Описание
+product.manufacturer: Производитель
+product.edit: Редаткирование товара
+search_by: Поиск по
+user.change_pass: Смена пароля
+user.change_password: Сменить пароль
+user.profile: Профиль пользователя
+user.fullname: Полное имя
+user.role: Роль
+role.admin: администратор
+role.moderator: модератор
+role.user: пользователь
+return_to_profile: Вернуться к профилю
+user.edit: Редактирование профиля
+category.name: Название
+category.parent: Родитель
+functions: Функции
+sorted_by: Сортировать по
+show_by: Показывать по
+category.add_success: Категория была успешно создана
+category.not_found: Категория не найдена
+category.edit_success: Категория успешно изменена
+category.delete: Категория быда успешно удалена
+error.login_used: Логин уже используется
+error.email_used: E-mail уже используется
+product.add_success: Продукт был успешно создан
+product.not_found: Продукт не найден
+product.edit_success: Продукт был успешно изменен
+product.delete: Продукт был успешно удален
+error.not_correct_data: Некорректный логин или пароль
+error.not_correct_email: Пользователь с таким e-mail не найден
+info.instruction: Письмо с инструкцией по восстановлению пароля отправлено на ваш e-mail
+error.link: Ссылка недействительна
+info.password: Пароль был успешно изменен
+error.user_not_found: Пользователь не найден
+info.user_delete: Пользователь был успешно удален
+info.role_change: Роль пользователя была изменена
+user.change_info: Данные вашей учетной записи были изменены
+category.exist_name: Категория с таким именем уже существует
+category.parent_not_found: Имя родительской категории не найдено
+product.exist_name: Продукт с таким именем уже существует
+product.exist_sku: Продукт с таким sku уже существует
+name: Название

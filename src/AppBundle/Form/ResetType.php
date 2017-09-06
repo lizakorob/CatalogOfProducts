@@ -13,7 +13,7 @@ class ResetType extends AbstractType
     {
         $builder
             ->add('new_password', PasswordType::class, array(
-                'label' => 'Новый пароль',
+                'label' => 'modal.new_password',
                 'label_attr' => array('class' => 'col-xs-12 col-md-4'),
                 'attr'       => array('class' => 'col-xs-12 col-md-6'),))
         ;

@@ -57,7 +57,7 @@ class CategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('category')->addCategory($form);
 
-            $this->addFlash('message', 'Категория была успешно создана');
+            $this->addFlash('message', 'category.add_success');
             return $this->redirectToRoute('categories');
         }
 
@@ -82,7 +82,7 @@ class CategoryController extends Controller
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
         if (is_null($category)) {
-            throw new NotFoundHttpException('Категория не найдена');
+            throw new NotFoundHttpException('categoty.not_found');
         }
 
         $form = $this->createForm(EditCategoryType::class);
@@ -99,7 +99,7 @@ class CategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('category')->editCategory($form, $category);
 
-            $this->addFlash('message', 'Категория успешно изменена');
+            $this->addFlash('message', 'category.edit_success');
             return $this->redirectToRoute('categories');
         }
 
@@ -123,13 +123,13 @@ class CategoryController extends Controller
         $category = $em->getRepository('AppBundle:Category')->find($id);
 
         if (is_null($category)) {
-            throw new NotFoundHttpException('Категория не найдена');
+            throw new NotFoundHttpException('category.not_found');
         }
 
         $em->remove($category);
         $em->flush();
 
-        $this->addFlash('message', 'Категория быда успешно удалена');
+        $this->addFlash('message', 'category.delete');
         return $this->redirectToRoute('categories');
     }
 

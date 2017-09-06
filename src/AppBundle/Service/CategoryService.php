@@ -53,15 +53,14 @@ class CategoryService
     {
         $category->setName($form->get('name')->getData());
 
-        //$categoryById = $form->get('category_id')->getData();
-        $categoryId = $this->registry->getManager()->getRepository('AppBundle:Category')
-            ->findBy(array(
+        $categoryParent = $this->registry->getManager()->getRepository('AppBundle:Category')
+            ->findOneBy(array(
                 'name' => $form->get('parent')->getData(),
             ));
 
-        if ($categoryId != null) {
+        if ($categoryParent != null) {
             $category_parent = $this->registry->getEntityManager()
-                ->getReference('AppBundle:Category', intval($categoryId));
+                ->getReference('AppBundle:Category', intval($categoryParent->getId()));
             $category->setParent($category_parent);
         } else {
             $category->setParent(null);
@@ -85,7 +84,7 @@ class CategoryService
         if ($categoryUsed != null) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Категория с таким именем уже существует'
+                'message' => 'category.exist_name'
             ));
         }
 
@@ -98,7 +97,7 @@ class CategoryService
             if ($parentCategory == null) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Имя родительской категории не найдено'
+                    'message' => 'category.parent_not_found'
                 ));
             }
         }
@@ -124,7 +123,7 @@ class CategoryService
         ), $product->getId())) {
             return new JsonResponse(array(
                 'status' => '400',
-                'message' => 'Категория с таким именем уже существует'
+                'message' => 'category.exist_name'
             ));
         }
 
@@ -137,7 +136,7 @@ class CategoryService
             if ($parentCategory == null) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Имя родительской категории не найдено'
+                    'message' => 'category.parent_not_found'
                 ));
             }
         }

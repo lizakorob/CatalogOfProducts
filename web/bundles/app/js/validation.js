@@ -18,13 +18,29 @@ function registrationValidate() {
         setErrorState('register_firstName');
         return false;
     }
+    else if (!nameCorrect(nameItem)) {
+        showMessage('registrationError', 'Имя может содержать только буквы');
+        setErrorState('register_firstName');
+        return false;
+    }
     else if (!surnameValidate(surnameItem)) {
         showMessage('registrationError', 'Фамилия должна быть длиной от 1 до 20 символов');
         setErrorState('register_surname');
         return false;
     }
+    else if (!surnameCorrect(surnameItem)) {
+        showMessage('registrationError', 'Фамилия может содержать только буквы');
+        setErrorState('register_surname');
+        return false;
+    }
     else if (!usernameValidate(usernameItem)) {
         showMessage('registrationError', 'Логин должен быть длиной от 3 до 16 символов');
+        setErrorState('register_username');
+        return false;
+    }
+    else if (!usernameCorrect(usernameItem)) {
+        showMessage('registrationError', 'Логин может содержать только буквы латинского алфавита, ' +
+            'числа, знак нижнего подчеркивания, точку');
         setErrorState('register_username');
         return false;
     }
@@ -80,12 +96,27 @@ function nameValidate(nameItem) {
     return !(nameItem.length < 1 || nameItem.length > 15);
 }
 
+function nameCorrect(nameItem) {
+    const namePattern = /^[A-zА-яё]+$/i;
+    return nameItem.match(namePattern);
+}
+
 function surnameValidate(surnameItem) {
     return !(surnameItem.length < 1 || surnameItem.length > 20);
 }
 
+function surnameCorrect(surnameItem) {
+    const namePattern = /^[A-zА-яё]+$/i;
+    return surnameItem.match(namePattern);
+}
+
 function usernameValidate(usernameItem) {
     return !(usernameItem.length < 3 || usernameItem.length > 16);
+}
+
+function usernameCorrect(usernameItem) {
+    const usernamePattern = /^[a-zA-Z0-9_\.]+$/;
+    return usernameItem.match(usernamePattern);
 }
 
 function checkConfirmPassword(passwordItem, confirmPasswordItem) {

@@ -19,24 +19,24 @@ class EditProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-                'label' => 'Название',
+                'label' => 'product.name',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'col-xs-12 col-md-9'),))
             ->add('category', TextType::class, array(
-                'label' => 'Категория',
+                'label' => 'product.category',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'categoryField col-xs-12 col-md-9')))
             ->add('price', IntegerType::class, array(
-                'label' => 'Стоимость',
+                'label' => 'product.cost',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'col-xs-12 col-md-9',
                     'min' => '0.01', 'max' => '100', 'step' => '0.01')))
             ->add('manufacturer', TextType::class, array(
-                'label' => 'Производитель',
+                'label' => 'product.manufacturer',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'manufacturerField col-xs-12 col-md-9'),))
             ->add('description', TextareaType::class, array(
-                'label' => 'Описание',
+                'label' => 'product.description',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr'       => array('class' => 'col-xs-12 col-md-9')))
             ->add('sku', IntegerType::class, array(
@@ -45,11 +45,11 @@ class EditProductType extends AbstractType
                 'attr'       => array('class' => 'col-xs-12 col-md-9',
                     'min' => '100000000000', 'max' => '999999999999')))
             ->add('isActive', CheckboxType::class, array(
-                'label' => 'В наличии',
+                'label' => 'product.is_active',
                 'label_attr' => array('class' => 'col-xs-5 col-md-3'),
                 'attr'       => array('class' => 'col-xs-1 col-xs-offset-6 col-md-1 col-md-offset-8')))
             ->add('image', FileType::class, array(
-                'label' => 'Изображение',
+                'label' => 'product.image',
                 'label_attr' => array('class' => 'col-xs-12 col-md-3'),
                 'attr' => array('accept' => 'image/jpeg,image/png',
                     'onchange' => 'loadFile(event)',

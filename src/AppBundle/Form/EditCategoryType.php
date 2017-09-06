@@ -14,11 +14,11 @@ class EditCategoryType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-                'label' => 'Название категории',
+                'label' => 'category.name',
                 'label_attr' => array('class' => 'col-xs-12 col-md-4'),
                 'attr'       => array('class' => 'col-xs-12 col-md-6'),))
             ->add('parent', TextType::class, array(
-                'label' => 'Родительская категория',
+                'label' => 'category.parent',
                 'label_attr' => array('class' => 'col-xs-12 col-md-4'),
                 'attr' => array('class' => 'categoryField col-xs-12 col-md-6',
                     'required' => 'false'), 'required' => 'false'))

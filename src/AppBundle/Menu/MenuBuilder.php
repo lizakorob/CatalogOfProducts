@@ -23,8 +23,8 @@ class MenuBuilder
     public function createMainMenu(array $options)
     {
         $menuItems = array (
-            'homepage' => 'Главная',
-            'products' => 'Каталог',
+            'homepage' => 'navbar.home',
+            'products' => 'navbar.catalog_of_products',
         );
         $menu = $this->factory->createItem('main');
         $menu->setChildrenAttribute('class', 'nav navbar-nav mainMenu col-md-12 hidden-xs hidden-sm');
@@ -34,17 +34,17 @@ class MenuBuilder
             ));
         }
         if ($options['user'] != 'ROLE_USER') {
-            $menu->addChild('Управление категориями', array(
+            $menu->addChild('navbar.contol_category', array(
                 'route' => 'categories',
             ));
         }
         if ($options['user'] == 'ROLE_ADMIN') {
-            $menu->addChild('Управление пользователями', array(
+            $menu->addChild('navbar.control_user', array(
                 'route' => 'users',
             ));
         }
 
-        $menu->addChild('О нас', array(
+        $menu->addChild('navbar.about', array(
             'route' => 'about',
         ));
 

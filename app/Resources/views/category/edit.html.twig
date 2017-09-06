@@ -1,27 +1,22 @@
 {% extends ':home:index.html.twig' %}
 {% block javascripts %}
     {{ parent() }}
-    {#<script src="{{ 'js/validation.js' }}"></script>#}
-    {#<script src="{{ '/js/validation/clientValidation.js' }}"></script>#}
-    {#<script src="{{ '/js/validation/validationFromDatabase.js' }}"></script>#}
-    {#<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>#}
-    {#<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>#}
 {% endblock %}
 {% block body %}
     {% for flash_message in app.session.flashbag.get('error') %}
         <div class="alert alert-warning" role="alert" style="margin: 1% 15%">
-            {{ flash_message }}
+            {{ flash_message|trans }}
         </div>
     {% endfor %}
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a onclick="javascript:history.back(); return false;">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">Назад</span>
+            <span class="hidden-xs">{{ 'return'|trans }}</span>
         </a>
     </div>
     <div class="list-group"></div>
     <div class="col-xs-12 col-md-offset-1 col-md-6">
-        <h2 style="margin: 2% 0 4% 0">Редактирование категории</h2>
+        <h2 style="margin: 2% 0 4% 0">{{ 'category.edit'|trans }}</h2>
         {{ form_start(form, { 'attr': {
             'class': 'category'},
             'action': path('category_edit_id', { 'id': category.id }),
@@ -30,7 +25,7 @@
             <span id="categoryError"></span>
         </div>
         {{ form_widget(form) }}
-        <input type="button" value="Сохранить" id="saveCategory" class="col-xs-12 col-md-3 btn btn-default" />
+        <input type="button" value="{{ 'save'|trans }}" id="saveCategory" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
         <div class="list-group"></div>
     </div>

@@ -19,7 +19,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid ">
             <div class="navbar-header col-xs-4 col-sm-2">
-                <a class="navbar-brand" href="/">Brand</a>
+                <a class="navbar-brand" href="/">Sweetland</a>
             </div>
             <div class="icon-bar hidden-sm hidden-md hidden-lg">
                 <a class="active" href="#" onclick="openSearchForm()">
@@ -45,23 +45,26 @@
                 <div name="searchList" class="list-group" style="z-index: 100;"></div>
                 <form action="{{ path('get_by_filter') }}" class="navbar-form navbar-left col-sm-12 hidden-xs" name="searchForm" role="search">
                     <div class="input-group" style="width: 400px">
-                        <input name="searchInput" id="searchInput" type="text" class="form-control" placeholder="Ищу...">
+                        <input name="searchInput" id="searchInput" type="text" class="form-control" placeholder="{{ 'navbar.search'|trans }}">
                         <span class="input-group-btn">
                             <button id="searchSubmit" class="btn btn-default glyphicon glyphicon-search" type="button"></button>
                         </span>
                     </div>
                 </form>
             {% endif %}
+            <div class="nav navbar-nav navbar-brand">
+                <p class="language"><a name="en">English</a> | <a name="ru">Русский</a></p>
+            </div>
             <div class="nav navbar-nav navbar-right col-sm-3 hidden-xs" id="login_logup">
                 {% if is_granted("ROLE_USER") %}
                     <p>
-                        <a class="active" href="/users/details/{{ app.user.id }}">
+                        <a href="/users/details/{{ app.user.id }}">
                             <i class="glyphicon glyphicon-user"></i>
                             {{ app.user.username }}
                         </a>
                         <a style="margin-left: 30px" href="/logout">
                             <i class="glyphicon glyphicon-log-out"></i>
-                            Выйти
+                            {{ 'navbar.logout'|trans }}
                         </a>
                     </p>
                 {% else %}
@@ -75,5 +78,41 @@
         $('#searchSubmit').click(function () {
             $('form[name="searchForm"]').submit();
         });
+
+        var language = {
+            'English': 'en',
+            'Русский': 'ru'
+        };
+
+        setActiveForLanguage();
+
+        $('p.language a').click(function () {
+            var languageClick = language[$(this).text()];
+
+            if (!$(this).hasClass('active')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/change_language',
+                    data: {
+                        locale: languageClick
+                    },
+                    success: function () {
+                        setActiveForLanguage();
+                        location.reload();
+                    }
+                });
+            }
+        });
+
+        function setActiveForLanguage() {
+            $.ajax({
+                type: 'POST',
+                url: '/get_language',
+                success: function (data) {
+                    $('p.language a').removeClass('active');
+                    $('p.language a[name="' + data + '"]').addClass('active');
+                }
+            });
+        }
     </script>
 {% endblock %}

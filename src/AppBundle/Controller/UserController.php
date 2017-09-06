@@ -52,7 +52,7 @@ class UserController extends Controller
         $user = $em->getRepository('AppBundle:User')->find($id);
 
         if (is_null($user)) {
-            throw new NotFoundHttpException('Продукт не найден');
+            throw new NotFoundHttpException('error.user_not_found');
         }
 
         $form = $this->createForm(EditUserType::class, $user);
@@ -65,14 +65,14 @@ class UserController extends Controller
             if ($this->get('register_service')->IsRegisterLogin($username, $this->getUser()->getId())) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'Логин уже используется'
+                    'message' => 'error.login_used'
                 ));
             }
 
             if ($this->get('register_service')->IsRegisterEmail($email, $this->getUser()->getId())) {
                 return new JsonResponse(array(
                     'status' => '400',
-                    'message' => 'E-mail уже используется'
+                    'message' => 'error.email_used'
                 ));
             }
 
@@ -86,7 +86,7 @@ class UserController extends Controller
             $user = $form->getData();
             $em->flush();
 
-            $this->addFlash('message', 'Данные вышей учетной записи были изменены');
+            $this->addFlash('message', 'user.change_info');
             return $this->redirect('/users/details/' . $user->getId());
         }
 
@@ -132,13 +132,13 @@ class UserController extends Controller
         $user = $em->getRepository('AppBundle:User')->find($id);
 
         if (is_null($user)) {
-            throw new NotFoundHttpException('Пользователь не найден');
+            throw new NotFoundHttpException('error.user_not_found');
         }
 
         $em->remove($user);
         $em->flush();
 
-        $this->addFlash('message', 'Пользователь был успешно удален');
+        $this->addFlash('message', 'info.user_delete');
         return $this->redirectToRoute('users');
     }
 
@@ -173,7 +173,7 @@ class UserController extends Controller
             $user->setRole($role);
             $em->flush();
 
-            return new JsonResponse('Роль пользователя была изменена');
+            return new JsonResponse('info.role_change');
         }
     }
 }

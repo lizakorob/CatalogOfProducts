@@ -8,11 +8,11 @@
     {% for flash_message in app.session.flashbag.get('message') %}
         <div class="alert alert-info" role="alert" style="margin: 5% 15% 1%">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ flash_message }}
+            {{ flash_message|trans }}
         </div>
     {% endfor %}
     <div class="col-xs-12 col-md-offset-1 col-md-10">
-        <h1> Управление категориями
+        <h1> {{ 'navbar.contol_category'|trans }}
             {% if is_granted("ROLE_MODERATOR") %}
                 <a href="{{ path('create_category') }}" class="btn btn-default ">
                     <span class="glyphicon glyphicon-plus" style="color: #fff8e7"></span>
@@ -29,7 +29,7 @@
             itemsPerPage: [6, 12, 20],
             page: 1,
             view: 'table',
-            headers: ['#', 'Название категории', 'Родительская категория']
+            headers: ['#', '{{ 'category.name'|trans }}', '{{ 'category.parent'|trans }}', '{{ 'functions'|trans }}']
         });
     </script>
 {% endblock %}

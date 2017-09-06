@@ -8,17 +8,17 @@
 {% block body %}
     {% for flash_message in app.session.flashbag.get('error') %}
         <div class="alert alert-warning" role="alert" style="margin: 1% 15%">
-            {{ flash_message }}
+            {{ flash_message|trans }}
         </div>
     {% endfor %}
     <div class="return col-xs-1 col-sm-3 col-md-2">
         <a onclick="javascript:history.back(); return false;">
             <i class="glyphicon glyphicon-chevron-left"></i>
-            <span class="hidden-xs">Назад</span>
+            <span class="hidden-xs">{{ 'return'|trans }}</span>
         </a>
     </div>
     <div class="col-xs-12 col-sm-6">
-        <h1 style="margin: 2% 0 4% 0">Добавление нового товара</h1>
+        <h1 style="margin: 2% 0 4% 0">{{ 'product.add'|trans }}</h1>
         {{ form_start(form, {
             'action': path('product_create'),
             'method': 'POST'
@@ -27,7 +27,7 @@
             <span id="productError"></span>
         </div>
         {{ form_widget(form) }}
-        <input type="button" value="Сохранить" id="saveProduct" class="col-xs-12 col-md-3 btn btn-default" />
+        <input type="button" value="{{ 'save'|trans }}" id="saveProduct" class="col-xs-12 col-md-3 btn btn-default" />
         {{ form_end(form) }}
         <div class="list-group"></div>
     </div>

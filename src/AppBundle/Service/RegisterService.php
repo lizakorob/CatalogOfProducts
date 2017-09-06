@@ -36,9 +36,11 @@ class RegisterService
         ));
 
         if ($user != null) {
-            if ($id != null && $id != $user->getId()) {
-                return true;
+            if ($id != null && $id == $user->getId()) {
+                return false;
             }
+
+            return true;
         }
 
         return false;
@@ -52,9 +54,11 @@ class RegisterService
         ));
 
         if ($user != null) {
-            if ($id != null && $id != $user->getId()) {
-                return true;
+            if ($id != null && $id == $user->getId()) {
+                return false;
             }
+
+            return true;
         }
 
         return false;
