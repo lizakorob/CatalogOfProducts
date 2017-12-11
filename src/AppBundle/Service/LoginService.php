@@ -3,22 +3,22 @@
 namespace AppBundle\Service;
 
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class LoginService
 {
-    private $registry;
+    private $em;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->registry = $registry;
+        $this->em = $entityManager;
     }
 
     public function IsUser(string $username, string $password): bool
     {
-        $em = $this->registry->getEntityManager();
-        $user = $em->getRepository('AppBundle:User')->findOneBy(array(
+        $user = $this->em->getRepository('AppBundle:User')->findOneBy(array(
             'username' => $username,
         ));
 

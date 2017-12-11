@@ -3,39 +3,36 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Category;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CategoryService
 {
-    private $registry;
+    private $em;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(EntityManager $em)
     {
-        $this->registry = $registry;
+        $this->em = $em;
     }
 
     public function addCategory(Form $form): bool
     {
-        $em = $this->registry->getManager();
-
         $category = new Category();
 
         $this->setDataInCategory($form, $category);
 
-        $em->persist($category);
-        $em->flush();
+        $this->em->persist($category);
+        $this->em->flush();
 
         return true;
     }
 
     public function editCategory(Form $form, Category $category): bool
     {
-        $em = $this->registry->getManager();
-
         $this->setDataInCategory($form, $category);
-        $em->flush();
+        $this->em->flush();
 
         return true;
     }
@@ -53,14 +50,15 @@ class CategoryService
     {
         $category->setName($form->get('name')->getData());
 
-        $categoryParent = $this->registry->getManager()->getRepository('AppBundle:Category')
+        $categoryParent = $this->em->getRepository('AppBundle:Category')
             ->findOneBy(array(
                 'name' => $form->get('parent')->getData(),
             ));
 
         if ($categoryParent != null) {
-            $category_parent = $this->registry->getEntityManager()
-                ->getReference('AppBundle:Category', intval($categoryParent->getId()));
+            $category_parent = $this->em
+                ->getReference('AppBundle:Category',
+					intval($categoryParent->getId()));
             $category->setParent($category_parent);
         } else {
             $category->setParent(null);
@@ -74,9 +72,7 @@ class CategoryService
      */
     public function isExistCategoryAdd($name, $parent)
     {
-        $em = $this->registry->getManager();
-
-        $categoryUsed = $em->getRepository('AppBundle:Category')
+        $categoryUsed = $this->em->getRepository('AppBundle:Category')
             ->findOneBy(array(
                 'name' => $name,
             ));
@@ -89,7 +85,7 @@ class CategoryService
         }
 
         if ($parent != '') {
-            $parentCategory = $em->getRepository('AppBundle:Category')
+            $parentCategory = $this->em->getRepository('AppBundle:Category')
                 ->findOneBy(array(
                     'name' => $parent,
                 ));
@@ -116,9 +112,7 @@ class CategoryService
      */
     public function isExistCategoryEdit($name, Category $product, $parent)
     {
-        $em = $this->registry->getManager();
-
-        if ($em->getRepository('AppBundle:Category')->isExist(array(
+        if ($this->em->getRepository('AppBundle:Category')->isExist(array(
             'name' => $name,
         ), $product->getId())) {
             return new JsonResponse(array(
@@ -128,7 +122,7 @@ class CategoryService
         }
 
         if ($parent != '') {
-            $parentCategory = $em->getRepository('AppBundle:Category')
+            $parentCategory = $this->em->getRepository('AppBundle:Category')
                 ->findOneBy(array(
                     'name' => $parent,
                 ));

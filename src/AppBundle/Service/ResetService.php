@@ -2,23 +2,23 @@
 
 namespace AppBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class ResetService
 {
-    private $registry;
+    private $em;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(EntityManager $em)
     {
-        $this->registry = $registry;
+        $this->em = $em;
     }
 
     public function resetPassword(Form $form, string $hash): bool
     {
-        $em = $this->registry->getManager();
-        $userReset = $em->getRepository('AppBundle:ForgotPassword')
+        $userReset = $this->em->getRepository('AppBundle:ForgotPassword')
             ->findOneBy(array(
                 'hashCode' => $hash,
             ));
@@ -27,7 +27,7 @@ class ResetService
             return false;
         }
 
-        $user = $em->getRepository('AppBundle:User')
+        $user = $this->em->getRepository('AppBundle:User')
             ->findOneBy(array(
                 'email' => $userReset->getEmail(),
             ));
@@ -35,7 +35,7 @@ class ResetService
         $encoder = new BCryptPasswordEncoder(12);
         $newPassword = $form->get('new_password')->getData();
         $user->setPassword($encoder->encodePassword($newPassword, $user->getSalt()));
-        $em->flush();
+		$this->em->flush();
 
         $this->deleteHash($hash);
         return true;
@@ -43,12 +43,11 @@ class ResetService
 
     public function deleteHash(string $hash)
     {
-        $em = $this->registry->getManager();
-        $userReset = $em->getRepository('AppBundle:ForgotPassword')
+        $userReset = $this->em->getRepository('AppBundle:ForgotPassword')
             ->findOneBy(array(
                 'hashCode' => $hash,
             ));
-        $em->remove($userReset);
-        $em->flush();
+		$this->em->remove($userReset);
+		$this->em->flush();
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Product;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\File;
@@ -11,34 +12,30 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductService
 {
-    private $registry;
+    private $em;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(EntityManager $em)
     {
-        $this->registry = $registry;
+        $this->em = $em;
     }
 
     public function createProduct(Form $form): bool
     {
-        $em = $this->registry->getManager();
-
         $product = new Product();
 
         $this->setDataInProduct($form, $product);
 
-        $em->persist($product);
-        $em->flush();
+		$this->em->persist($product);
+		$this->em->flush();
 
         return true;
     }
 
     public function editProduct(Form $form, Product $product): bool
     {
-        $em = $this->registry->getManager();
-
         $this->setDataInProduct($form, $product);
         $product->setUpdateDate(new \DateTime());
-        $em->flush();
+		$this->em->flush();
 
         return true;
     }
@@ -90,10 +87,8 @@ class ProductService
         $categoryId = $form->get('category_id')->getData();
         $manufacturerId = $form->get('manufacturer_id')->getData();
 
-        $category = $this->registry->getEntityManager()
-            ->getReference('AppBundle:Category', intval($categoryId));
-        $manufacturer = $this->registry->getEntityManager()
-            ->getReference('AppBundle:Manufacturer', intval($manufacturerId));
+        $category = $this->em->getReference('AppBundle:Category', intval($categoryId));
+        $manufacturer = $this->em->getReference('AppBundle:Manufacturer', intval($manufacturerId));
 
         $product->setCategory($category);
         $product->setManufacturer($manufacturer);
@@ -106,9 +101,7 @@ class ProductService
      */
     public function isExistProductAdd($name, $sku)
     {
-        $em = $this->registry->getManager();
-
-        $productUsed = $em->getRepository('AppBundle:Product')
+        $productUsed = $this->em->getRepository('AppBundle:Product')
             ->findOneBy(array(
                 'name' => $name,
             ));
@@ -120,7 +113,7 @@ class ProductService
             ));
         }
 
-        $productUsed = $em->getRepository('AppBundle:Product')
+        $productUsed = $this->em->getRepository('AppBundle:Product')
             ->findOneBy(array(
                 'sku' => $sku,
             ));
@@ -146,9 +139,7 @@ class ProductService
      */
     public function isExistProductEdit($name, $sku, Product $product)
     {
-        $em = $this->registry->getManager();
-
-        if ($em->getRepository('AppBundle:Product')->isExist(array(
+        if ($this->em->getRepository('AppBundle:Product')->isExist(array(
             'name' => $name,
         ), $product->getId())) {
             return new JsonResponse(array(
@@ -157,7 +148,7 @@ class ProductService
             ));
         }
 
-        if ($em->getRepository('AppBundle:Product')->isExist(array(
+        if ($this->em->getRepository('AppBundle:Product')->isExist(array(
             'sku' => $sku,
         ), $product->getId())) {
             return new JsonResponse(array(

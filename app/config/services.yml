@@ -33,38 +33,38 @@ services:
         class: AppBundle\Service\LoginService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
 
     register_service:
         class: AppBundle\Service\RegisterService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
 
     forgot_password:
         class: AppBundle\Service\ForgotService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
             - '@mailer'
 
     reset_password:
         class: AppBundle\Service\ResetService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
 
     category:
         class: AppBundle\Service\CategoryService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
 
     products:
         class: AppBundle\Service\ProductService
         public: true
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.entity_manager'
 
     serialize_service:
         class: AppBundle\Service\SerializeService

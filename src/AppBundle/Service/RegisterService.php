@@ -2,17 +2,18 @@
 
 namespace AppBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class RegisterService
 {
-    private $registry;
+    private $em;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(EntityManager $em)
     {
-        $this->registry = $registry;
+        $this->em = $em;
     }
 
     public function register(Form $form)
@@ -23,15 +24,13 @@ class RegisterService
         $encoder = new BCryptPasswordEncoder(12);
         $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
 
-        $em = $this->registry->getEntityManager();
-        $em->persist($user);
-        $em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
     }
 
     public function IsRegisterLogin(string $username, int $id = null): bool
     {
-        $em = $this->registry->getEntityManager();
-        $user = $em->getRepository('AppBundle:User')->findOneBy(array(
+        $user = $this->em->getRepository('AppBundle:User')->findOneBy(array(
             'username' => $username,
         ));
 
@@ -48,8 +47,7 @@ class RegisterService
 
     public function IsRegisterEmail(string $email, int $id = null): bool
     {
-        $em = $this->registry->getEntityManager();
-        $user = $em->getRepository('AppBundle:User')->findOneBy(array(
+        $user = $this->em->getRepository('AppBundle:User')->findOneBy(array(
             'email' => $email,
         ));
 

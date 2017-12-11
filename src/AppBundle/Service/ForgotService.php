@@ -3,32 +3,32 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\ForgotPassword;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 
 class ForgotService
 {
-    private $registry;
+    private $em;
     private $mailer;
 
-    public function __construct(RegistryInterface $registry, \Swift_Mailer $mailer)
+    public function __construct(EntityManager $em, \Swift_Mailer $mailer)
     {
-        $this->registry = $registry;
+        $this->em = $em;
         $this->mailer = $mailer;
     }
 
     public function sendResetPasswordEmail(Form $form)
     {
         $email = $form->get('email')->getData();
-        $em = $this->registry->getEntityManager();
 
-        $userReset = $em->getRepository('AppBundle:ForgotPassword')
+        $userReset = $this->em->getRepository('AppBundle:ForgotPassword')
             ->findOneBy(array(
                 'email' => $email,
             ));
         if (!is_null($userReset)) {
-            $em->remove($userReset);
-            $em->flush();
+			$this->em->remove($userReset);
+			$this->em->flush();
         }
 
         $hash = md5(uniqid(null, true));
@@ -55,16 +55,13 @@ class ForgotService
         $forgotPassword->setHashCode($hash);
         $forgotPassword->setCreateDate(new \DateTime());
 
-        $em = $this->registry->getEntityManager();
-        $em->persist($forgotPassword);
-        $em->flush();
+		$this->em->persist($forgotPassword);
+		$this->em->flush();
     }
 
     public function IsRegisterEmail(string $email): bool
     {
-        $em = $this->registry->getEntityManager();
-
-        $user = $em->getRepository('AppBundle:User')
+        $user = $this->em->getRepository('AppBundle:User')
             ->findOneBy(array(
                 'email' => $email,
             ));

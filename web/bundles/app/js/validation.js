@@ -132,21 +132,22 @@ function setErrorState(idItem) {
     document.getElementById(idItem).parentNode.classList.add("has-error");
 }
 
-function isRegisterData($username, $email) {
+function isRegisterData(username, email) {
     $.ajax({
         type: 'POST',
         url: '/register',
         data: {
-            'username': $username,
-            'email': $email
+            'username': username,
+            'email': email
         },
         success: function (data) {
             if(data['status'] === '200') {
                 var password = $('#register_password_first').val();
-                $("form[name='register']").submit();
-                $('#username').val($username);
+                alert(password);
+                $(".register").submit();
+                $('#username').val(username);
                 $('#password').val(password);
-                $("form[name='login']").submit();
+                $(".login").submit();
             } else {
                 showMessage('registrationError', data['message']);
             }
